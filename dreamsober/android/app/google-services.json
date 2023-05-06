@@ -1,0 +1,83 @@
+{
+  "project_info": {
+    "project_number": "394887397851",
+    "firebase_url": "https://dreamsober-2e341-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "dreamsober-2e341",
+    "storage_bucket": "dreamsober-2e341.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:394887397851:android:f417049c7e21ff7c5fe7fe",
+        "android_client_info": {
+          "package_name": "com.dreamsober.wellyes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "394887397851-o327ec7iqo9gehtkj9adladnp5todqai.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEP8PmH28gZEL4McRBHgmHREFxyvJ6Lkk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "394887397851-o327ec7iqo9gehtkj9adladnp5todqai.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "394887397851-cn1l99jq7bhuk8g9klvmgnu32kpp5818.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.dreamsober"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:394887397851:android:ff4994989046fb8a5fe7fe",
+        "android_client_info": {
+          "package_name": "com.example.dreamsober"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "394887397851-o327ec7iqo9gehtkj9adladnp5todqai.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEP8PmH28gZEL4McRBHgmHREFxyvJ6Lkk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "394887397851-o327ec7iqo9gehtkj9adladnp5todqai.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "394887397851-cn1l99jq7bhuk8g9klvmgnu32kpp5818.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.dreamsober"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
