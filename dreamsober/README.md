@@ -1,6 +1,6 @@
-# dreamsober
+# DreamSober
 
-A new Flutter project.
+An app to check the correlation between alcohol usage and sleep quality.
 
 ## Getting Started
 
