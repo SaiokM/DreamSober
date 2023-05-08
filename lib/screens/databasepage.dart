@@ -118,7 +118,7 @@ class _DatabasePageState extends State<DatabasePage> {
           if (snapshot.data!.snapshot.value != null) {
             Map<dynamic, dynamic> map =
                 snapshot.data!.snapshot.value as dynamic;
-            log(map.toString());
+            //log(map.toString());
             List<dynamic> list = [];
             list.clear();
             list = map.keys.toList();

@@ -2,16 +2,14 @@
 
 import 'package:dreamsober/screens/drinkpage.dart';
 import 'package:dreamsober/screens/graph.dart';
+import 'package:dreamsober/screens/managedrink.dart';
+import 'package:dreamsober/screens/databasepage.dart';
+import 'package:dreamsober/screens/profileplaceholder.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:dreamsober/pages/about.dart';
 import 'dart:developer';
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:dreamsober/models/drink.dart';
-import 'package:dreamsober/models/drinkDB.dart';
-import 'package:dreamsober/screens/managedrink.dart';
-import 'package:dreamsober/screens/databasepage.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -24,6 +22,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final user = FirebaseAuth.instance.currentUser!;
+  final String userUID = FirebaseAuth.instance.currentUser!.uid;
   static int _selectedIdx = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
@@ -31,7 +30,7 @@ class _HomePageState extends State<HomePage> {
     Text("Bed", style: optionStyle),
     DrinkPage(),
     ChartPage(),
-    Text("Profile", style: optionStyle)
+    ProfilePage(),
   ];
 
   final Color mainColor = const Color.fromARGB(255, 42, 41, 50);
@@ -106,7 +105,7 @@ class _HomePageState extends State<HomePage> {
             padding: EdgeInsets.all(16),
             selectedIndex: _selectedIdx,
             onTabChange: (idx) {
-              log(idx.toString());
+              //log(idx.toString());
               setState(() {
                 _selectedIdx = idx;
               });
