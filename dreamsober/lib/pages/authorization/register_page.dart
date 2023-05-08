@@ -8,6 +8,8 @@ class RegisterPage extends StatefulWidget {
   final Function()? onTap;
   const RegisterPage({super.key, required this.onTap});
 
+  static String route = "/register/";
+
   @override
   State<RegisterPage> createState() => _RegisterPageState();
 }
@@ -20,7 +22,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
   // sign user up method
   void signUserUp() async {
-
     // show loading circle
     showDialog(
       context: context,
@@ -44,16 +45,14 @@ class _RegisterPageState extends State<RegisterPage> {
         showErrorMessage("Passwords don't match!");
       }
       // pop the loading circle
-       Navigator.pop(context);
-
+      Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
-
       // pop the loading circle
-       Navigator.pop(context);
+      Navigator.pop(context);
 
       // show error message
       showErrorMessage(e.code);
-    }   
+    }
   }
 
   // error message to user
@@ -74,28 +73,27 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[300],
       body: SafeArea(
         child: Center(
-          child: SingleChildScrollView(   //remove overflow
-            child: Column( 
+          child: SingleChildScrollView(
+            //remove overflow
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 25),
-          
+
                 // logo
                 const Icon(
                   Icons.lock,
                   size: 50,
                 ),
-          
+
                 const SizedBox(height: 25),
-          
+
                 // Let's create an account for you!
                 Text(
                   'Let\'s create an account for you!',
@@ -104,25 +102,25 @@ class _RegisterPageState extends State<RegisterPage> {
                     fontSize: 16,
                   ),
                 ),
-          
+
                 const SizedBox(height: 25),
-          
+
                 // email textfield
                 MyTextField(
                   controller: emailController,
                   hintText: 'Email',
                   obscureText: false,
                 ),
-          
+
                 const SizedBox(height: 10),
-          
+
                 // password textfield
                 MyTextField(
                   controller: passwordController,
                   hintText: 'Password',
                   obscureText: true,
                 ),
-          
+
                 const SizedBox(height: 10),
 
                 // confirm password textfield
@@ -131,17 +129,17 @@ class _RegisterPageState extends State<RegisterPage> {
                   hintText: 'Confirm Password',
                   obscureText: true,
                 ),
-          
+
                 const SizedBox(height: 25),
-          
+
                 // sign up button
                 MyButton(
                   text: 'Sign up',
                   onTap: signUserUp,
                 ),
-          
+
                 const SizedBox(height: 50),
-          
+
                 // or continue with
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -169,25 +167,25 @@ class _RegisterPageState extends State<RegisterPage> {
                     ],
                   ),
                 ),
-          
+
                 const SizedBox(height: 20),
-          
+
                 // google + apple sign in buttons
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
                     // google button
                     SquareTile(imagePath: 'lib/images/google.png'),
-          
+
                     SizedBox(width: 35),
-          
+
                     // apple button
                     SquareTile(imagePath: 'lib/images/apple.png')
                   ],
                 ),
-          
+
                 const SizedBox(height: 30),
-          
+
                 // not a member? register now
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -217,4 +215,3 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 }
-

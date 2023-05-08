@@ -1,7 +1,6 @@
 // ignore_for_file: unused_local_variable, no_leading_underscores_for_local_identifiers, prefer_const_constructors
 
 import 'package:intl/intl.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dreamsober/models/drink.dart';
@@ -19,7 +18,6 @@ class DrinkPage extends StatefulWidget {
 }
 
 class _DrinkState extends State<DrinkPage> {
-  final Future<FirebaseApp> _fApp = Firebase.initializeApp();
   final Color mainColor = const Color.fromARGB(255, 42, 41, 50);
   final List<String> imgs = [
     'assets/beer.png',
@@ -49,11 +47,12 @@ class _DrinkState extends State<DrinkPage> {
     return Scaffold(
       backgroundColor: Colors.grey,
       resizeToAvoidBottomInset: false,
+      /*
       appBar: AppBar(
         title: Text(DrinkPage.routeName),
         centerTitle: true,
         backgroundColor: mainColor,
-      ),
+      ),*/
       body: Stack(
         children: [
           _backGroundDeco(context),
@@ -61,7 +60,7 @@ class _DrinkState extends State<DrinkPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              SizedBox(height: 40),
+              SizedBox(height: 50),
               _buildCarousel(context),
               _buildCard(context),
               SizedBox(height: 10),
@@ -86,44 +85,12 @@ class _DrinkState extends State<DrinkPage> {
     );
   }
 
-  Widget _wait(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey,
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: Text(DrinkPage.routeName),
-        centerTitle: true,
-        backgroundColor: mainColor,
-      ),
-      body: Center(
-        child: CircularProgressIndicator(
-          color: mainColor,
-        ),
-      ),
-    );
-  }
-
-  Widget _error(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey,
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: Text(DrinkPage.routeName),
-        centerTitle: true,
-        backgroundColor: mainColor,
-      ),
-      body: Center(
-        child: Text("Error: Something whent wrong"),
-      ),
-    );
-  }
-
   Widget _backGroundDeco(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     return Stack(
       children: [
         Positioned(
-          top: 30,
+          top: 40,
           left: screenWidth / 2 - 125,
           child: SizedBox(
             height: 250,
@@ -136,7 +103,7 @@ class _DrinkState extends State<DrinkPage> {
           ),
         ),
         Positioned(
-          top: 20,
+          top: 30,
           left: screenWidth / 2 + 60,
           child: SizedBox(
             height: 60,

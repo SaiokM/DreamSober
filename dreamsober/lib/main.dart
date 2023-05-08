@@ -10,8 +10,8 @@ import 'package:dreamsober/screens/managedrink.dart';
 import 'package:dreamsober/screens/databasepage.dart';
 import 'package:dreamsober/screens/graph.dart';
 import 'package:provider/provider.dart';
-import 'pages/authorization/login_page.dart';
-import 'pages/authorization/auth_page.dart';
+import 'package:dreamsober/pages/authorization/login_page.dart';
+import 'package:dreamsober/pages/authorization/auth_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase/firebase_options.dart';
 

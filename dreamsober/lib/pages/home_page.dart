@@ -1,13 +1,22 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:dreamsober/screens/drinkpage.dart';
+import 'package:dreamsober/screens/graph.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:dreamsober/pages/about.dart';
 import 'dart:developer';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:dreamsober/models/drink.dart';
+import 'package:dreamsober/models/drinkDB.dart';
+import 'package:dreamsober/screens/managedrink.dart';
+import 'package:dreamsober/screens/databasepage.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
+  static String route = "/home/";
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -18,11 +27,14 @@ class _HomePageState extends State<HomePage> {
   static int _selectedIdx = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static const List<Widget> _widgetList = <Widget>[
+  static List<Widget> _widgetList = <Widget>[
     Text("Bed", style: optionStyle),
-    Text("Drink", style: optionStyle),
-    Text("Graph", style: optionStyle),
+    DrinkPage(),
+    ChartPage(),
+    Text("Profile", style: optionStyle)
   ];
+
+  final Color mainColor = const Color.fromARGB(255, 42, 41, 50);
 
   //sign user out method
   void signUserOut() {
@@ -32,10 +44,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-      ),
-      drawer: _drawer(context),
       body: Center(
         child: _widgetList[_selectedIdx],
       ),
@@ -69,8 +77,8 @@ class _HomePageState extends State<HomePage> {
             ),
             ListTile(
               onTap: () {
-                //signUserOut();
-                Navigator.pop(context);
+                signUserOut();
+                //Navigator.pop(context);
               },
               leading: Icon(Icons.logout, color: Colors.white),
               title: Text(
@@ -116,6 +124,10 @@ class _HomePageState extends State<HomePage> {
                 icon: Icons.show_chart,
                 text: 'Graphs',
               ),
+              GButton(
+                icon: Icons.person,
+                text: "Profile Page",
+              )
             ]),
       ),
     );

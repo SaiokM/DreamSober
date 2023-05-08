@@ -135,6 +135,7 @@ class _ManageDrinkPageState extends State<ManageDrinkPage> {
         }
         final snackBar = SnackBar(
           content: Text(msg),
+          duration: Duration(seconds: 1),
         );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
         context.read<DailyDrinkDB>().resetDB();

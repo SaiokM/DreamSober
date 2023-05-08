@@ -75,31 +75,26 @@ class ChartPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey,
       resizeToAvoidBottomInset: false,
+      /*
       appBar: AppBar(
         title: Text(ChartPage.routeName),
         centerTitle: true,
         backgroundColor: mainColor,
-      ),
+      ),*/
       body: Center(
         child: Stack(
           children: [
             Column(
               children: [
-                SizedBox(height: 10),
+                SizedBox(height: 50),
+                Text(
+                  "How well did you sleep?",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 20),
                 Card(
                   color: Color.fromARGB(255, 213, 210, 243),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 20),
-                      Text(
-                        "Last Week",
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                      _graph(context),
-                    ],
-                  ),
+                  child: _graph(context),
                 ),
               ],
             ),
@@ -155,68 +150,86 @@ class ChartPage extends StatelessWidget {
             );
             mybarData.initializeBarData();
 
-            return SizedBox(
-              height: 360,
-              child: Padding(
-                padding: EdgeInsets.all(10),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Center(
-                    child: SizedBox(
-                      height: 200,
-                      width: 50 * dayList.length.toDouble(),
-                      child: Container(
-                        alignment: Alignment.topCenter,
-                        child: BarChart(
-                          BarChartData(
-                            borderData: FlBorderData(
-                              border: const Border(
-                                top: BorderSide.none,
-                                right: BorderSide.none,
-                                left: BorderSide.none,
-                                bottom: BorderSide(width: 1),
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(height: 20),
+                Text(
+                  "${DateFormat('dd-MM-yyyy').format(DateTime.parse(dayList[0])).split(' ')[0].replaceAll("-", "/")} - ${DateFormat('dd-MM-yyyy').format(DateTime.parse(dayList[7])).split(' ')[0].replaceAll("-", "/")}",
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(
+                  height: 360,
+                  child: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Center(
+                        child: SizedBox(
+                          height: 200,
+                          width: 50 * dayList.length.toDouble(),
+                          child: Container(
+                            alignment: Alignment.topCenter,
+                            child: BarChart(
+                              BarChartData(
+                                borderData: FlBorderData(
+                                  border: const Border(
+                                    top: BorderSide.none,
+                                    right: BorderSide.none,
+                                    left: BorderSide.none,
+                                    bottom: BorderSide(width: 1),
+                                  ),
+                                ),
+                                titlesData: FlTitlesData(
+                                    bottomTitles: AxisTitles(
+                                        drawBehindEverything: true,
+                                        sideTitles: _bottomTitles(mybarData)),
+                                    topTitles: AxisTitles(
+                                        sideTitles:
+                                            SideTitles(showTitles: false)),
+                                    leftTitles: AxisTitles(
+                                        sideTitles:
+                                            SideTitles(showTitles: false)),
+                                    rightTitles: AxisTitles(
+                                        sideTitles:
+                                            SideTitles(showTitles: false))),
+                                gridData: FlGridData(show: true),
+                                minY: 0,
+                                barGroups: mybarData.barData
+                                    .map(
+                                      (data) => BarChartGroupData(
+                                        x: data.x,
+                                        barRods: [
+                                          BarChartRodData(
+                                            width: 15,
+                                            borderRadius:
+                                                BorderRadius.circular(2),
+                                            toY: data.y1,
+                                            color: alcColor,
+                                          ),
+                                          BarChartRodData(
+                                            width: 15,
+                                            borderRadius:
+                                                BorderRadius.circular(1),
+                                            toY: data.y2,
+                                            color: sleepColor,
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                    .toList(),
                               ),
                             ),
-                            titlesData: FlTitlesData(
-                                bottomTitles: AxisTitles(
-                                    drawBehindEverything: true,
-                                    sideTitles: _bottomTitles(mybarData)),
-                                topTitles: AxisTitles(
-                                    sideTitles: SideTitles(showTitles: false)),
-                                leftTitles: AxisTitles(
-                                    sideTitles: SideTitles(showTitles: false)),
-                                rightTitles: AxisTitles(
-                                    sideTitles: SideTitles(showTitles: false))),
-                            gridData: FlGridData(show: true),
-                            minY: 0,
-                            barGroups: mybarData.barData
-                                .map(
-                                  (data) => BarChartGroupData(
-                                    x: data.x,
-                                    barRods: [
-                                      BarChartRodData(
-                                        width: 15,
-                                        borderRadius: BorderRadius.circular(2),
-                                        toY: data.y1,
-                                        color: alcColor,
-                                      ),
-                                      BarChartRodData(
-                                        width: 15,
-                                        borderRadius: BorderRadius.circular(1),
-                                        toY: data.y2,
-                                        color: sleepColor,
-                                      ),
-                                    ],
-                                  ),
-                                )
-                                .toList(),
                           ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
+              ],
             );
           } else {
             return const SizedBox(
@@ -276,7 +289,7 @@ class ChartPage extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Positioned(
-      top: 360,
+      top: 440,
       left: screenWidth / 2 - 75,
       child: Center(
         child: Row(

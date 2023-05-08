@@ -7,6 +7,7 @@ import 'package:dreamsober/components/square_tile.dart';
 class LoginPage extends StatefulWidget {
   final Function()? onTap;
   const LoginPage({super.key, required this.onTap});
+  static String route = "/login/";
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -19,7 +20,6 @@ class _LoginPageState extends State<LoginPage> {
 
   // sign user in method
   void signUserIn() async {
-
     // show loading circle
     showDialog(
       context: context,
@@ -38,16 +38,14 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       // pop the loading circle
-       Navigator.pop(context);
-
+      Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
-
       // pop the loading circle
-       Navigator.pop(context);
+      Navigator.pop(context);
 
       // show error message
       showErrorMessage(e.code);
-    }   
+    }
   }
 
   // error message to user
@@ -68,28 +66,27 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[300],
       body: SafeArea(
         child: Center(
-          child: SingleChildScrollView(   //remove overflow
-            child: Column( 
+          child: SingleChildScrollView(
+            //remove overflow
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 50),
-          
+
                 // logo
                 const Icon(
                   Icons.lock,
                   size: 100,
                 ),
-          
+
                 const SizedBox(height: 50),
-          
+
                 // welcome back, you've been missed!
                 Text(
                   'Welcome back you\'ve been missed!',
@@ -98,27 +95,27 @@ class _LoginPageState extends State<LoginPage> {
                     fontSize: 16,
                   ),
                 ),
-          
+
                 const SizedBox(height: 25),
-          
+
                 // email textfield
                 MyTextField(
                   controller: emailController,
                   hintText: 'Email',
                   obscureText: false,
                 ),
-          
+
                 const SizedBox(height: 10),
-          
+
                 // password textfield
                 MyTextField(
                   controller: passwordController,
                   hintText: 'Password',
                   obscureText: true,
                 ),
-          
+
                 const SizedBox(height: 10),
-          
+
                 // forgot password?
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -132,17 +129,17 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   ),
                 ),
-          
+
                 const SizedBox(height: 25),
-          
+
                 // sign in button
                 MyButton(
-                  text:'Sign In',
+                  text: 'Sign In',
                   onTap: signUserIn,
                 ),
-          
+
                 const SizedBox(height: 50),
-          
+
                 // or continue with
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -170,25 +167,25 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   ),
                 ),
-          
+
                 const SizedBox(height: 20),
-          
+
                 // google + apple sign in buttons
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
                     // google button
                     SquareTile(imagePath: 'lib/images/google.png'),
-          
+
                     SizedBox(width: 35),
-          
+
                     // apple button
                     SquareTile(imagePath: 'lib/images/apple.png')
                   ],
                 ),
-          
+
                 const SizedBox(height: 30),
-          
+
                 // not a member? register now
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
