@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dreamsober/models/drink.dart';
@@ -12,11 +13,14 @@ import 'package:dreamsober/models/drinkDB.dart';
 import 'package:dreamsober/screens/drinkpage.dart';
 import 'package:dreamsober/screens/managedrink.dart';
 import 'package:provider/provider.dart';
+import 'dart:developer';
 
 class DatabasePage extends StatefulWidget {
-  const DatabasePage({super.key});
+  DatabasePage({super.key});
   static String route = "/list/";
   static String routeName = "Drink Database";
+  final user = FirebaseAuth.instance.currentUser!;
+  static String userUID = FirebaseAuth.instance.currentUser!.uid;
 
   @override
   State<DatabasePage> createState() => _DatabasePageState();
@@ -24,8 +28,10 @@ class DatabasePage extends StatefulWidget {
 
 class _DatabasePageState extends State<DatabasePage> {
   final Future<FirebaseApp> _fApp = Firebase.initializeApp();
-  DatabaseReference dbRef =
-      FirebaseDatabase.instance.ref().child("data").child("User");
+  DatabaseReference dbRef = FirebaseDatabase.instance
+      .ref()
+      .child("${DatabasePage.userUID}")
+      .child("Data");
 
   final Color mainColor = const Color.fromARGB(255, 42, 41, 50);
   @override
@@ -33,6 +39,7 @@ class _DatabasePageState extends State<DatabasePage> {
     return FutureBuilder(
       future: _fApp,
       builder: (context, snapshot) {
+        //og(DatabasePage.userUID);
         if (snapshot.hasError) {
           return _error(context);
         } else if (snapshot.hasData) {

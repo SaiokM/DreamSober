@@ -4,7 +4,7 @@ import 'package:dreamsober/screens/drinkpage.dart';
 import 'package:dreamsober/screens/graph.dart';
 import 'package:dreamsober/screens/managedrink.dart';
 import 'package:dreamsober/screens/databasepage.dart';
-import 'package:dreamsober/screens/profileplaceholder.dart';
+import 'package:dreamsober/pages/profilePage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';

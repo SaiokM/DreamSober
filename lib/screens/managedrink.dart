@@ -3,6 +3,7 @@
 import 'package:intl/intl.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:dreamsober/models/drink.dart';
 import 'package:dreamsober/models/drinkDB.dart';
@@ -10,9 +11,11 @@ import 'package:dreamsober/screens/databasepage.dart';
 import 'package:provider/provider.dart';
 
 class ManageDrinkPage extends StatefulWidget {
-  const ManageDrinkPage({super.key});
+  ManageDrinkPage({super.key});
   static String route = '/drinklist/';
   static String routeName = 'Is everything right?';
+  final user = FirebaseAuth.instance.currentUser!;
+  static String userUID = FirebaseAuth.instance.currentUser!.uid;
 
   @override
   State<ManageDrinkPage> createState() => _ManageDrinkPageState();
@@ -28,10 +31,10 @@ class _ManageDrinkPageState extends State<ManageDrinkPage> {
     'assets/wine-bottle.png'
   ];
   final List<Drink> drinks = [
-    Drink('Beer', 4, 500),
-    Drink('Cocktail', 8, 200),
-    Drink('Super Alcoholics', 40, 40),
-    Drink('Wine', 12, 150)
+    Drink('Beer', 4, 500, 5),
+    Drink('Cocktail', 8, 200, 8),
+    Drink('Super Alcoholics', 40, 40, 6),
+    Drink('Wine', 12, 150, 4)
   ];
   @override
   Widget build(BuildContext context) {
@@ -124,8 +127,10 @@ class _ManageDrinkPageState extends State<ManageDrinkPage> {
   }
 
   Widget _floatButton(BuildContext context) {
-    DatabaseReference dbRef =
-        FirebaseDatabase.instance.ref().child("data").child("User");
+    DatabaseReference dbRef = FirebaseDatabase.instance
+        .ref()
+        .child(ManageDrinkPage.userUID)
+        .child("Data");
     return FloatingActionButton(
       onPressed: () {
         context.read<DailyDrinkDB>().saveDay(dbRef);

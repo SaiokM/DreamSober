@@ -26,10 +26,10 @@ class _DrinkState extends State<DrinkPage> {
     'assets/wine-bottle.png'
   ];
   final List<Drink> drinks = [
-    Drink('Beer', 4, 500),
-    Drink('Cocktail', 8, 200),
-    Drink('Super Alcoholics', 40, 40),
-    Drink('Wine', 12, 150)
+    Drink('Beer', 4, 500, 5),
+    Drink('Cocktail', 8, 200, 8),
+    Drink('Super Alcoholics', 40, 40, 6),
+    Drink('Wine', 12, 150, 4)
   ];
 
   // Carousel Variables
