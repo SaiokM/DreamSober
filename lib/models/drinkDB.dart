@@ -11,10 +11,10 @@ class DailyDrinkDB with ChangeNotifier {
   };
 
   final List<Drink> drinks = [
-    Drink('Beer', 4, 500),
-    Drink('Cocktail', 8, 200),
-    Drink('Super Alcoholics', 40, 40),
-    Drink('Wine', 12, 150)
+    Drink('Beer', 4, 500, 5),
+    Drink('Cocktail', 8, 200, 8),
+    Drink('Super Alcoholics', 40, 40, 6),
+    Drink('Wine', 12, 150, 4)
   ];
   DateTime _date = DateTime.now();
   double _sleepScore = 0;
@@ -41,7 +41,7 @@ class DailyDrinkDB with ChangeNotifier {
         'Super Alcoholics', (value) => json['Drinks']['Super Alcoholics']);
     drinkList.update('Wine', (value) => json['Drinks']['Wine']);
     _totAlc = json['TotalAlcohol'].toDouble();
-    _sleepScore = json['SleepScore'];
+    _sleepScore = json['SleepScore'].toDouble();
   }
 
   void addDate(DateTime newDate) {
@@ -122,6 +122,7 @@ class DailyDrinkDB with ChangeNotifier {
     } else {
       dbRef.child(date).remove();
     }
+    resetDB();
   }
 
   void notifyChange() {

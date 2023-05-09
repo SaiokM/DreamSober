@@ -6,6 +6,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:dreamsober/bar_graph/bar_data.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:developer';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -15,10 +16,12 @@ class ChartPage extends StatelessWidget {
   ChartPage({super.key});
   static String route = "/chart/";
   static String routeName = "Data Chart";
+  final user = FirebaseAuth.instance.currentUser!;
+  static String userUID = FirebaseAuth.instance.currentUser!.uid;
 
   final Future<FirebaseApp> _fApp = Firebase.initializeApp();
   DatabaseReference dbRef =
-      FirebaseDatabase.instance.ref().child("data").child("User");
+      FirebaseDatabase.instance.ref().child(userUID).child("Data");
 
   final Color mainColor = const Color.fromARGB(255, 42, 41, 50);
   final Color alcColor = Color.fromARGB(255, 57, 47, 61);
@@ -155,7 +158,7 @@ class ChartPage extends StatelessWidget {
               children: [
                 SizedBox(height: 20),
                 Text(
-                  "${DateFormat('dd-MM-yyyy').format(DateTime.parse(dayList[0])).split(' ')[0].replaceAll("-", "/")} - ${DateFormat('dd-MM-yyyy').format(DateTime.parse(dayList[7])).split(' ')[0].replaceAll("-", "/")}",
+                  "${DateFormat('dd-MM-yyyy').format(DateTime.parse(dayList[0])).split(' ')[0].replaceAll("-", "/")} - ${DateFormat('dd-MM-yyyy').format(DateTime.parse(dayList[dayList.length - 1])).split(' ')[0].replaceAll("-", "/")}",
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
