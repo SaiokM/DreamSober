@@ -46,6 +46,8 @@ class _HomePageState extends State<HomePage> {
       body: Center(
         child: _widgetList[_selectedIdx],
       ),
+      appBar: AppBar(backgroundColor: Colors.brown[900],),
+      drawer: _drawer(context),
       bottomNavigationBar: _bottomNavBar(context),
     );
   }
@@ -53,7 +55,7 @@ class _HomePageState extends State<HomePage> {
   Widget _drawer(BuildContext context) {
     return Drawer(
       child: Container(
-        color: Colors.black,
+        color: Colors.brown[900],
         child: ListView(
           children: [
             DrawerHeader(
@@ -93,14 +95,14 @@ class _HomePageState extends State<HomePage> {
 
   Widget _bottomNavBar(BuildContext context) {
     return Container(
-      color: Colors.black,
+      color: Colors.brown[900],
       child: Padding(
         padding: EdgeInsets.all(10),
         child: GNav(
-            backgroundColor: Colors.black,
+            backgroundColor: Color.fromRGBO(62, 39, 35, 1),
             color: Colors.white,
             activeColor: Colors.white,
-            tabBackgroundColor: Color.fromARGB(208, 66, 66, 66),
+            tabBackgroundColor: Color.fromRGBO(109, 76, 65, 1),
             gap: 8,
             padding: EdgeInsets.all(16),
             selectedIndex: _selectedIdx,

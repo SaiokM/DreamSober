@@ -1,3 +1,4 @@
+import 'package:dreamsober/pages/authorization/update_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:dreamsober/components/my_button.dart';
@@ -175,14 +176,32 @@ class _RegisterPageState extends State<RegisterPage> {
                 // google + apple sign in buttons
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
+                  children: [
                     // google button
-                    SquareTile(imagePath: 'lib/images/google.png'),
+                    SquareTile(
+                       onTap: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Avaible from the next update"),
+                            duration: Duration(seconds: 2),
+                          ),
+                        );
+                      },
+                      imagePath: 'lib/images/google.png'),
 
                     SizedBox(width: 35),
 
                     // apple button
-                    SquareTile(imagePath: 'lib/images/apple.png')
+                    SquareTile(
+                       onTap: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Avaible from the next update"),
+                            duration: Duration(seconds: 2),
+                          ),
+                        );
+                      },
+                      imagePath: 'lib/images/apple.png')
                   ],
                 ),
 

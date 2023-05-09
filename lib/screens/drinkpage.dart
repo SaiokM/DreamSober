@@ -18,7 +18,7 @@ class DrinkPage extends StatefulWidget {
 }
 
 class _DrinkState extends State<DrinkPage> {
-  final Color mainColor = const Color.fromARGB(255, 42, 41, 50);
+  final Color mainColor = Color.fromARGB(255, 97, 96, 95);
   final List<String> imgs = [
     'assets/beer.png',
     'assets/cocktail.png',
@@ -45,7 +45,7 @@ class _DrinkState extends State<DrinkPage> {
 
   Widget _mainApp(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey,
+      backgroundColor: Color.fromRGBO(215, 204, 200, 1),
       resizeToAvoidBottomInset: false,
       /*
       appBar: AppBar(
