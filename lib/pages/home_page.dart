@@ -26,7 +26,7 @@ class _HomePageState extends State<HomePage> {
   static int _selectedIdx = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static List<Widget> _widgetList = <Widget>[
+  static final List<Widget> _widgetList = <Widget>[
     Text("Bed", style: optionStyle),
     DrinkPage(),
     ChartPage(),
