@@ -59,7 +59,7 @@ class _HomePageState extends State<HomePage> {
       Text("Report", style: optionStyle),
       DrinkPage(userUID: widget.userUID),
       ChartPage(userUID: widget.userUID),
-      ProfilePage(),
+      ProfilePage(userUID: widget.userUID),
     ];
 
     DatabaseReference dbRef =

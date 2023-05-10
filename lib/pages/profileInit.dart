@@ -1,21 +1,22 @@
-// ignore_for_file: file_names, prefer_const_constructors
-
 import 'package:flutter/material.dart';
 import 'package:dreamsober/models/user.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'dart:developer';
 
-class ProfilePage extends StatefulWidget {
-  final String userUID;
-  ProfilePage({super.key, required this.userUID});
-  static const routename = 'ProfilePage';
+class ProfileInit extends StatefulWidget {
+  ProfileInit({Key? key}) : super(key: key);
+  static const routename = 'ProfileInit';
+  final user = FirebaseAuth.instance.currentUser!;
+  static String userUID = FirebaseAuth.instance.currentUser!.uid;
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  State<ProfileInit> createState() => _ProfileInitState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _ProfileInitState extends State<ProfileInit> {
+  DatabaseReference dbRef =
+      FirebaseDatabase.instance.ref().child(ProfileInit.userUID);
+
   //Text controller
   String? sex;
   final nameController = TextEditingController();
@@ -25,60 +26,58 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    //print('${ProfilePage.routename} built');
+    print('${ProfileInit.routename} built');
     return Scaffold(
       body: _buildForm(context),
     );
   } //build
 
   Widget _buildForm(BuildContext context) {
-    DatabaseReference dbRef =
-        FirebaseDatabase.instance.ref().child(widget.userUID);
     return SingleChildScrollView(
       child: Center(
         child: Padding(
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
           child: Form(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 TextFormField(
                   controller: nameController,
                   decoration: const InputDecoration(
                     labelText: 'Name',
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 TextFormField(
                   controller: ageController,
                   decoration: const InputDecoration(
                     labelText: 'Age',
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 TextFormField(
                   controller: weightController,
                   decoration: const InputDecoration(
                     labelText: 'Weight',
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 TextFormField(
                   controller: heightController,
                   decoration: const InputDecoration(
                     labelText: 'Heigth',
                   ),
                 ),
-                SizedBox(height: 10),
-                Text('Sex'),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
+                const Text('Sex'),
+                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Column(
                       children: [
-                        Text("Male"),
+                        const Text("Male"),
                         Radio(
                           value: "Male",
                           groupValue: sex,
@@ -92,7 +91,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     Column(
                       children: [
-                        Text("Female"),
+                        const Text("Female"),
                         Radio(
                           value: "Female",
                           groupValue: sex,
@@ -106,7 +105,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ],
                 ),
-                SizedBox(height: 30),
+                const SizedBox(height: 30),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,
@@ -116,18 +115,18 @@ class _ProfilePageState extends State<ProfilePage> {
                     final age = int.parse(ageController.text);
                     final height = double.parse(heightController.text);
                     final weight = double.parse(weightController.text);
-                    CurrentUser _currentUser =
+                    CurrentUser currentUser =
                         CurrentUser(name, age, height, weight, sex);
-                    _currentUser.saveToDB(dbRef.child("User"));
+                    currentUser.saveToDB(dbRef.child("User"));
                   },
-                  child: Text("Submit"),
+                  child: const Text("Submit"),
                 ),
-                SizedBox(height: 30),
+                const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
                     FirebaseAuth.instance.signOut();
                   },
-                  child: Text("Log Out"),
+                  child: const Text("Logout"),
                 ),
               ],
             ),
@@ -136,5 +135,5 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
-} //ProfilePage
+} //ProfileInit
 
