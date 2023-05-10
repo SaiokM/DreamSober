@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, unused_import
 
+import 'package:dreamsober/screens/drinkpage.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -36,8 +37,14 @@ class _ManageDrinkPageState extends State<ManageDrinkPage> {
     Drink('Super Alcoholics', 40, 40, 6),
     Drink('Wine', 12, 150, 4)
   ];
+
+  void _updateCurrentUser() {
+    ManageDrinkPage.userUID = FirebaseAuth.instance.currentUser!.uid;
+  }
+
   @override
   Widget build(BuildContext context) {
+    _updateCurrentUser();
     return Scaffold(
       backgroundColor: Colors.grey,
       appBar: AppBar(

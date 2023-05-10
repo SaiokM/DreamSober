@@ -18,8 +18,8 @@ class CurrentUser {
   factory CurrentUser.fromJson(Map<String, dynamic> json) {
     final name = json["name"];
     final age = json["age"];
-    final height = json["height"];
-    final weight = json["weight"];
+    final height = json["height"].toDouble();
+    final weight = json["weight"].toDouble();
     final sex = json["sex"];
     return CurrentUser(name, age, height, weight, sex);
   }

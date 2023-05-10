@@ -8,9 +8,11 @@ import 'package:dreamsober/models/drinkDB.dart';
 import 'package:dreamsober/screens/managedrink.dart';
 import 'package:dreamsober/screens/databasepage.dart';
 import 'package:provider/provider.dart';
+import 'dart:developer';
 
 class DrinkPage extends StatefulWidget {
-  DrinkPage({super.key});
+  final String userUID;
+  DrinkPage({super.key, required this.userUID});
   static String route = "/drink/";
   static String routeName = "What did you drink today?";
   @override
@@ -18,7 +20,8 @@ class DrinkPage extends StatefulWidget {
 }
 
 class _DrinkState extends State<DrinkPage> {
-  final Color mainColor = Color.fromARGB(255, 97, 96, 95);
+  final Color mainColor = Color.fromARGB(255, 69, 63, 57);
+  final Color secondaryColor = Color.fromARGB(255, 146, 138, 122);
   final List<String> imgs = [
     'assets/beer.png',
     'assets/cocktail.png',
@@ -40,48 +43,61 @@ class _DrinkState extends State<DrinkPage> {
 
   @override
   Widget build(BuildContext context) {
-    return _mainApp(context);
+    double height = MediaQuery.of(context).size.height;
+    log(height.toString());
+    if (height < 700) {
+      return SingleChildScrollView(
+        child: SizedBox(
+          height: height - 100,
+          child: _mainApp(context),
+        ),
+      );
+    } else {
+      return _appBody(context);
+    }
   }
 
   Widget _mainApp(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromRGBO(215, 204, 200, 1),
       resizeToAvoidBottomInset: false,
-      /*
-      appBar: AppBar(
-        title: Text(DrinkPage.routeName),
-        centerTitle: true,
-        backgroundColor: mainColor,
-      ),*/
-      body: Stack(
-        children: [
-          _backGroundDeco(context),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              SizedBox(height: 50),
-              _buildCarousel(context),
-              _buildCard(context),
-              SizedBox(height: 10),
-              _buttonSet(context),
-              SizedBox(height: 10),
-              _datePicker(context),
-              SizedBox(height: 5),
-              _resetButton(context),
-            ],
-          ),
-        ],
-      ),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          _listButton(context),
-          SizedBox(width: 215),
-          _saveButton(context),
-        ],
-      ),
+      body: _appBody(context),
+      floatingActionButton: _floatingButtons(context),
+    );
+  }
+
+  Widget _floatingButtons(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        _listButton(context),
+        SizedBox(width: 215),
+        _saveButton(context),
+      ],
+    );
+  }
+
+  Widget _appBody(BuildContext context) {
+    return Stack(
+      children: [
+        _backGroundDeco(context),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            SizedBox(height: 30),
+            _buildCarousel(context),
+            _buildCard(context),
+            SizedBox(height: 10),
+            _buttonSet(context),
+            SizedBox(height: 10),
+            _datePicker(context),
+            SizedBox(height: 5),
+            _resetButton(context),
+          ],
+        ),
+      ],
     );
   }
 
@@ -90,20 +106,20 @@ class _DrinkState extends State<DrinkPage> {
     return Stack(
       children: [
         Positioned(
-          top: 40,
+          top: 20,
           left: screenWidth / 2 - 125,
           child: SizedBox(
             height: 250,
             width: 250,
             child: Container(
               decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 58, 57, 69),
+                  color: mainColor,
                   borderRadius: BorderRadius.all(Radius.circular(125))),
             ),
           ),
         ),
         Positioned(
-          top: 30,
+          top: 20,
           left: screenWidth / 2 + 60,
           child: SizedBox(
             height: 60,
@@ -113,7 +129,7 @@ class _DrinkState extends State<DrinkPage> {
                 return Container(
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 125, 122, 146),
+                      color: secondaryColor,
                       borderRadius: BorderRadius.all(Radius.circular(50))),
                   child: Text(
                     dailyDrinkDB
@@ -170,7 +186,7 @@ class _DrinkState extends State<DrinkPage> {
     return Consumer<DailyDrinkDB>(
       builder: (context, dailyDrinkDB, _) {
         return Card(
-          color: Color.fromARGB(255, 170, 167, 196),
+          color: secondaryColor,
           elevation: 5,
           child: SizedBox(
             width: 200,
@@ -341,7 +357,8 @@ class _DrinkState extends State<DrinkPage> {
     return FloatingActionButton(
       heroTag: "btn1",
       onPressed: () {
-        Navigator.pushNamed(context, ManageDrinkPage.route);
+        Navigator.pushNamed(context, ManageDrinkPage.route,
+            arguments: widget.userUID);
       },
       backgroundColor: mainColor,
       child: Icon(Icons.check),
@@ -355,7 +372,8 @@ class _DrinkState extends State<DrinkPage> {
           return FloatingActionButton(
             heroTag: "btn2",
             onPressed: () {
-              Navigator.pushNamed(context, DatabasePage.route);
+              Navigator.pushNamed(context, DatabasePage.route,
+                  arguments: widget.userUID);
             },
             backgroundColor: mainColor,
             child: Icon(Icons.menu),

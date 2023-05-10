@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:dreamsober/models/user.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'dart:developer';
 
 class ProfilePage extends StatefulWidget {
-  ProfilePage({super.key});
+  final Function()? signOut;
+  ProfilePage({super.key, required this.signOut});
   static const routename = 'ProfilePage';
   final user = FirebaseAuth.instance.currentUser!;
   static String userUID = FirebaseAuth.instance.currentUser!.uid;
@@ -121,17 +121,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     CurrentUser _currentUser =
                         CurrentUser(name, age, height, weight, sex);
                     _currentUser.saveToDB(dbRef.child("User"));
-                    log(ProfilePage.userUID);
                   },
                   child: Text("Submit"),
-                ),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    FirebaseAuth.instance.signOut();
-                    //Navigator.pop(context);
-                  },
-                  child: Text("Logout"),
                 ),
               ],
             ),

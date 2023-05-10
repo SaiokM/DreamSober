@@ -13,104 +13,82 @@ import 'package:provider/provider.dart';
 import 'package:dreamsober/models/drinkDB.dart';
 
 class ChartPage extends StatelessWidget {
-  ChartPage({super.key});
+  final String userUID;
+  ChartPage({super.key, required this.userUID});
   static String route = "/chart/";
   static String routeName = "Data Chart";
-  final user = FirebaseAuth.instance.currentUser!;
-  static String userUID = FirebaseAuth.instance.currentUser!.uid;
 
   final Future<FirebaseApp> _fApp = Firebase.initializeApp();
-  DatabaseReference dbRef =
-      FirebaseDatabase.instance.ref().child(userUID).child("Data");
 
   final Color mainColor = const Color.fromARGB(255, 42, 41, 50);
-  final Color alcColor = Color.fromARGB(255, 57, 47, 61);
-  final Color sleepColor = Color.fromARGB(255, 78, 82, 114);
+  final Color secondaryColor = Color.fromARGB(255, 146, 138, 122);
+  final Color alcColor = Color.fromARGB(255, 61, 56, 47);
+  final Color sleepColor = Color.fromARGB(255, 114, 99, 78);
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: _fApp,
       builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return _error(context);
-        } else if (snapshot.hasData) {
-          return _mainPage(context);
-        } else {
-          return _wait(context);
-        }
+        double height = MediaQuery.of(context).size.height;
+        //log(height.toString());
+        return Scaffold(
+            backgroundColor: Color.fromARGB(255, 159, 159, 159),
+            resizeToAvoidBottomInset: false,
+            body: (snapshot.hasError)
+                ? _error(context)
+                : (snapshot.hasData)
+                    ? (height < 700)
+                        ? SingleChildScrollView(
+                            child: _pageBody(context),
+                          )
+                        : _pageBody(context)
+                    : _wait(context));
       },
     );
   }
 
   Widget _wait(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey,
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: Text(ChartPage.routeName),
-        centerTitle: true,
-        backgroundColor: mainColor,
-      ),
-      body: Center(
-        child: CircularProgressIndicator(
-          color: mainColor,
-        ),
+    return Center(
+      child: CircularProgressIndicator(
+        color: mainColor,
       ),
     );
   }
 
   Widget _error(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey,
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: Text(ChartPage.routeName),
-        centerTitle: true,
-        backgroundColor: mainColor,
-      ),
-      body: const Center(
-        child: Text("Error: Something whent wrong"),
-      ),
+    return const Center(
+      child: Text("Error: Something whent wrong"),
     );
   }
 
-  Widget _mainPage(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey,
-      resizeToAvoidBottomInset: false,
-      /*
-      appBar: AppBar(
-        title: Text(ChartPage.routeName),
-        centerTitle: true,
-        backgroundColor: mainColor,
-      ),*/
-      body: Center(
-        child: Stack(
-          children: [
-            Column(
-              children: [
-                SizedBox(height: 50),
-                Text(
-                  "How well did you sleep?",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 20),
-                Card(
-                  color: Color.fromARGB(255, 213, 210, 243),
-                  child: _graph(context),
-                ),
-              ],
-            ),
-            _buttons(
-              context,
-            )
-          ],
-        ),
+  Widget _pageBody(BuildContext context) {
+    return Center(
+      child: Stack(
+        children: [
+          Column(
+            children: [
+              SizedBox(height: 20),
+              Text(
+                "How well did you sleep?",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 20),
+              Card(
+                color: Color.fromARGB(255, 237, 237, 237),
+                child: _graph(context),
+              ),
+            ],
+          ),
+          _buttons(context)
+        ],
       ),
     );
   }
 
   Widget _graph(BuildContext context) {
+    DatabaseReference dbRef =
+        FirebaseDatabase.instance.ref().child(userUID).child("Data");
+
     return StreamBuilder(
       stream: dbRef.onValue,
       builder: (context, AsyncSnapshot<DatabaseEvent> snapshot) {
@@ -135,8 +113,9 @@ class ChartPage extends StatelessWidget {
               return DateTime.parse(a).compareTo(DateTime.parse(b));
             });
             if (dayList.length > 7) {
-              dayList.removeRange(0, dayList.length - 8);
+              dayList.removeRange(0, dayList.length - 7);
             }
+            log(dayList[dayList.length - 1].toString());
             for (var day in dayList) {
               alcList.add(map[day]['TotalAlcohol'].toDouble());
               sleepList.add(map[day]['SleepScore'].toDouble());
@@ -292,7 +271,7 @@ class ChartPage extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Positioned(
-      top: 440,
+      top: 410,
       left: screenWidth / 2 - 75,
       child: Center(
         child: Row(

@@ -1,19 +1,25 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unused_import, prefer_const_constructors_in_immutables
 
+import 'package:dreamsober/models/user.dart';
 import 'package:dreamsober/screens/drinkpage.dart';
 import 'package:dreamsober/screens/graph.dart';
 import 'package:dreamsober/screens/managedrink.dart';
 import 'package:dreamsober/screens/databasepage.dart';
 import 'package:dreamsober/pages/profilePage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:dreamsober/pages/about.dart';
 import 'dart:developer';
 import 'package:provider/provider.dart';
+import 'package:rxdart/rxdart.dart';
+import 'dart:async';
+import 'dart:convert';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key? key}) : super(key: key);
+  final String userUID;
+  HomePage({super.key, required this.userUID});
   static String route = "/home/";
 
   @override
@@ -21,38 +27,70 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final user = FirebaseAuth.instance.currentUser!;
-  final String userUID = FirebaseAuth.instance.currentUser!.uid;
-  static int _selectedIdx = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static List<Widget> _widgetList = <Widget>[
-    Text("Bed", style: optionStyle),
-    DrinkPage(),
-    ChartPage(),
-    ProfilePage(),
-  ];
+  late StreamController<int> stream_controller;
 
-  final Color mainColor = const Color.fromARGB(255, 42, 41, 50);
-
-  //sign user out method
-  void signUserOut() {
-    FirebaseAuth.instance.signOut();
+  @override
+  void initState() {
+    super.initState();
+    stream_controller = StreamController<int>.broadcast();
   }
 
   @override
+  void dispose() {
+    stream_controller.close();
+    super.dispose();
+  }
+
+  static int _selectedIdx = 0;
+  static const TextStyle optionStyle =
+      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+
+  void signOut() {
+    setState(() {
+      FirebaseAuth.instance.signOut();
+    });
+  }
+
+  final Color mainColor = const Color.fromARGB(255, 42, 41, 50);
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: _widgetList[_selectedIdx],
-      ),
-      appBar: AppBar(backgroundColor: Colors.brown[900],),
-      drawer: _drawer(context),
-      bottomNavigationBar: _bottomNavBar(context),
+    final List<Widget> _widgetList = <Widget>[
+      Text("Report", style: optionStyle),
+      DrinkPage(userUID: widget.userUID),
+      ChartPage(userUID: widget.userUID),
+      ProfilePage(),
+    ];
+
+    DatabaseReference dbRef =
+        FirebaseDatabase.instance.ref().child(widget.userUID).child("User");
+
+    return StreamBuilder(
+      stream: dbRef.onValue,
+      builder: (context, snapshot) {
+        CurrentUser _currentUser = CurrentUser("", 0, 0, 0, "");
+        if (snapshot.hasData && snapshot.data!.snapshot.value != null) {
+          Map<String, dynamic> user =
+              Map<String, dynamic>.from(snapshot.data!.snapshot.value as Map);
+
+          _currentUser = CurrentUser.fromJson(user);
+        }
+        return Scaffold(
+          body: Center(
+            child: _widgetList[_selectedIdx],
+          ),
+          appBar: AppBar(
+            backgroundColor: Colors.brown[900],
+          ),
+          drawer: _drawer(context, _currentUser),
+          bottomNavigationBar: _bottomNavBar(context),
+        );
+      },
     );
   }
 
-  Widget _drawer(BuildContext context) {
+  Widget _drawer(BuildContext context, CurrentUser user) {
+    //log(widget.userUID);
     return Drawer(
       child: Container(
         color: Colors.brown[900],
@@ -60,10 +98,8 @@ class _HomePageState extends State<HomePage> {
           children: [
             DrawerHeader(
               child: Center(
-                  child: Text(
-                'L O G O',
-                style: TextStyle(fontSize: 35, color: Colors.white),
-              )),
+                child: Text(user.name),
+              ),
             ),
             ListTile(
               leading: Icon(Icons.info_outline, color: Colors.white),
@@ -78,7 +114,7 @@ class _HomePageState extends State<HomePage> {
             ),
             ListTile(
               onTap: () {
-                signUserOut();
+                signOut();
                 //Navigator.pop(context);
               },
               leading: Icon(Icons.logout, color: Colors.white),
@@ -114,8 +150,8 @@ class _HomePageState extends State<HomePage> {
             },
             tabs: [
               GButton(
-                icon: Icons.bed,
-                text: 'Bed',
+                icon: Icons.report,
+                text: 'Report',
               ),
               GButton(
                 icon: Icons.wine_bar,
