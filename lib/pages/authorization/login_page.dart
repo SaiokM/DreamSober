@@ -78,26 +78,25 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(height: 50),
+                
 
                 // logo
-                const Icon(
-                  Icons.lock,
-                  size: 100,
-                ),
+                Image.asset(
+                  'assets/logo_name.png',
+                  fit: BoxFit.fitWidth,
+                  ),
 
-                const SizedBox(height: 50),
+                const SizedBox(height: 20),
 
                 // welcome back, you've been missed!
-                Text(
+                /* Text(
                   'Welcome back you\'ve been missed!',
                   style: TextStyle(
                     color: Colors.grey[600],
                     fontSize: 16,
                   ),
-                ),
-
-                const SizedBox(height: 25),
+                ),  
+                const SizedBox(height: 20), */
 
                 // email textfield
                 MyTextField(
@@ -139,7 +138,7 @@ class _LoginPageState extends State<LoginPage> {
                   onTap: signUserIn,
                 ),
 
-                const SizedBox(height: 50),
+                const SizedBox(height: 30),
 
                 // or continue with
                 Padding(
@@ -181,11 +180,11 @@ class _LoginPageState extends State<LoginPage> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text("Avaible from the next update"),
-                            duration: Duration(seconds: 2),
+                            duration: Duration(seconds: 1),
                           ),
                         );
                       },
-                      imagePath: 'lib/images/google.png'),
+                      imagePath: 'assets/google.png'),
                     
 
                     SizedBox(width: 35),
@@ -196,11 +195,11 @@ class _LoginPageState extends State<LoginPage> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text("Avaible from the next update"),
-                            duration: Duration(seconds: 2),
+                            duration: Duration(seconds: 1),
                           ),
                         );
                       },
-                      imagePath: 'lib/images/apple.png')
+                      imagePath: 'assets/apple.png')
 
                   ],
                 ),

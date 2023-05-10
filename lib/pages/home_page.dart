@@ -17,6 +17,8 @@ import 'package:rxdart/rxdart.dart';
 import 'dart:async';
 import 'dart:convert';
 
+import '../components/square_tile.dart';
+
 class HomePage extends StatefulWidget {
   final String userUID;
   HomePage({super.key, required this.userUID});
@@ -96,10 +98,29 @@ class _HomePageState extends State<HomePage> {
         color: Colors.brown[900],
         child: ListView(
           children: [
-            DrawerHeader(
-              child: Center(
-                child: Text(user.name),
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SquareTile(
+                      onTap: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Avaible from the next update"),
+                            duration: Duration(seconds: 1),
+                          ),
+                        );
+                      },
+                      imagePath: 'assets/yepp.png'),
+                DrawerHeader(
+                  child: Center(
+                    child: Text(
+                      user.name, 
+                      style: TextStyle(fontSize: 20, color: Colors.white
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             ListTile(
               leading: Icon(Icons.info_outline, color: Colors.white),

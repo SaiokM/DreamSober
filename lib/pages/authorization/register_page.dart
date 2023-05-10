@@ -87,15 +87,15 @@ class _RegisterPageState extends State<RegisterPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(height: 25),
+                
 
                 // logo
-                const Icon(
-                  Icons.lock,
-                  size: 50,
-                ),
+                 Image.asset(
+                  'assets/logo_full_name.png',
+                  fit: BoxFit.fitWidth,
+                  ),
 
-                const SizedBox(height: 25),
+                const SizedBox(height: 20),
 
                 // Let's create an account for you!
                 Text(
@@ -141,7 +141,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   onTap: signUserUp,
                 ),
 
-                const SizedBox(height: 50),
+                const SizedBox(height: 30),
 
                 // or continue with
                 Padding(
@@ -183,11 +183,11 @@ class _RegisterPageState extends State<RegisterPage> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text("Avaible from the next update"),
-                            duration: Duration(seconds: 2),
+                            duration: Duration(seconds: 1),
                           ),
                         );
                       },
-                      imagePath: 'lib/images/google.png'),
+                      imagePath: 'assets/google.png'),
 
                     SizedBox(width: 35),
 
@@ -197,11 +197,11 @@ class _RegisterPageState extends State<RegisterPage> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text("Avaible from the next update"),
-                            duration: Duration(seconds: 2),
+                            duration: Duration(seconds: 1),
                           ),
                         );
                       },
-                      imagePath: 'lib/images/apple.png')
+                      imagePath: 'assets/apple.png')
                   ],
                 ),
 
