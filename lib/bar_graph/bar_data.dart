@@ -14,7 +14,7 @@ class BarData {
 
   List<IndividualBar> barData = [];
   void initializeBarData() {
-    for (int i = 0; i < dayList.length - 1; i++) {
+    for (int i = 0; i < dayList.length; i++) {
       barData.add(IndividualBar(
         x: i,
         y1: alcList[i],

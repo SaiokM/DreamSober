@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:dreamsober/pages/authorization/login_or_register.dart';
 import 'package:flutter/material.dart';
 import 'package:dreamsober/pages/authorization/auth_page.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -36,13 +37,18 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: AuthPage(),
-      initialRoute: AuthPage.route,
+      //initialRoute: LoginOrRegisterPage.route,
+      onGenerateRoute: (settings) {
+        if (settings.name == DatabasePage.route) {
+          final args = settings.arguments;
+          return PageRouteBuilder(
+              pageBuilder: (_, __, ___) =>
+                  DatabasePage(userUID: args.toString()));
+        }
+      },
       routes: {
-        PlaceholderPage.route: (context) => PlaceholderPage(),
-        DrinkPage.route: (context) => DrinkPage(),
         ManageDrinkPage.route: (context) => ManageDrinkPage(),
-        DatabasePage.route: (context) => DatabasePage(),
-        ChartPage.route: (context) => ChartPage(),
+        //DatabasePage.route: (context) => DatabasePage(),
       },
     );
   }

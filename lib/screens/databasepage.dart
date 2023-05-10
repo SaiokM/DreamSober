@@ -13,14 +13,12 @@ import 'package:dreamsober/models/drinkDB.dart';
 import 'package:dreamsober/screens/drinkpage.dart';
 import 'package:dreamsober/screens/managedrink.dart';
 import 'package:provider/provider.dart';
-import 'dart:developer';
 
 class DatabasePage extends StatefulWidget {
-  DatabasePage({super.key});
+  final String userUID;
+  DatabasePage({super.key, required this.userUID});
   static String route = "/list/";
   static String routeName = "Drink Database";
-  final user = FirebaseAuth.instance.currentUser!;
-  static String userUID = FirebaseAuth.instance.currentUser!.uid;
 
   @override
   State<DatabasePage> createState() => _DatabasePageState();
@@ -28,14 +26,11 @@ class DatabasePage extends StatefulWidget {
 
 class _DatabasePageState extends State<DatabasePage> {
   final Future<FirebaseApp> _fApp = Firebase.initializeApp();
-  DatabaseReference dbRef = FirebaseDatabase.instance
-      .ref()
-      .child("${DatabasePage.userUID}")
-      .child("Data");
 
   final Color mainColor = const Color.fromARGB(255, 42, 41, 50);
   @override
   Widget build(BuildContext context) {
+    log(widget.userUID);
     return FutureBuilder(
       future: _fApp,
       builder: (context, snapshot) {
@@ -118,6 +113,10 @@ class _DatabasePageState extends State<DatabasePage> {
   }
 
   Widget _drinkList(BuildContext context) {
+    DatabaseReference dbRef = FirebaseDatabase.instance
+        .ref()
+        .child("${widget.userUID}")
+        .child("Data");
     return StreamBuilder(
       stream: dbRef.onValue,
       builder: (context, AsyncSnapshot<DatabaseEvent> snapshot) {

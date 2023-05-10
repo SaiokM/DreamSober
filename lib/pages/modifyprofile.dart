@@ -4,18 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:dreamsober/models/user.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'dart:developer';
 
 class ProfilePage extends StatefulWidget {
-  final String userUID;
-  ProfilePage({super.key, required this.userUID});
+  final Function()? signOut;
+  ProfilePage({super.key, required this.signOut});
   static const routename = 'ProfilePage';
+  final user = FirebaseAuth.instance.currentUser!;
+  static String userUID = FirebaseAuth.instance.currentUser!.uid;
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  DatabaseReference dbRef =
+      FirebaseDatabase.instance.ref().child(ProfilePage.userUID);
+
   //Text controller
   String? sex;
   final nameController = TextEditingController();
@@ -32,8 +36,6 @@ class _ProfilePageState extends State<ProfilePage> {
   } //build
 
   Widget _buildForm(BuildContext context) {
-    DatabaseReference dbRef =
-        FirebaseDatabase.instance.ref().child(widget.userUID);
     return SingleChildScrollView(
       child: Center(
         child: Padding(
@@ -121,13 +123,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     _currentUser.saveToDB(dbRef.child("User"));
                   },
                   child: Text("Submit"),
-                ),
-                SizedBox(height: 30),
-                ElevatedButton(
-                  onPressed: () {
-                    FirebaseAuth.instance.signOut();
-                  },
-                  child: Text("Log Out"),
                 ),
               ],
             ),
