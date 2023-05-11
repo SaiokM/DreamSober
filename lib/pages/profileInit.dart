@@ -45,8 +45,20 @@ class _ProfileInitState extends State<ProfileInit> {
                 TextFormField(
                   controller: nameController,
                   decoration: const InputDecoration(
-                    labelText: 'Name',
+                  labelText: 'Name',
                   ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Can\'t be empty';
+                    }
+                    if (value.length < 2) {
+                      return 'Too short';
+                    }
+                    if (!value.contains(RegExp(r'[^a-zA-Z]'))) {
+                      return 'Can\'t contain numbers or special characters';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 10),
                 TextFormField(
@@ -54,20 +66,56 @@ class _ProfileInitState extends State<ProfileInit> {
                   decoration: const InputDecoration(
                     labelText: 'Age',
                   ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Can\'t be empty';
+                    }
+                    if (value.length > 2) {
+                      return 'Too long';
+                    }
+                    if (!value.contains(RegExp(r'^[0-9]'))) {
+                      return 'Can\'t contain letters or special characters';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 10),
                 TextFormField(
                   controller: weightController,
                   decoration: const InputDecoration(
-                    labelText: 'Weight',
+                    labelText: 'Weight ',
                   ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Can\'t be empty';
+                    }
+                    if (value.length > 3) {
+                      return 'Too long';
+                    }
+                    if (!value.contains(RegExp(r'^[0-9]'))) {
+                      return 'Can\'t contain letters or special characters';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 10),
                 TextFormField(
                   controller: heightController,
                   decoration: const InputDecoration(
-                    labelText: 'Heigth',
+                    labelText: 'Heigth [cm]',
                   ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Can\'t be empty';
+                    }
+                    if (value.length > 3) {
+                      return 'Too long';
+                    }
+                    if (!value.contains(RegExp(r'^[0-9]'))) {
+                      return 'Can\'t contain letters or special characters';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 10),
                 const Text('Sex'),
