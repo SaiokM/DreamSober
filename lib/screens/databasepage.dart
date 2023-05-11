@@ -115,7 +115,7 @@ class _DatabasePageState extends State<DatabasePage> {
   Widget _drinkList(BuildContext context) {
     DatabaseReference dbRef = FirebaseDatabase.instance
         .ref()
-        .child("${widget.userUID}")
+        .child(widget.userUID)
         .child("Data");
     return StreamBuilder(
       stream: dbRef.onValue,
