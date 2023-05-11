@@ -102,21 +102,20 @@ class _HomePageState extends State<HomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SquareTile(
-                      onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("Avaible from the next update"),
-                            duration: Duration(seconds: 1),
-                          ),
-                        );
-                      },
-                      imagePath: 'assets/profileimg.png'),
+                    onTap: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Avaible from the next update"),
+                          duration: Duration(seconds: 1),
+                        ),
+                      );
+                    },
+                    imagePath: 'assets/profileimg.png'),
                 DrawerHeader(
                   child: Center(
                     child: Text(
-                      user.name, 
-                      style: TextStyle(fontSize: 20, color: Colors.white
-                      ),
+                      user.name,
+                      style: TextStyle(fontSize: 20, color: Colors.white),
                     ),
                   ),
                 ),
@@ -171,7 +170,7 @@ class _HomePageState extends State<HomePage> {
             },
             tabs: [
               GButton(
-                icon: Icons.report,
+                icon: Icons.event_note,
                 text: 'Report',
               ),
               GButton(

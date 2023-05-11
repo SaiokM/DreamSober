@@ -44,7 +44,7 @@ class _DrinkState extends State<DrinkPage> {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
-    log(height.toString());
+    //log(height.toString());
     if (height < 700) {
       return SingleChildScrollView(
         child: SizedBox(
@@ -53,8 +53,7 @@ class _DrinkState extends State<DrinkPage> {
         ),
       );
     } else {
-      return 
-          _appBody(context);
+      return _mainApp(context);
     }
   }
 
@@ -340,11 +339,13 @@ class _DrinkState extends State<DrinkPage> {
             width: 100,
             height: 40,
             child: Center(
-              child: Text(
-                DateFormat('dd-MM-yyyy')
-                    .format(context.read<DailyDrinkDB>().date)
-                    .split(' ')[0]
-                    .replaceAll("-", "/"),
+              child: Consumer<DailyDrinkDB>(
+                builder: (context, db, _) => Text(
+                  DateFormat('dd-MM-yyyy')
+                      .format(db.date)
+                      .split(' ')[0]
+                      .replaceAll("-", "/"),
+                ),
               ),
             ),
           ),
@@ -383,6 +384,7 @@ class _DrinkState extends State<DrinkPage> {
           return FloatingActionButton(
             heroTag: "btn2",
             onPressed: () {
+              context.read<DailyDrinkDB>().addDate(DateTime.now());
               Navigator.pushNamed(context, DatabasePage.route,
                   arguments: widget.userUID);
               db.mod(true);
