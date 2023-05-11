@@ -48,6 +48,7 @@ class MyApp extends StatelessWidget {
       },
       routes: {
         ManageDrinkPage.route: (context) => ManageDrinkPage(),
+        //DrinkPage.route: (context) => DrinkPage(userUID: userUID)
         //DatabasePage.route: (context) => DatabasePage(),
       },
     );

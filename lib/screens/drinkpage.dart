@@ -379,9 +379,15 @@ class _DrinkState extends State<DrinkPage> {
             child: Icon(Icons.menu),
           );
         } else {
-          return SizedBox(
-            height: 50,
-            width: 50,
+          return FloatingActionButton(
+            heroTag: "btn2",
+            onPressed: () {
+              Navigator.pushNamed(context, DatabasePage.route,
+                  arguments: widget.userUID);
+              db.mod(true);
+            },
+            backgroundColor: mainColor,
+            child: Icon(Icons.arrow_back),
           );
         }
       },

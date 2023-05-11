@@ -164,7 +164,7 @@ class _DatabasePageState extends State<DatabasePage> {
                                   .read<DailyDrinkDB>()
                                   .loadFromJson(map[list[idx]]);
                               context.read<DailyDrinkDB>().mod(false);
-                              Navigator.pushNamed(context, DrinkPage.route);
+                              Navigator.pop(context);
                             },
                           ),
                           onLongPress: () {
