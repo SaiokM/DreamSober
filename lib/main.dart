@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, unused_import, body_might_complete_normally_nullable
 
 import 'package:dreamsober/pages/authorization/login_or_register.dart';
 import 'package:flutter/material.dart';
@@ -12,8 +12,6 @@ import 'package:dreamsober/screens/databasepage.dart';
 import 'package:dreamsober/screens/graph.dart';
 import 'package:provider/provider.dart';
 import 'package:dreamsober/pages/authorization/login_page.dart';
-import 'package:dreamsober/pages/authorization/auth_page.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'firebase/firebase_options.dart';
 
 void main() async {
@@ -46,8 +44,10 @@ class MyApp extends StatelessWidget {
                   DatabasePage(userUID: args.toString()));
         }
       },
+      theme: ThemeData(primarySwatch: Colors.brown),  // Theme color<
       routes: {
         ManageDrinkPage.route: (context) => ManageDrinkPage(),
+        //DrinkPage.route: (context) => DrinkPage(userUID: userUID)
         //DatabasePage.route: (context) => DatabasePage(),
       },
     );

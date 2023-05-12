@@ -44,7 +44,7 @@ class _DrinkState extends State<DrinkPage> {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
-    log(height.toString());
+    //log(height.toString());
     if (height < 700) {
       return SingleChildScrollView(
         child: SizedBox(
@@ -53,7 +53,12 @@ class _DrinkState extends State<DrinkPage> {
         ),
       );
     } else {
-      return _appBody(context);
+      return Scaffold(
+      backgroundColor: Color.fromRGBO(215, 204, 200, 1),
+      resizeToAvoidBottomInset: false,
+      body: _appBody(context),
+      floatingActionButton: _floatingButtons(context),
+    );
     }
   }
 
@@ -79,6 +84,7 @@ class _DrinkState extends State<DrinkPage> {
   }
 
   Widget _appBody(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
     return Stack(
       children: [
         _backGroundDeco(context),
@@ -86,7 +92,7 @@ class _DrinkState extends State<DrinkPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            SizedBox(height: 30),
+            height<700 ? SizedBox(height: 30): SizedBox(height: 80),
             _buildCarousel(context),
             _buildCard(context),
             SizedBox(height: 10),
@@ -339,11 +345,13 @@ class _DrinkState extends State<DrinkPage> {
             width: 100,
             height: 40,
             child: Center(
-              child: Text(
-                DateFormat('dd-MM-yyyy')
-                    .format(context.read<DailyDrinkDB>().date)
-                    .split(' ')[0]
-                    .replaceAll("-", "/"),
+              child: Consumer<DailyDrinkDB>(
+                builder: (context, db, _) => Text(
+                  DateFormat('dd-MM-yyyy')
+                      .format(db.date)
+                      .split(' ')[0]
+                      .replaceAll("-", "/"),
+                ),
               ),
             ),
           ),
@@ -379,9 +387,16 @@ class _DrinkState extends State<DrinkPage> {
             child: Icon(Icons.menu),
           );
         } else {
-          return SizedBox(
-            height: 50,
-            width: 50,
+          return FloatingActionButton(
+            heroTag: "btn2",
+            onPressed: () {
+              context.read<DailyDrinkDB>().addDate(DateTime.now());
+              Navigator.pushNamed(context, DatabasePage.route,
+                  arguments: widget.userUID);
+              db.mod(true);
+            },
+            backgroundColor: mainColor,
+            child: Icon(Icons.arrow_back),
           );
         }
       },
