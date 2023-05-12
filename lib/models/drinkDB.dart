@@ -46,7 +46,7 @@ class DailyDrinkDB with ChangeNotifier {
 
   void addDate(DateTime newDate) {
     _date = newDate;
-    print(_date);
+    //print(_date);
     notifyListeners();
   }
 

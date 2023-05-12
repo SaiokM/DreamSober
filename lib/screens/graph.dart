@@ -12,18 +12,29 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:dreamsober/models/drinkDB.dart';
 
-class ChartPage extends StatelessWidget {
+class ChartPage extends StatefulWidget {
   final String userUID;
   ChartPage({super.key, required this.userUID});
   static String route = "/chart/";
   static String routeName = "Data Chart";
 
+  @override
+  State<ChartPage> createState() => _ChartPageState();
+}
+
+class _ChartPageState extends State<ChartPage> {
   final Future<FirebaseApp> _fApp = Firebase.initializeApp();
 
   final Color mainColor = const Color.fromARGB(255, 42, 41, 50);
+
   final Color secondaryColor = Color.fromARGB(255, 146, 138, 122);
+
   final Color alcColor = Color.fromARGB(255, 61, 56, 47);
+
   final Color sleepColor = Color.fromARGB(255, 114, 99, 78);
+
+  int dayIdx = 0;
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -85,9 +96,25 @@ class ChartPage extends StatelessWidget {
     );
   }
 
+  List<String> _generateWeek(String day) {
+    List<String> weekList = ["", "", "", "", "", "", ""];
+    List date = day.split("-"); //[YYYY, MM, DD]
+    for (int i = 1; i <= 7; i++) {
+      weekList[i - 1] = DateTime(
+              int.parse(date[0]),
+              int.parse(date[1]),
+              int.parse(date[2]) -
+                  DateTime.parse(day).weekday +
+                  i) //YYYY, MM, DD
+          .toString()
+          .split(' ')[0];
+    }
+    return weekList;
+  }
+
   Widget _graph(BuildContext context) {
     DatabaseReference dbRef =
-        FirebaseDatabase.instance.ref().child(userUID).child("Data");
+        FirebaseDatabase.instance.ref().child(widget.userUID).child("Data");
 
     return StreamBuilder(
       stream: dbRef.onValue,
@@ -97,36 +124,47 @@ class ChartPage extends StatelessWidget {
             Map<dynamic, dynamic> map =
                 snapshot.data!.snapshot.value as dynamic;
             //log(map.toString());
-            List<String> dayList = [];
+            List<String> dateList = [];
             List<double> alcList = [];
             List<double> sleepList = [];
 
-            dayList.clear();
+            dateList.clear();
             alcList.clear();
             sleepList.clear();
 
             for (var key in map.keys) {
-              dayList.add(key);
+              dateList.add(key);
             }
             // Sort List
-            dayList.sort((a, b) {
+            dateList.sort((a, b) {
               return DateTime.parse(a).compareTo(DateTime.parse(b));
             });
-            if (dayList.length > 7) {
-              dayList.removeRange(0, dayList.length - 7);
-            }
-            log(dayList[dayList.length - 1].toString());
-            for (var day in dayList) {
-              alcList.add(map[day]['TotalAlcohol'].toDouble());
-              sleepList.add(map[day]['SleepScore'].toDouble());
-            }
 
-            //log(dayList.toString());
-            //log(alcList.toString());
-            //og(sleepList.toString());
+            List<String> refDay =
+                DateTime.now().toString().split(" ")[0].split("-");
+            String lastDate = DateTime(int.parse(refDay[0]),
+                    int.parse(refDay[1]), int.parse(refDay[2]) - dayIdx)
+                .toString()
+                .split(" ")[0];
+
+            //log(lastDate);
+            //log("WeekDay: ${DateTime.parse(lastDate).weekday}");
+
+            List<String> weekList = _generateWeek(lastDate);
+            //log("Generated week: ${weekList.toString()}");
+
+            for (var day in weekList) {
+              if (dateList.contains(day)) {
+                alcList.add(map[day]['TotalAlcohol'].toDouble());
+                sleepList.add(map[day]['SleepScore'].toDouble());
+              } else {
+                alcList.add(0);
+                sleepList.add(0);
+              }
+            }
 
             BarData mybarData = BarData(
-              dayList: dayList,
+              dayList: weekList,
               alcList: alcList,
               sleepList: sleepList,
             );
@@ -137,7 +175,7 @@ class ChartPage extends StatelessWidget {
               children: [
                 SizedBox(height: 20),
                 Text(
-                  "${DateFormat('dd-MM-yyyy').format(DateTime.parse(dayList[0])).split(' ')[0].replaceAll("-", "/")} - ${DateFormat('dd-MM-yyyy').format(DateTime.parse(dayList[dayList.length - 1])).split(' ')[0].replaceAll("-", "/")}",
+                  "${DateFormat('dd-MM-yyyy').format(DateTime.parse(weekList[0])).split(' ')[0].replaceAll("-", "/")} - ${DateFormat('dd-MM-yyyy').format(DateTime.parse(weekList[weekList.length - 1])).split(' ')[0].replaceAll("-", "/")}",
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
@@ -152,7 +190,7 @@ class ChartPage extends StatelessWidget {
                       child: Center(
                         child: SizedBox(
                           height: 200,
-                          width: 50 * dayList.length.toDouble(),
+                          width: 50 * dateList.length.toDouble(),
                           child: Container(
                             alignment: Alignment.topCenter,
                             child: BarChart(
@@ -285,7 +323,11 @@ class ChartPage extends StatelessWidget {
                 ),
                 backgroundColor: mainColor,
               ),
-              onPressed: () {},
+              onPressed: () {
+                setState(() {
+                  dayIdx += 7;
+                });
+              },
               child: Icon(Icons.arrow_left),
             ),
             SizedBox(width: 30),
@@ -296,7 +338,11 @@ class ChartPage extends StatelessWidget {
                 ),
                 backgroundColor: mainColor,
               ),
-              onPressed: () {},
+              onPressed: () {
+                setState(() {
+                  dayIdx -= 7;
+                });
+              },
               child: Icon(Icons.arrow_right),
             ),
           ],

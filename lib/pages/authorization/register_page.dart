@@ -189,7 +189,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       },
                       imagePath: 'assets/google.png'),
 
-                    SizedBox(width: 35),
+                    const SizedBox(width: 35),
 
                     // apple button
                     SquareTile(
