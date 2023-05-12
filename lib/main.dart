@@ -44,6 +44,7 @@ class MyApp extends StatelessWidget {
                   DatabasePage(userUID: args.toString()));
         }
       },
+      theme: ThemeData(primarySwatch: Colors.brown),  // Theme color<
       routes: {
         ManageDrinkPage.route: (context) => ManageDrinkPage(),
         //DrinkPage.route: (context) => DrinkPage(userUID: userUID)

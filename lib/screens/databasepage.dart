@@ -65,7 +65,7 @@ class _DatabasePageState extends State<DatabasePage> {
 
   Widget _error(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey,
+      backgroundColor: Colors.brown[100],
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text(DatabasePage.routeName),

@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unused_import, prefer_const_constructors_in_immutables
 
 import 'package:dreamsober/models/user.dart';
+import 'package:dreamsober/pages/report.dart';
 import 'package:dreamsober/screens/drinkpage.dart';
 import 'package:dreamsober/screens/graph.dart';
 import 'package:dreamsober/screens/managedrink.dart';
@@ -47,6 +48,7 @@ class _HomePageState extends State<HomePage> {
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
+  //singOut
   void signOut() {
     setState(() {
       FirebaseAuth.instance.signOut();
@@ -58,7 +60,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> _widgetList = <Widget>[
-      Text("Report", style: optionStyle),
+      ReportPage(),
       DrinkPage(userUID: widget.userUID),
       ChartPage(userUID: widget.userUID),
       ProfilePage(userUID: widget.userUID),
