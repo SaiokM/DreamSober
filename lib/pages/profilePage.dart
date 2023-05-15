@@ -6,19 +6,17 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class ProfilePage extends StatefulWidget {
-  ProfilePage({Key? key}) : super(key: key);
+  final String userUID;
+  ProfilePage({Key? key, required this.userUID}) : super(key: key);
   static const routename = 'ProfilePage';
-  final user = FirebaseAuth.instance.currentUser!;
-  static String userUID = FirebaseAuth.instance.currentUser!.uid;
+  //final user = FirebaseAuth.instance.currentUser!;
+  //static String userUID = FirebaseAuth.instance.currentUser!.uid;
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  DatabaseReference dbRef =
-      FirebaseDatabase.instance.ref().child(ProfilePage.userUID);
-
   //Text controller
   String? sex;
   final nameController = TextEditingController();
@@ -35,6 +33,8 @@ class _ProfilePageState extends State<ProfilePage> {
   } //build
 
   Widget _buildForm(BuildContext context) {
+    DatabaseReference dbRef =
+        FirebaseDatabase.instance.ref().child(widget.userUID);
     return SingleChildScrollView(
       child: Center(
         child: Padding(
@@ -47,7 +47,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 TextFormField(
                   controller: nameController,
                   decoration: const InputDecoration(
-                  labelText: 'Name',
+                    labelText: 'Name',
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -85,7 +85,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 TextFormField(
                   controller: weightController,
                   decoration: const InputDecoration(
-                    labelText: 'Weight ',
+                    labelText: 'Weight [kg]',
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {

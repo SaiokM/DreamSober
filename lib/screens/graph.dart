@@ -242,6 +242,7 @@ class _ChartPageState extends State<ChartPage> {
                                     )
                                     .toList(),
                               ),
+                              swapAnimationDuration: Duration(seconds: 0),
                             ),
                           ),
                         ),

@@ -45,11 +45,13 @@ dependencies:
   firebase_database: ^10.1.1
   fl_chart: ^0.62.0
   rxdart: ^0.27.7
+  shared_preferences: ^2.1.0
+  http: ^0.13.6
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  
+
   flutter_launcher_icons: "^0.13.1"
 
   # The "flutter_lints" package below contains a set of recommended lints to
@@ -105,6 +107,3 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
-
-
-

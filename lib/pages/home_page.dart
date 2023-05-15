@@ -4,6 +4,7 @@ import 'package:dreamsober/models/user.dart';
 import 'package:dreamsober/pages/report.dart';
 import 'package:dreamsober/screens/drinkpage.dart';
 import 'package:dreamsober/screens/graph.dart';
+import 'package:dreamsober/screens/impacttest.dart';
 import 'package:dreamsober/screens/managedrink.dart';
 import 'package:dreamsober/screens/databasepage.dart';
 import 'package:dreamsober/pages/profilePage.dart';
@@ -60,7 +61,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> _widgetList = <Widget>[
-      ReportPage(),
+      ImpactTest(),
       DrinkPage(userUID: widget.userUID),
       ChartPage(userUID: widget.userUID),
       ProfilePage(userUID: widget.userUID),
