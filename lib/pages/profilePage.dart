@@ -1,5 +1,3 @@
-// ignore_for_file: file_names, prefer_const_constructors
-
 import 'package:flutter/material.dart';
 import 'package:dreamsober/models/user.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -25,11 +23,15 @@ class _ProfilePageState extends State<ProfilePage> {
   final ageController = TextEditingController();
   final weightController = TextEditingController();
   final heightController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+
+  bool enable = true;
 
   @override
   Widget build(BuildContext context) {
     print('${ProfilePage.routename} built');
     return Scaffold(
+      backgroundColor: Colors.brown[100],
       body: _buildForm(context),
     );
   } //build
@@ -40,11 +42,14 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Padding(
           padding: const EdgeInsets.all(10),
           child: Form(
+            key: formKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 const SizedBox(height: 10),
                 TextFormField(
+                  enabled: enable,
+                  initialValue: enable?"Insert your Name":"",
                   controller: nameController,
                   decoration: const InputDecoration(
                   labelText: 'Name',
@@ -64,6 +69,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 const SizedBox(height: 10),
                 TextFormField(
+                  enabled: enable,
+                  initialValue: enable?"Insert your Age":"",
                   controller: ageController,
                   decoration: const InputDecoration(
                     labelText: 'Age',
@@ -83,6 +90,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 const SizedBox(height: 10),
                 TextFormField(
+                  enabled: enable,
+                  initialValue: enable?"Insert your Weight":"",
                   controller: weightController,
                   decoration: const InputDecoration(
                     labelText: 'Weight ',
@@ -102,6 +111,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 const SizedBox(height: 10),
                 TextFormField(
+                  enabled: enable,
+                  initialValue: enable?"Insert your Height":"",
                   controller: heightController,
                   decoration: const InputDecoration(
                     labelText: 'Heigth [cm]',
@@ -132,9 +143,11 @@ class _ProfilePageState extends State<ProfilePage> {
                           value: "Male",
                           groupValue: sex,
                           onChanged: (value) {
-                            setState(() {
+                            if (enable) {
+                              setState(() {
                               sex = value.toString();
                             });
+                            }
                           },
                         ),
                       ],
@@ -146,9 +159,11 @@ class _ProfilePageState extends State<ProfilePage> {
                           value: "Female",
                           groupValue: sex,
                           onChanged: (value) {
-                            setState(() {
+                            if (enable) {
+                              setState(() {
                               sex = value.toString();
                             });
+                            }
                           },
                         ),
                       ],
@@ -158,28 +173,41 @@ class _ProfilePageState extends State<ProfilePage> {
                 const SizedBox(height: 30),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
+                    backgroundColor: Colors.brown[300],
                   ),
                   onPressed: () {
-                    final name = nameController.text;
-                    final age = int.parse(ageController.text);
-                    final height = double.parse(heightController.text);
-                    final weight = double.parse(weightController.text);
-                    CurrentUser currentUser =
-                        CurrentUser(name, age, height, weight, sex);
-                    currentUser.saveToDB(dbRef.child("User"));
+                    if (formKey.currentState!.validate()) {
+                      if(enable){
+                        final name = nameController.text;
+                        final age = int.parse(ageController.text);
+                        final height = double.parse(heightController.text);
+                        final weight = double.parse(weightController.text);
+                        CurrentUser currentUser =
+                          CurrentUser(name, age, height, weight, sex);
+                        currentUser.saveToDB(dbRef.child("User"));
+                        enable = false;
+                        }
+                      else{
+                        setState(() {
+                          enable = true;
+                        });
+                      }
+                    }
                   },
-                  child: const Text("Submit"),
+                  child: enable? const Text("Submit") : const Text("Modify"),
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.brown[300],
+                  ),
                   onPressed: () {
                     FirebaseAuth.instance.signOut();
                   },
                   child: const Text("Logout"),
                 ),
               ],
-            ),
+            )
           ),
         ),
       ),

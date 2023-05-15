@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unused_import, prefer_const_constructors_in_immutables
 
 import 'package:dreamsober/models/user.dart';
-import 'package:dreamsober/pages/report.dart';
 import 'package:dreamsober/screens/drinkpage.dart';
 import 'package:dreamsober/screens/graph.dart';
 import 'package:dreamsober/screens/managedrink.dart';
@@ -48,7 +47,6 @@ class _HomePageState extends State<HomePage> {
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
-  //singOut
   void signOut() {
     setState(() {
       FirebaseAuth.instance.signOut();
@@ -60,10 +58,10 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> _widgetList = <Widget>[
-      ReportPage(),
+      Text("Report", style: optionStyle),
       DrinkPage(userUID: widget.userUID),
       ChartPage(userUID: widget.userUID),
-      ProfilePage(userUID: widget.userUID),
+      ProfilePage(), // 4 Giulio: add userUID to profPage
     ];
 
     DatabaseReference dbRef =
@@ -104,20 +102,21 @@ class _HomePageState extends State<HomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SquareTile(
-                    onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Avaible from the next update"),
-                          duration: Duration(seconds: 1),
-                        ),
-                      );
-                    },
-                    imagePath: 'assets/profileimg.png'),
+                      onTap: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Avaible from the next update"),
+                            duration: Duration(seconds: 1),
+                          ),
+                        );
+                      },
+                      imagePath: 'assets/yepp.png'),
                 DrawerHeader(
                   child: Center(
                     child: Text(
-                      user.name,
-                      style: TextStyle(fontSize: 20, color: Colors.white),
+                      user.name, 
+                      style: TextStyle(fontSize: 20, color: Colors.white
+                      ),
                     ),
                   ),
                 ),
@@ -172,7 +171,7 @@ class _HomePageState extends State<HomePage> {
             },
             tabs: [
               GButton(
-                icon: Icons.event_note,
+                icon: Icons.report,
                 text: 'Report',
               ),
               GButton(
