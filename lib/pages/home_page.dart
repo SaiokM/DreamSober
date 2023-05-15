@@ -8,7 +8,6 @@ import 'package:dreamsober/screens/impacttest.dart';
 import 'package:dreamsober/screens/managedrink.dart';
 import 'package:dreamsober/screens/databasepage.dart';
 import 'package:dreamsober/pages/profilePage.dart';
-import 'package:dreamsober/pages/report.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
