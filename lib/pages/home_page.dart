@@ -8,6 +8,7 @@ import 'package:dreamsober/screens/impacttest.dart';
 import 'package:dreamsober/screens/managedrink.dart';
 import 'package:dreamsober/screens/databasepage.dart';
 import 'package:dreamsober/pages/profilePage.dart';
+import 'package:dreamsober/pages/report.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,6 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:dreamsober/pages/about.dart';
 import 'dart:developer';
 import 'package:provider/provider.dart';
-//import 'package:rxdart/rxdart.dart';
 import 'dart:async';
 import 'dart:convert';
 
@@ -49,7 +49,6 @@ class _HomePageState extends State<HomePage> {
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
-  //singOut
   void signOut() {
     setState(() {
       FirebaseAuth.instance.signOut();
@@ -61,10 +60,10 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> _widgetList = <Widget>[
-      ImpactTest(),
+      ReportPage(),
       DrinkPage(userUID: widget.userUID),
       ChartPage(userUID: widget.userUID),
-      ProfilePage(userUID: widget.userUID),
+      ProfilePage(userUID: widget.userUID), // 4 Giulio: add userUID to profPage
     ];
 
     DatabaseReference dbRef =
@@ -173,7 +172,7 @@ class _HomePageState extends State<HomePage> {
             },
             tabs: [
               GButton(
-                icon: Icons.event_note,
+                icon: Icons.report,
                 text: 'Report',
               ),
               GButton(

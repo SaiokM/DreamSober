@@ -15,7 +15,7 @@ class CurrentUser {
     this._sex,
   );
 
-  factory CurrentUser.fromJson(Map<String, dynamic> json) {
+  factory CurrentUser.fromJson(Map<dynamic, dynamic> json) {
     final name = json["name"];
     final age = json["age"];
     final height = json["height"].toDouble();

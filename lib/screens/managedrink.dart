@@ -95,7 +95,7 @@ class _ManageDrinkPageState extends State<ManageDrinkPage> {
                     fontSize: 18,
                   ),
                 ),
-                titleAlignment: ListTileTitleAlignment.center,
+                //titleAlignment: ListTileTitleAlignment.center, //4 Giulio Check thiss
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -153,8 +153,11 @@ class _ManageDrinkPageState extends State<ManageDrinkPage> {
         context.read<DailyDrinkDB>().resetDB();
         if (!context.read<DailyDrinkDB>().modify) {
           context.read<DailyDrinkDB>().mod(true);
+
+          Navigator.popUntil(context, ModalRoute.withName(DatabasePage.route));
+        } else {
+          Navigator.pop(context);
         }
-        Navigator.pop(context);
       },
       backgroundColor: mainColor,
       child: Icon(Icons.save),
