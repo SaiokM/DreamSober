@@ -96,7 +96,6 @@ class _ProfilePageState extends State<ProfilePage> {
                           const SizedBox(height: 10),
                           TextFormField(
                             keyboardType: TextInputType.number,
-                            //enabled: enable,
                             readOnly: !enable,
                             controller: ageController,
                             decoration: const InputDecoration(
@@ -120,7 +119,6 @@ class _ProfilePageState extends State<ProfilePage> {
                           const SizedBox(height: 10),
                           TextFormField(
                             keyboardType: TextInputType.number,
-                            //enabled: enable,
                             readOnly: !enable,
                             controller: weightController,
                             decoration: const InputDecoration(
@@ -144,7 +142,6 @@ class _ProfilePageState extends State<ProfilePage> {
                           const SizedBox(height: 10),
                           TextFormField(
                             keyboardType: TextInputType.number,
-                            //enabled: enable,
                             readOnly: !enable,
                             controller: heightController,
                             decoration: const InputDecoration(
@@ -208,7 +205,9 @@ class _ProfilePageState extends State<ProfilePage> {
                           const SizedBox(height: 30),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.brown[300],
+                              backgroundColor: !enable
+                                  ? Colors.brown[300]
+                                  : const Color.fromARGB(255, 78, 66, 62),
                             ),
                             onPressed: () {
                               setState(() {

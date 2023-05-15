@@ -60,7 +60,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> _widgetList = <Widget>[
-      ReportPage(),
+      ReportPage(userUID: widget.userUID),
       DrinkPage(userUID: widget.userUID),
       ChartPage(userUID: widget.userUID),
       ProfilePage(userUID: widget.userUID), // 4 Giulio: add userUID to profPage
