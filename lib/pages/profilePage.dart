@@ -40,6 +40,9 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       backgroundColor: Colors.brown[100],
       body: _buildForm(context),
+      appBar: AppBar(
+            backgroundColor: Colors.brown[900],
+          ),
     );
   } //build
 
