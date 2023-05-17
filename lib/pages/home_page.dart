@@ -8,7 +8,6 @@ import 'package:dreamsober/screens/impacttest.dart';
 import 'package:dreamsober/screens/managedrink.dart';
 import 'package:dreamsober/screens/databasepage.dart';
 import 'package:dreamsober/pages/profilePage.dart';
-import 'package:dreamsober/pages/report.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -105,12 +104,8 @@ class _HomePageState extends State<HomePage> {
               children: [
                 SquareTile(
                     onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Avaible from the next update"),
-                          duration: Duration(seconds: 1),
-                        ),
-                      );
+                      Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) => ProfilePage(userUID: widget.userUID,)));
                     },
                     imagePath: 'assets/profileimg.png'),
                 DrawerHeader(
@@ -183,10 +178,6 @@ class _HomePageState extends State<HomePage> {
                 icon: Icons.show_chart,
                 text: 'Graphs',
               ),
-              GButton(
-                icon: Icons.person,
-                text: "Profile Page",
-              )
             ]),
       ),
     );

@@ -40,6 +40,9 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       backgroundColor: Colors.brown[100],
       body: _buildForm(context),
+      appBar: AppBar(
+        backgroundColor: Colors.brown[900],
+      ),
     );
   } //build
 
@@ -73,13 +76,25 @@ class _ProfilePageState extends State<ProfilePage> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          const SizedBox(height: 10),
+                          SizedBox(
+                            width: 120,
+                            height: 120,
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.circular(100),
+                                child: const Image(
+                                    image:
+                                        AssetImage('assets/profileimg.png'))),
+                          ),
+                          const SizedBox(height: 30),
                           TextFormField(
                             //enabled: enable,
                             readOnly: !enable,
                             controller: nameController,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               labelText: 'Name',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
                             ),
                             validator: (value) {
                               if (value == null ||
@@ -98,8 +113,11 @@ class _ProfilePageState extends State<ProfilePage> {
                             keyboardType: TextInputType.number,
                             readOnly: !enable,
                             controller: ageController,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               labelText: 'Age',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
                             ),
                             validator: (value) {
                               if (value == null ||
@@ -121,8 +139,11 @@ class _ProfilePageState extends State<ProfilePage> {
                             keyboardType: TextInputType.number,
                             readOnly: !enable,
                             controller: weightController,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               labelText: 'Weight [kg]',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
                             ),
                             validator: (value) {
                               if (value == null ||
@@ -144,8 +165,11 @@ class _ProfilePageState extends State<ProfilePage> {
                             keyboardType: TextInputType.number,
                             readOnly: !enable,
                             controller: heightController,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               labelText: 'Heigth [cm]',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
                             ),
                             validator: (value) {
                               if (value == null ||
@@ -163,51 +187,64 @@ class _ProfilePageState extends State<ProfilePage> {
                             },
                           ),
                           const SizedBox(height: 10),
-                          const Text('Sex'),
-                          const SizedBox(height: 10),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Column(
-                                children: [
-                                  const Text("Male"),
-                                  Radio(
-                                    value: "Male",
-                                    groupValue: sex,
-                                    onChanged: (value) {
-                                      if (enable) {
-                                        setState(() {
-                                          sex = value.toString();
-                                        });
-                                      }
-                                    },
-                                  ),
-                                ],
+                          Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Color.fromRGBO(117, 117, 117, 1),
+                                width: 1.0,
                               ),
-                              Column(
-                                children: [
-                                  const Text("Female"),
-                                  Radio(
-                                    value: "Female",
-                                    groupValue: sex,
-                                    onChanged: (value) {
-                                      if (enable) {
-                                        setState(() {
-                                          sex = value.toString();
-                                        });
-                                      }
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ],
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Column(
+                              children: [
+                                const Text('Sex'),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Column(
+                                      children: [
+                                        const Text("Male"),
+                                        Radio(
+                                          value: "Male",
+                                          groupValue: sex,
+                                          onChanged: (value) {
+                                            if (enable) {
+                                              setState(() {
+                                                sex = value.toString();
+                                              });
+                                            }
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                    Column(
+                                      children: [
+                                        const Text("Female"),
+                                        Radio(
+                                          value: "Female",
+                                          groupValue: sex,
+                                          onChanged: (value) {
+                                            if (enable) {
+                                              setState(() {
+                                                sex = value.toString();
+                                              });
+                                            }
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
+                          const SizedBox(height: 10),
                           const SizedBox(height: 30),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: !enable
-                                  ? Colors.brown[300]
-                                  : const Color.fromARGB(255, 78, 66, 62),
+                              backgroundColor: Colors.brown[300],
+                              minimumSize: Size(200, 50),
                             ),
                             onPressed: () {
                               setState(() {
@@ -230,25 +267,21 @@ class _ProfilePageState extends State<ProfilePage> {
                               });
                             },
                             child: enable
-                                ? const Text("Submit")
-                                : const Text("Modify profile"),
-                          ),
-                          const SizedBox(height: 20),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                //
-                                ),
-                            onPressed: () {
-                              FirebaseAuth.instance.signOut();
-                            },
-                            child: const Text("Logout"),
+                                ? const Text(
+                                    "Submit",
+                                    style: TextStyle(fontSize: 20),
+                                  )
+                                : const Text(
+                                    "Modify profile",
+                                    style: TextStyle(fontSize: 20),
+                                  ),
                           ),
                         ],
                       )),
                 ),
               );
             } else {
-              return Center(
+              return const Center(
                 child: CircularProgressIndicator(),
               );
             }
