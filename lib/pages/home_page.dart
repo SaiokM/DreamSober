@@ -172,7 +172,7 @@ class _HomePageState extends State<HomePage> {
             },
             tabs: [
               GButton(
-                icon: Icons.report,
+                icon: Icons.event_note,
                 text: 'Report',
               ),
               GButton(

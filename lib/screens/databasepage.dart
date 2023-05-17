@@ -27,7 +27,7 @@ class DatabasePage extends StatefulWidget {
 class _DatabasePageState extends State<DatabasePage> {
   final Future<FirebaseApp> _fApp = Firebase.initializeApp();
 
-  final Color mainColor = const Color.fromARGB(255, 42, 41, 50);
+  //final Color mainColor = const Color.fromARGB(255, 42, 41, 50);
   @override
   Widget build(BuildContext context) {
     log(widget.userUID);
@@ -53,24 +53,24 @@ class _DatabasePageState extends State<DatabasePage> {
       appBar: AppBar(
         title: Text(DatabasePage.routeName),
         centerTitle: true,
-        backgroundColor: mainColor,
+        backgroundColor: Colors.brown[900],
       ),
       body: Center(
         child: CircularProgressIndicator(
-          color: mainColor,
-        ),
+            //color: mainColor,
+            ),
       ),
     );
   }
 
   Widget _error(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.brown[100],
+      backgroundColor: Colors.brown[900],
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text(DatabasePage.routeName),
         centerTitle: true,
-        backgroundColor: mainColor,
+        backgroundColor: Colors.brown,
       ),
       body: Center(
         child: Text("Error: Something whent wrong"),
@@ -83,7 +83,7 @@ class _DatabasePageState extends State<DatabasePage> {
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.grey,
         appBar: AppBar(
-          backgroundColor: mainColor,
+          backgroundColor: Colors.brown[900],
           title: Text(DatabasePage.routeName),
           centerTitle: true,
         ),
@@ -113,10 +113,8 @@ class _DatabasePageState extends State<DatabasePage> {
   }
 
   Widget _drinkList(BuildContext context) {
-    DatabaseReference dbRef = FirebaseDatabase.instance
-        .ref()
-        .child(widget.userUID)
-        .child("Data");
+    DatabaseReference dbRef =
+        FirebaseDatabase.instance.ref().child(widget.userUID).child("Data");
     return StreamBuilder(
       stream: dbRef.onValue,
       builder: (context, AsyncSnapshot<DatabaseEvent> snapshot) {
@@ -135,7 +133,7 @@ class _DatabasePageState extends State<DatabasePage> {
             return SizedBox(
               height: 400,
               child: Card(
-                color: Color.fromARGB(255, 170, 167, 196),
+                color: Colors.brown[300],
                 child: Padding(
                   padding: EdgeInsets.all(5),
                   child: ListView.builder(
@@ -145,7 +143,7 @@ class _DatabasePageState extends State<DatabasePage> {
                     itemBuilder: (context, idx) {
                       return Card(
                         child: ListTile(
-                          tileColor: Color.fromARGB(255, 147, 145, 170),
+                          tileColor: Colors.brown[200],
                           title: Text(
                               "Date: ${DateFormat('dd-MM-yyyy').format(DateTime.parse(map[list[idx]]['Date'])).split(' ')[0].replaceAll("-", "/")}"),
                           subtitle: Column(
@@ -206,8 +204,8 @@ class _DatabasePageState extends State<DatabasePage> {
           }
         } else {
           return CircularProgressIndicator(
-            color: mainColor,
-          );
+              //color: mainColor,
+              );
         }
       },
     );

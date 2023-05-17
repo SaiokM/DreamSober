@@ -54,11 +54,11 @@ class _DrinkState extends State<DrinkPage> {
       );
     } else {
       return Scaffold(
-      backgroundColor: Color.fromRGBO(215, 204, 200, 1),
-      resizeToAvoidBottomInset: false,
-      body: _appBody(context),
-      floatingActionButton: _floatingButtons(context),
-    );
+        backgroundColor: Color.fromRGBO(215, 204, 200, 1),
+        resizeToAvoidBottomInset: false,
+        body: _appBody(context),
+        floatingActionButton: _floatingButtons(context),
+      );
     }
   }
 
@@ -92,7 +92,7 @@ class _DrinkState extends State<DrinkPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            height<700 ? SizedBox(height: 30): SizedBox(height: 80),
+            height < 700 ? SizedBox(height: 30) : SizedBox(height: 80),
             _buildCarousel(context),
             _buildCard(context),
             SizedBox(height: 10),

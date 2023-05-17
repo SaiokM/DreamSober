@@ -50,7 +50,7 @@ class _ManageDrinkPageState extends State<ManageDrinkPage> {
       appBar: AppBar(
         title: Text(ManageDrinkPage.routeName),
         centerTitle: true,
-        backgroundColor: mainColor,
+        backgroundColor: Colors.brown[900],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -159,7 +159,7 @@ class _ManageDrinkPageState extends State<ManageDrinkPage> {
           Navigator.pop(context);
         }
       },
-      backgroundColor: mainColor,
+      backgroundColor: Colors.brown[900],
       child: Icon(Icons.save),
     );
   }
