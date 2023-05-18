@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, unused_import
 
 import 'dart:math' as math;
+import 'package:dreamsober/models/userprefs.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:dreamsober/bar_graph/bar_data.dart';
@@ -13,8 +14,8 @@ import 'package:provider/provider.dart';
 import 'package:dreamsober/models/drinkDB.dart';
 
 class ChartPage extends StatefulWidget {
-  final String userUID;
-  ChartPage({super.key, required this.userUID});
+  final String userUID = UserPrefs.getUID();
+  ChartPage({super.key});
   static String route = "/chart/";
   static String routeName = "Data Chart";
 
@@ -43,7 +44,7 @@ class _ChartPageState extends State<ChartPage> {
         double height = MediaQuery.of(context).size.height;
         //log(height.toString());
         return Scaffold(
-            backgroundColor: Color.fromARGB(255, 159, 159, 159),
+            backgroundColor: Color.fromRGBO(215, 204, 200, 1),
             resizeToAvoidBottomInset: false,
             body: (snapshot.hasError)
                 ? _error(context)

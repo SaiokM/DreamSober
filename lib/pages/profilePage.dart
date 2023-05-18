@@ -1,3 +1,4 @@
+import 'package:dreamsober/models/userprefs.dart';
 import 'package:flutter/material.dart';
 import 'package:dreamsober/models/user.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -5,8 +6,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:developer';
 
 class ProfilePage extends StatefulWidget {
-  final String userUID;
-  ProfilePage({Key? key, required this.userUID}) : super(key: key);
+  final String userUID = UserPrefs.getUID();
+  ProfilePage({Key? key}) : super(key: key);
+  static const route = "/profile/";
   static const routename = 'ProfilePage';
   //final user = FirebaseAuth.instance.currentUser!;
   //static String userUID = FirebaseAuth.instance.currentUser!.uid;
@@ -67,7 +69,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 heightController.text = _currentUser.height.toString();
                 sex = _currentUser.sex;
               }
-              log(enable.toString());
+              //log(enable.toString());
               return Center(
                 child: Padding(
                   padding: const EdgeInsets.all(10),

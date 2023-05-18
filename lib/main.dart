@@ -1,10 +1,12 @@
 // ignore_for_file: prefer_const_constructors, unused_import, body_might_complete_normally_nullable
 
 import 'package:dreamsober/pages/authorization/login_or_register.dart';
+import 'package:dreamsober/pages/profilePage.dart';
 import 'package:flutter/material.dart';
 import 'package:dreamsober/pages/authorization/auth_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:dreamsober/models/drinkDB.dart';
+import 'package:dreamsober/models/userprefs.dart';
 import 'package:dreamsober/screens/drinkpage.dart';
 import 'package:dreamsober/screens/placeholder.dart';
 import 'package:dreamsober/screens/managedrink.dart';
@@ -20,6 +22,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await UserPrefs.init();
   runApp(
     ChangeNotifierProvider(
       create: (_) => DailyDrinkDB(),
@@ -48,6 +51,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(primarySwatch: Colors.brown), // Theme color<
       routes: {
         ManageDrinkPage.route: (context) => ManageDrinkPage(),
+        ImpactTest.route: (context) => ImpactTest(),
+        ProfilePage.route: (context) => ProfilePage(),
         //DrinkPage.route: (context) => DrinkPage(userUID: userUID)
         //DatabasePage.route: (context) => DatabasePage(),
       },
