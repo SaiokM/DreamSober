@@ -43,7 +43,7 @@ class _ChartPageState extends State<ChartPage> {
         double height = MediaQuery.of(context).size.height;
         //log(height.toString());
         return Scaffold(
-            backgroundColor: Color.fromARGB(255, 159, 159, 159),
+            backgroundColor: Color.fromRGBO(215, 204, 200, 1),
             resizeToAvoidBottomInset: false,
             body: (snapshot.hasError)
                 ? _error(context)

@@ -41,7 +41,7 @@ class _ReportPageState extends State<ReportPage> {
   Widget build(BuildContext context) {
     //double height = MediaQuery.of(context).size.height;
     return Container(
-      color: const Color.fromARGB(255, 252, 216, 204),
+      color: const Color.fromRGBO(215, 204, 200, 1),
       child: Column(
         children: <Widget>[
           SizedBox(height: 10),
