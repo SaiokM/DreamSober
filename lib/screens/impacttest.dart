@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dreamsober/models/userprefs.dart';
+import 'package:dreamsober/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import "package:dreamsober/models/impact.dart";
 import 'package:http/http.dart' as http;
@@ -23,9 +24,7 @@ class ImpactTest extends StatelessWidget {
     pswController.text = UserPrefs.getImpactPsw();
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(ImpactTest.routename),
-      ),
+      //appBar: AppBar(        title: Text(ImpactTest.routename),      ),
       body: SingleChildScrollView(
         child: Center(
           child: Column(
@@ -107,6 +106,11 @@ class ImpactTest extends StatelessWidget {
                           SnackBar(content: Text('Tokens have been deleted')));
                   },
                   child: const Text('Delete tokens')),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushReplacementNamed(context, HomePage.route);
+                  },
+                  child: const Text('HOME PAGE')),
             ],
           ),
         ),

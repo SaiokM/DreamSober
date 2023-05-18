@@ -2,6 +2,7 @@
 
 import 'package:dreamsober/models/user.dart';
 import 'package:dreamsober/models/userprefs.dart';
+import 'package:dreamsober/pages/authorization/auth_page.dart';
 import 'package:dreamsober/pages/report.dart';
 import 'package:dreamsober/screens/drinkpage.dart';
 import 'package:dreamsober/screens/graph.dart';
@@ -94,7 +95,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _drawer(BuildContext context, CurrentUser user) {
-    //log(widget.userUID);
+    log(userUID);
     return Drawer(
       child: Container(
         color: Colors.brown[900],
@@ -144,7 +145,7 @@ class _HomePageState extends State<HomePage> {
                 UserPrefs.resetUser();
                 UserPrefs.setLogin(false);
                 signOut();
-                //Navigator.pop(context);
+                Navigator.popUntil(context, (route) => route.settings.name =='/');
               },
               leading: Icon(Icons.logout, color: Colors.white),
               title: Text(

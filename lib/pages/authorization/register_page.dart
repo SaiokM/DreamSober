@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:dreamsober/components/my_button.dart';
 import 'package:dreamsober/components/my_textfield.dart';
 import 'package:dreamsober/components/square_tile.dart';
+import 'package:dreamsober/screens/impacttest.dart';
 
 class RegisterPage extends StatefulWidget {
   final Function()? onTap;
@@ -16,6 +17,7 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   // text editing controllers
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmpasswordController = TextEditingController();
@@ -37,16 +39,22 @@ class _RegisterPageState extends State<RegisterPage> {
       // check if password is confirmed
       if (passwordController.text == confirmpasswordController.text) {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: emailController.text,
-          password: passwordController.text,
+          email: emailController.text.trim(),
+          password: passwordController.text.trim(),
         );
+        
+        //Navigator.pop(context);
+
+        navigateToImpactPage();
+
       } else {
         //show error message, passwords don't match
         showErrorMessage("Passwords don't match!");
       }
       // pop the loading circle
       if (context.mounted) {
-        Navigator.pop(context);
+        //Navigator.pop(context);
+        navigateToImpactPage();
       }
     } on FirebaseAuthException catch (e) {
       // pop the loading circle
@@ -73,6 +81,10 @@ class _RegisterPageState extends State<RegisterPage> {
         );
       },
     );
+  }
+
+   void navigateToImpactPage() {
+    Navigator.pushReplacementNamed(context, ImpactTest.route);
   }
 
   @override

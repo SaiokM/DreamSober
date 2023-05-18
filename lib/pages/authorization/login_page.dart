@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:dreamsober/components/my_button.dart';
 import 'package:dreamsober/components/my_textfield.dart';
 import 'package:dreamsober/components/square_tile.dart';
+import 'package:dreamsober/screens/impacttest.dart';
 
 class LoginPage extends StatefulWidget {
   final Function()? onTap;
@@ -15,6 +16,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   // text editing controllers
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -33,12 +35,15 @@ class _LoginPageState extends State<LoginPage> {
     // try sign in
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
+        email: emailController.text.trim(), //rimuove spazio 
+        password: passwordController.text.trim(),
       );
 
       // pop the loading circle
-      Navigator.pop(context);
+      //Navigator.pop(context);
+
+      navigateToImpactPage();
+
     } on FirebaseAuthException catch (e) {
       // pop the loading circle
       Navigator.pop(context);
@@ -64,6 +69,10 @@ class _LoginPageState extends State<LoginPage> {
         );
       },
     );
+  }
+
+  void navigateToImpactPage() {
+    Navigator.pushReplacementNamed(context, ImpactTest.route);
   }
 
   @override
@@ -237,3 +246,4 @@ class _LoginPageState extends State<LoginPage> {
 
 //'SafeArea' è un widget che viene utilizzato per evitare che i contenuti di un'applicazione
 // siano tagliati o nascosti dalla visualizzazione del dispositivo in cui l'app viene eseguita.
+
