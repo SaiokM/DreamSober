@@ -7,11 +7,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'dart:developer';
 import 'package:dreamsober/models/drink.dart';
+import 'package:dreamsober/models/userprefs.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class ReportPage extends StatefulWidget {
-  final String userUID;
-  const ReportPage({super.key, required this.userUID});
+  final String userUID = UserPrefs.getUID();
+  ReportPage({super.key});
 
   @override
   State<ReportPage> createState() => _ReportPageState();
@@ -109,7 +110,7 @@ class _ReportPageState extends State<ReportPage> {
             }
             List<int> totList = [totBeer, totCocktails, totSuper, totWine];
 
-            log(totAlc.toString());
+            //log(totAlc.toString());
             return Expanded(
               child: ListView(
                 physics: BouncingScrollPhysics(),

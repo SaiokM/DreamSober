@@ -5,14 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dreamsober/models/drink.dart';
 import 'package:dreamsober/models/drinkDB.dart';
+import 'package:dreamsober/models/userprefs.dart';
 import 'package:dreamsober/screens/managedrink.dart';
 import 'package:dreamsober/screens/databasepage.dart';
 import 'package:provider/provider.dart';
 import 'dart:developer';
 
 class DrinkPage extends StatefulWidget {
-  final String userUID;
-  DrinkPage({super.key, required this.userUID});
+  final String userUID = UserPrefs.getUID();
+  DrinkPage({super.key});
   static String route = "/drink/";
   static String routeName = "What did you drink today?";
   @override

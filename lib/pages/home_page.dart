@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unused_import, prefer_const_constructors_in_immutables
 
 import 'package:dreamsober/models/user.dart';
+import 'package:dreamsober/models/userprefs.dart';
 import 'package:dreamsober/pages/report.dart';
 import 'package:dreamsober/screens/drinkpage.dart';
 import 'package:dreamsober/screens/graph.dart';
@@ -17,12 +18,13 @@ import 'dart:developer';
 import 'package:provider/provider.dart';
 import 'dart:async';
 import 'dart:convert';
-
+import "package:dreamsober/models/impact.dart";
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import '../components/square_tile.dart';
 
 class HomePage extends StatefulWidget {
-  final String userUID;
-  HomePage({super.key, required this.userUID});
+  HomePage({super.key});
   static String route = "/home/";
 
   @override
@@ -31,6 +33,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late StreamController<int> stream_controller;
+  static String userUID = UserPrefs.getUID();
 
   @override
   void initState() {
@@ -45,8 +48,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   static int _selectedIdx = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   void signOut() {
     setState(() {
@@ -58,15 +59,15 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    //log(UserPrefs.getUID());
     final List<Widget> _widgetList = <Widget>[
-      ReportPage(userUID: widget.userUID),
-      DrinkPage(userUID: widget.userUID),
-      ChartPage(userUID: widget.userUID),
-      ProfilePage(userUID: widget.userUID), // 4 Giulio: add userUID to profPage
+      ReportPage(),
+      DrinkPage(),
+      ChartPage(), // 4 Giulio: add userUID to profPage
     ];
 
     DatabaseReference dbRef =
-        FirebaseDatabase.instance.ref().child(widget.userUID).child("User");
+        FirebaseDatabase.instance.ref().child(userUID).child("User");
 
     return StreamBuilder(
       stream: dbRef.onValue,
@@ -104,8 +105,7 @@ class _HomePageState extends State<HomePage> {
               children: [
                 SquareTile(
                     onTap: () {
-                      Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (context) => ProfilePage(userUID: widget.userUID,)));
+                      Navigator.of(context).pushNamed(ProfilePage.route);
                     },
                     imagePath: 'assets/profileimg.png'),
                 DrawerHeader(
@@ -131,6 +131,18 @@ class _HomePageState extends State<HomePage> {
             ),
             ListTile(
               onTap: () {
+                Navigator.pushNamed(context, '/impact/');
+              },
+              leading: Icon(Icons.login, color: Colors.white),
+              title: Text(
+                'Impact Login',
+                style: TextStyle(fontSize: 20, color: Colors.white),
+              ),
+            ),
+            ListTile(
+              onTap: () {
+                UserPrefs.resetUser();
+                UserPrefs.setLogin(false);
                 signOut();
                 //Navigator.pop(context);
               },

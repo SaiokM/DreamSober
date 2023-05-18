@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:dreamsober/pages/home_page.dart';
 import 'package:dreamsober/pages/authorization/login_page.dart';
-
+import 'package:dreamsober/models/userprefs.dart';
 import 'login_or_register.dart';
 
 class AuthPage extends StatelessWidget {
@@ -21,7 +21,8 @@ class AuthPage extends StatelessWidget {
           // user is logged in
           if (snapshot.hasData) {
             final String userUID = FirebaseAuth.instance.currentUser!.uid;
-            return HomePage(userUID: userUID);
+            UserPrefs.setUID(userUID);
+            return HomePage();
           }
           // user is NOT logged in
           else {

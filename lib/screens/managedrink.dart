@@ -154,7 +154,7 @@ class _ManageDrinkPageState extends State<ManageDrinkPage> {
         if (!context.read<DailyDrinkDB>().modify) {
           context.read<DailyDrinkDB>().mod(true);
 
-          Navigator.popUntil(context, ModalRoute.withName(DatabasePage.route));
+          Navigator.pop(context);
         } else {
           Navigator.pop(context);
         }
