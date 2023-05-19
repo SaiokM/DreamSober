@@ -7,7 +7,9 @@ import 'dart:developer';
 
 class ProfilePage extends StatefulWidget {
   final String userUID = UserPrefs.getUID();
-  ProfilePage({Key? key}) : super(key: key);
+  final bool registerPage; // Aggiunto il parametro registerPage
+  
+  ProfilePage({Key? key, this.registerPage = false}) : super(key: key);
   static const route = "/profile/";
   static const routename = 'ProfilePage';
   //final user = FirebaseAuth.instance.currentUser!;
@@ -19,7 +21,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   //Text controller
-  late String sex;
+  String sex = "Male";
   TextEditingController nameController = TextEditingController();
   TextEditingController ageController = TextEditingController();
   TextEditingController weightController = TextEditingController();
@@ -51,6 +53,13 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget _buildForm(BuildContext context) {
     DatabaseReference dbRef =
         FirebaseDatabase.instance.ref().child(widget.userUID);
+        if(widget.registerPage){
+          enable = true;
+        final String userUID = FirebaseAuth.instance.currentUser!.uid;
+            UserPrefs.setUID(userUID);
+            dbRef = FirebaseDatabase.instance.ref().child(userUID);
+            }
+            
 
     return SingleChildScrollView(
       child: StreamBuilder(
@@ -250,7 +259,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                             onPressed: () {
                               setState(() {
-                                if (enable) {
+                                 if (enable) {
                                   if (formKey.currentState!.validate()) {
                                     final name = nameController.text;
                                     final age = int.parse(ageController.text);
@@ -277,6 +286,31 @@ class _ProfilePageState extends State<ProfilePage> {
                                     "Modify profile",
                                     style: TextStyle(fontSize: 20),
                                   ),
+                          ),
+
+                          if (widget.registerPage) // Aggiunto il controllo per la register page
+                            const SizedBox(height: 10),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.brown[300],
+                                minimumSize: Size(200, 50),
+                              ),
+                              onPressed: () {
+                                 if (formKey.currentState!.validate()) {
+                                  final name = nameController.text;
+                                  final age = int.parse(ageController.text);
+                                  final height = double.parse(heightController.text);
+                                  final weight = double.parse(weightController.text);
+                                  _currentUser = CurrentUser(name, age, height, weight, sex);
+                                  _currentUser.saveToDB(dbRef.child("User"));
+                                  Navigator.pop(context); // Torna alla register_page
+                              };
+                            },
+                            child: const Text(
+                              "Create User",
+                              style: TextStyle(fontSize: 20),
+
+                            ),
                           ),
                         ],
                       )),

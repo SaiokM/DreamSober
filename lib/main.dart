@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, unused_import, body_might_complete_normally_nullable
 
 import 'package:dreamsober/pages/authorization/login_or_register.dart';
+import 'package:dreamsober/pages/home_page.dart';
 import 'package:dreamsober/pages/profilePage.dart';
 import 'package:flutter/material.dart';
 import 'package:dreamsober/pages/authorization/auth_page.dart';
@@ -38,17 +39,18 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: AuthPage(),
-      //initialRoute: LoginOrRegisterPage.route,
-
+      initialRoute: AuthPage.route,
       theme: ThemeData(primarySwatch: Colors.brown), // Theme color<
       routes: {
         ManageDrinkPage.route: (context) => ManageDrinkPage(),
-        ImpactTest.route: (context) => ImpactTest(),
+        //ImpactTest.route: (context) => ImpactTest(),
         ProfilePage.route: (context) => ProfilePage(),
         DatabasePage.route: (context) => DatabasePage(),
         //DrinkPage.route: (context) => DrinkPage(userUID: userUID)
         //DatabasePage.route: (context) => DatabasePage(),
+        AuthPage.route: (context) => AuthPage(),
+        ImpactTest.route: (context) => ImpactTest(),
+        HomePage.route: (context) => HomePage(),
       },
     );
   }
