@@ -1,3 +1,4 @@
+import 'package:dreamsober/pages/profilePage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:dreamsober/components/my_button.dart';
@@ -45,7 +46,9 @@ class _RegisterPageState extends State<RegisterPage> {
         
         //Navigator.pop(context);
 
-        navigateToImpactPage();
+        //navigateToImpactPage();
+
+        navigateToProfilePage();
 
       } else {
         //show error message, passwords don't match
@@ -54,7 +57,9 @@ class _RegisterPageState extends State<RegisterPage> {
       // pop the loading circle
       if (context.mounted) {
         //Navigator.pop(context);
-        navigateToImpactPage();
+        //navigateToImpactPage();
+
+        //navigateToProfilePage();
       }
     } on FirebaseAuthException catch (e) {
       // pop the loading circle
@@ -83,9 +88,20 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-   void navigateToImpactPage() {
+ /* void navigateToImpactPage() {
     Navigator.pushReplacementNamed(context, ImpactTest.route);
-  }
+  }*/
+
+  void navigateToProfilePage() {
+  Navigator.pushReplacement(
+    context,
+    MaterialPageRoute(
+      builder: (context) => ProfilePage(registerPage: true),
+    ),
+  );
+}
+
+  
 
   @override
   Widget build(BuildContext context) {
