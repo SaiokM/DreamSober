@@ -142,7 +142,8 @@ class _HomePageState extends State<HomePage> {
             ListTile(
               onTap: () {
                 UserPrefs.resetUser();
-                UserPrefs.setLogin(false);
+                UserPrefs.setImpactLogin(false);
+                UserPrefs.setFBlogin(false);
                 signOut();
                 //Navigator.pop(context);
               },

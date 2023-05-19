@@ -40,19 +40,13 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: AuthPage(),
       //initialRoute: LoginOrRegisterPage.route,
-      onGenerateRoute: (settings) {
-        if (settings.name == DatabasePage.route) {
-          final args = settings.arguments;
-          return PageRouteBuilder(
-              pageBuilder: (_, __, ___) =>
-                  DatabasePage(userUID: args.toString()));
-        }
-      },
+
       theme: ThemeData(primarySwatch: Colors.brown), // Theme color<
       routes: {
         ManageDrinkPage.route: (context) => ManageDrinkPage(),
         ImpactTest.route: (context) => ImpactTest(),
         ProfilePage.route: (context) => ProfilePage(),
+        DatabasePage.route: (context) => DatabasePage(),
         //DrinkPage.route: (context) => DrinkPage(userUID: userUID)
         //DatabasePage.route: (context) => DatabasePage(),
       },

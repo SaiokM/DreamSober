@@ -6,17 +6,24 @@ class UserPrefs {
   static Future init() async =>
       _preferences = await SharedPreferences.getInstance();
 
-  static Future setUID(String userUID) async =>
-      await _preferences.setString('userUID', userUID);
-  static String getUID() => _preferences.getString('userUID') ?? '';
-
   static void resetUser() => _preferences.clear();
 
-  static void clearTokens() {
-    _preferences.remove('access');
-    _preferences.remove('refresh');
-  }
+  //Firebase
+  static Future setUID(String userUID) async =>
+      await _preferences.setString('userUID', userUID);
+  static Future setFBUsername(String username) async =>
+      await _preferences.setString('firebaseUsername', username);
+  static Future setFBpsw(String password) async =>
+      await _preferences.setString('firebasePassword', password);
+  static Future setFBlogin(bool login) =>
+      _preferences.setBool('firebaseLogin', login);
 
+  static String getUID() => _preferences.getString('userUID') ?? '';
+  static String? getFBUser() => _preferences.getString('firebaseUsername');
+  static String? getFBpsw() => _preferences.getString('firebasePassword');
+  static bool getFBLogin() => _preferences.getBool('firebaseLogin') ?? false;
+
+  //Impact
   static Future setImpactUsername(String username) async =>
       await _preferences.setString('imapactUsername', username);
   static Future setImpactPsw(String password) async =>
@@ -25,7 +32,13 @@ class UserPrefs {
       await _preferences.setString('access', access);
   static Future setImpactRefresh(String refresh) async =>
       await _preferences.setString('refresh', refresh);
-  static Future setLogin(bool login) => _preferences.setBool('login', login);
+  static Future setImpactLogin(bool login) =>
+      _preferences.setBool('impactlogin', login);
+
+  static void clearTokens() {
+    _preferences.remove('access');
+    _preferences.remove('refresh');
+  }
 
   static String getImpactUser() =>
       _preferences.getString('imapactUsername') ?? '';
@@ -33,4 +46,5 @@ class UserPrefs {
       _preferences.getString('impactPassword') ?? '';
   static String? getImpactAccess() => _preferences.getString('access');
   static String? getImpactRefresh() => _preferences.getString('refresh');
+  static bool getImpactLogin() => _preferences.getBool('impactLogin') ?? false;
 }

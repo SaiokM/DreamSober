@@ -1,10 +1,11 @@
 import 'dart:convert';
-
+import 'dart:io';
+import 'package:dreamsober/models/sleepday.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:dreamsober/models/userprefs.dart';
 import 'package:flutter/material.dart';
 import "package:dreamsober/models/impact.dart";
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:developer';
 
 class ImpactTest extends StatelessWidget {
@@ -54,7 +55,7 @@ class ImpactTest extends StatelessWidget {
               const SizedBox(height: 10),
               ElevatedButton(
                   onPressed: () async {
-                    final result = await _getAndStoreTokens();
+                    final result = await getandsaveTokens();
                     final message =
                         result == 200 ? 'Request successful' : 'Request failed';
                     ScaffoldMessenger.of(context)
@@ -87,7 +88,7 @@ class ImpactTest extends StatelessWidget {
                     if (refresh == null) {
                       message = 'No stored tokens';
                     } else {
-                      final result = await _refreshTokens();
+                      final result = await Impact.refreshTokens();
                       message = result == 200
                           ? 'Request successful'
                           : 'Request failed';
@@ -107,14 +108,24 @@ class ImpactTest extends StatelessWidget {
                           SnackBar(content: Text('Tokens have been deleted')));
                   },
                   child: const Text('Delete tokens')),
+              ElevatedButton(
+                  onPressed: () async {
+                    List<SleepDay>? results = await Impact.getSleepRangeData(
+                        '2023-05-04', '2023-05-10');
+                    String message =
+                        results != null ? "Data retrived!" : "Error!";
+                    ScaffoldMessenger.of(context)
+                      ..removeCurrentSnackBar()
+                      ..showSnackBar(SnackBar(content: Text(message)));
+                  },
+                  child: Text("Get Data"))
             ],
           ),
         ),
       ),
     );
-  } //build
+  }
 
-  //This method allows to check if the IMPACT backend is up
   Future<bool> _isImpactUp() async {
     //Create the request
     final url = Impact.baseUrl + Impact.pingEndpoint;
@@ -127,55 +138,9 @@ class ImpactTest extends StatelessWidget {
     return response.statusCode == 200;
   } //_isImpactUp
 
-  //This method allows to obtain the JWT token pair from IMPACT and store it in SharedPreferences
-  Future<int> _getAndStoreTokens() async {
-    //Create the request
-    final url = Impact.baseUrl + Impact.tokenEndpoint;
-    log(userController.text);
-    log(pswController.text);
-    UserPrefs.setImpactUsername(userController.text);
-    UserPrefs.setImpactPsw(pswController.text);
-    Impact.username = userController.text;
-    Impact.password = pswController.text;
-    final body = {
-      'username': userController.text,
-      'password': pswController.text
-    };
-
-    //Get the response
-    log('Calling: $url');
-    final response = await http.post(Uri.parse(url), body: body);
-
-    //If response is OK, decode it and store the tokens. Otherwise do nothing.
-    if (response.statusCode == 200) {
-      final decodedResponse = jsonDecode(response.body);
-      UserPrefs.setImpactAccess(decodedResponse['access']);
-      UserPrefs.setImpactRefresh(decodedResponse['refresh']);
-    } //if
-
-    //Just return the status code
-    return response.statusCode;
-  } //_getAndStoreTokens
-
-  //This method allows to refrsh the stored JWT in SharedPreferences
-  Future<int> _refreshTokens() async {
-    //Create the request
-    final url = Impact.baseUrl + Impact.refreshEndpoint;
-    final refresh = UserPrefs.getImpactRefresh();
-    final body = {'refresh': refresh};
-
-    //Get the response
-    log('Calling: $url');
-    final response = await http.post(Uri.parse(url), body: body);
-
-    //If the response is OK, set the tokens in SharedPreferences to the new values
-    if (response.statusCode == 200) {
-      final decodedResponse = jsonDecode(response.body);
-      UserPrefs.setImpactAccess(decodedResponse['access']);
-      UserPrefs.setImpactRefresh(decodedResponse['refresh']);
-    } //if
-
-    //Just return the status code
-    return response.statusCode;
-  } //_refreshTokens
-} //HomePage
+  Future<int> getandsaveTokens() {
+    UserPrefs.setImpactUsername(userController.text.trim());
+    UserPrefs.setImpactPsw(pswController.text.trim());
+    return Impact.getTokens();
+  }
+}

@@ -1,7 +1,9 @@
 // ignore_for_file: prefer_const_constructors, unused_import
 
 import 'dart:math' as math;
+import 'package:dreamsober/models/impact.dart';
 import 'package:dreamsober/models/userprefs.dart';
+import 'package:dreamsober/models/sleepday.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:dreamsober/bar_graph/bar_data.dart';

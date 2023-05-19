@@ -10,13 +10,14 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dreamsober/models/drink.dart';
 import 'package:dreamsober/models/drinkDB.dart';
+import 'package:dreamsober/models/userprefs.dart';
 import 'package:dreamsober/screens/drinkpage.dart';
 import 'package:dreamsober/screens/managedrink.dart';
 import 'package:provider/provider.dart';
 
 class DatabasePage extends StatefulWidget {
-  final String userUID;
-  DatabasePage({super.key, required this.userUID});
+  final String userUID = UserPrefs.getUID();
+  DatabasePage({super.key});
   static String route = "/list/";
   static String routeName = "Drink Database";
 
@@ -34,7 +35,7 @@ class _DatabasePageState extends State<DatabasePage> {
     return FutureBuilder(
       future: _fApp,
       builder: (context, snapshot) {
-        //og(DatabasePage.userUID);
+        //log(DatabasePage.userUID);
         if (snapshot.hasError) {
           return _error(context);
         } else if (snapshot.hasData) {

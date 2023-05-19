@@ -38,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       // pop the loading circle
-      Navigator.pop(context);
+      //Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
       // pop the loading circle
       Navigator.pop(context);
@@ -77,13 +77,11 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                
-
                 // logo
                 Image.asset(
                   'assets/logo_name.png',
                   fit: BoxFit.fitWidth,
-                  ),
+                ),
 
                 const SizedBox(height: 20),
 
@@ -175,31 +173,29 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     // google button
                     SquareTile(
-                      onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("Avaible from the next update"),
-                            duration: Duration(seconds: 1),
-                          ),
-                        );
-                      },
-                      imagePath: 'assets/google.png'),
-                    
+                        onTap: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Avaible from the next update"),
+                              duration: Duration(seconds: 1),
+                            ),
+                          );
+                        },
+                        imagePath: 'assets/google.png'),
 
                     const SizedBox(width: 35),
 
                     // apple button
                     SquareTile(
-                       onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("Avaible from the next update"),
-                            duration: Duration(seconds: 1),
-                          ),
-                        );
-                      },
-                      imagePath: 'assets/apple.png')
-
+                        onTap: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Avaible from the next update"),
+                              duration: Duration(seconds: 1),
+                            ),
+                          );
+                        },
+                        imagePath: 'assets/apple.png')
                   ],
                 ),
 
