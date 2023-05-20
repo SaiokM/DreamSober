@@ -30,6 +30,7 @@ class SleepDay {
       minAwake = 0;
       for (String phase in phasesName) {
         SleepPhase slpphase = SleepPhase(0, 0);
+         phases[phase] = slpphase;
       }
     }
   }
