@@ -4,11 +4,12 @@ import 'package:dreamsober/models/user.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:developer';
+import 'package:dreamsober/screens/impacttest.dart';
 
 class ProfilePage extends StatefulWidget {
   final String userUID = UserPrefs.getUID();
-  final bool registerPage; // Aggiunto il parametro registerPage
-  
+  final bool registerPage;
+
   ProfilePage({Key? key, this.registerPage = false}) : super(key: key);
   static const route = "/profile/";
   static const routename = 'ProfilePage';
@@ -29,14 +30,12 @@ class _ProfilePageState extends State<ProfilePage> {
   final formKey = GlobalKey<FormState>();
 
   bool enable = false;
-  @override /*
+  bool useAppBar = true;
+  @override
   void initState() {
     super.initState();
-    nameController = new TextEditingController(text: 'Initial value');
-    ageController = new TextEditingController(text: 'Initial value');
-    weightController = new TextEditingController(text: 'Initial value');
-    heightController = new TextEditingController(text: 'Initial value');
-  }*/
+    useAppBar = widget.registerPage;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,22 +43,27 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       backgroundColor: Colors.brown[100],
       body: _buildForm(context),
-      appBar: AppBar(
-        backgroundColor: Colors.brown[900],
-      ),
+      appBar: useAppBar
+          ? AppBar(
+              backgroundColor: Colors.brown[900],
+              automaticallyImplyLeading: false,
+              actions: const [],
+            )
+          : AppBar(
+              backgroundColor: Colors.brown[900],
+            ),
     );
   } //build
 
   Widget _buildForm(BuildContext context) {
     DatabaseReference dbRef =
         FirebaseDatabase.instance.ref().child(widget.userUID);
-        if(widget.registerPage){
-          enable = true;
-        final String userUID = FirebaseAuth.instance.currentUser!.uid;
-            UserPrefs.setUID(userUID);
-            dbRef = FirebaseDatabase.instance.ref().child(userUID);
-            }
-            
+    if (widget.registerPage) {
+      enable = true;
+      final String userUID = FirebaseAuth.instance.currentUser!.uid;
+      UserPrefs.setUID(userUID);
+      dbRef = FirebaseDatabase.instance.ref().child(userUID);
+    }
 
     return SingleChildScrollView(
       child: StreamBuilder(
@@ -250,68 +254,72 @@ class _ProfilePageState extends State<ProfilePage> {
                               ],
                             ),
                           ),
-                          const SizedBox(height: 10),
-                          const SizedBox(height: 30),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.brown[300],
-                              minimumSize: Size(200, 50),
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                 if (enable) {
-                                  if (formKey.currentState!.validate()) {
-                                    final name = nameController.text;
-                                    final age = int.parse(ageController.text);
-                                    final height =
-                                        double.parse(heightController.text);
-                                    final weight =
-                                        double.parse(weightController.text);
-                                    _currentUser = CurrentUser(
-                                        name, age, height, weight, sex);
-                                    _currentUser.saveToDB(dbRef.child("User"));
-                                    enable = false;
-                                  }
-                                } else {
-                                  enable = true;
-                                }
-                              });
-                            },
-                            child: enable
-                                ? const Text(
-                                    "Submit",
-                                    style: TextStyle(fontSize: 20),
-                                  )
-                                : const Text(
-                                    "Modify profile",
-                                    style: TextStyle(fontSize: 20),
-                                  ),
-                          ),
-
-                          if (widget.registerPage) // Aggiunto il controllo per la register page
-                            const SizedBox(height: 10),
+                          const SizedBox(height: 40),
+                          if (!widget
+                              .registerPage) // Crea modify button se non viene dalla register_page
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.brown[300],
-                                minimumSize: Size(200, 50),
+                                backgroundColor: Colors.brown[800],
+                                minimumSize: const Size(340, 70),
                               ),
                               onPressed: () {
-                                 if (formKey.currentState!.validate()) {
+                                setState(() {
+                                  if (enable) {
+                                    if (formKey.currentState!.validate()) {
+                                      final name = nameController.text;
+                                      final age = int.parse(ageController.text);
+                                      final height =
+                                          double.parse(heightController.text);
+                                      final weight =
+                                          double.parse(weightController.text);
+                                      _currentUser = CurrentUser(
+                                          name, age, height, weight, sex);
+                                      _currentUser
+                                          .saveToDB(dbRef.child("User"));
+                                      enable = false;
+                                    }
+                                  } else {
+                                    enable = true;
+                                  }
+                                });
+                              },
+                              child: enable
+                                  ? const Text(
+                                      "Submit",
+                                      style: TextStyle(fontSize: 20),
+                                    )
+                                  : const Text(
+                                      "Modify profile",
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                            ),
+                          if (widget
+                              .registerPage) // Aggiunto il controllo per la register page
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.brown[800],
+                                minimumSize: const Size(340, 70),
+                              ),
+                              onPressed: () {
+                                if (formKey.currentState!.validate()) {
                                   final name = nameController.text;
                                   final age = int.parse(ageController.text);
-                                  final height = double.parse(heightController.text);
-                                  final weight = double.parse(weightController.text);
-                                  _currentUser = CurrentUser(name, age, height, weight, sex);
+                                  final height =
+                                      double.parse(heightController.text);
+                                  final weight =
+                                      double.parse(weightController.text);
+                                  _currentUser = CurrentUser(
+                                      name, age, height, weight, sex);
                                   _currentUser.saveToDB(dbRef.child("User"));
-                                  Navigator.pop(context); // Torna alla register_page
-                              };
-                            },
-                            child: const Text(
-                              "Create User",
-                              style: TextStyle(fontSize: 20),
-
+                                  Navigator.pushReplacementNamed(context,
+                                      ImpactTest.route); // Torna home page
+                                }
+                              },
+                              child: const Text(
+                                "Create User",
+                                style: TextStyle(fontSize: 20),
+                              ),
                             ),
-                          ),
                         ],
                       )),
                 ),
