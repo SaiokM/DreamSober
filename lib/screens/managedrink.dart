@@ -95,7 +95,6 @@ class _ManageDrinkPageState extends State<ManageDrinkPage> {
                     fontSize: 18,
                   ),
                 ),
-                //titleAlignment: ListTileTitleAlignment.center, //4 Giulio Check thiss
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

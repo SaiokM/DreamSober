@@ -27,7 +27,7 @@ class PlaceholderPage extends StatelessWidget {
               onPressed: () {
                 Navigator.pushNamed(context, DrinkPage.route);
               },
-              child: Text("To Drink Page"),
+              child: const Text("To Drink Page"),
             ),
             const SizedBox(
               height: 30,
@@ -36,7 +36,7 @@ class PlaceholderPage extends StatelessWidget {
               onPressed: () {
                 Navigator.pushNamed(context, ChartPage.route);
               },
-              child: Text("To Chart Page"),
+              child: const Text("To Chart Page"),
             ),
           ],
         ),

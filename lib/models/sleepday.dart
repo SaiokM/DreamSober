@@ -6,6 +6,7 @@ class SleepDay {
   late int minToFall;
   late int minAsleep;
   late int minAwake;
+
   Map<String, SleepPhase> phases = {};
   List<String> phasesName = ['wake', 'light', 'deep', 'rem'];
 

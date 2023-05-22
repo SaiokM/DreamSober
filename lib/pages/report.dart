@@ -1,13 +1,14 @@
 // ignore_for_file: prefer_const_constructors, unused_import, unused_local_variable, prefer_const_literals_to_create_immutables
 
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'dart:developer';
 import 'package:dreamsober/models/drink.dart';
 import 'package:dreamsober/models/userprefs.dart';
+import 'package:dreamsober/models/sleepday.dart';
+import 'package:dreamsober/models/impact.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class ReportPage extends StatefulWidget {
@@ -37,6 +38,15 @@ class _ReportPageState extends State<ReportPage> {
     Drink('Super Alcoholics', 40, 40, 6),
     Drink('Wine', 12, 150, 4)
   ];
+
+  final String today = DateTime.now().toString().split(' ')[0];
+  late final List<String> thisWeek;
+
+  @override
+  void initState() {
+    thisWeek = _generateWeek(today);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +86,13 @@ class _ReportPageState extends State<ReportPage> {
     return weekList;
   }
 
+  Future<Map<dynamic, dynamic>> sleepData() async {
+    Map<String, SleepDay> impactSleep = {};
+    impactSleep = await Impact.getSleepRangeData(
+        thisWeek[0], thisWeek[thisWeek.length - 1]);
+    return impactSleep;
+  }
+
   Widget _weeklyList(BuildContext context) {
     DatabaseReference dbRef =
         FirebaseDatabase.instance.ref().child(widget.userUID).child("Data");
@@ -87,9 +104,6 @@ class _ReportPageState extends State<ReportPage> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data!.snapshot.value != null) {
-            String today = DateTime.now().toString().split(' ')[0];
-            List<String> thisWeek = _generateWeek(today);
-
             Map<dynamic, dynamic> map =
                 snapshot.data!.snapshot.value as dynamic;
             var totAlc = 0;
@@ -225,7 +239,7 @@ class _ReportPageState extends State<ReportPage> {
                     child: (idx == 0)
                         ? _money(context, totSpent)
                         : (idx == 1)
-                            ? _sleep(context, 0.0)
+                            ? _sleep(context)
                             : SizedBox(),
                   ),
                 ),
@@ -259,25 +273,56 @@ class _ReportPageState extends State<ReportPage> {
     );
   }
 
-  Widget _sleep(BuildContext context, double hours) {
-    return Center(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            "This week you slept\nan average of",
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: 20),
-          Center(
-            child: Text(
-              "$hours hs",
-              style: TextStyle(fontSize: 30),
-              textAlign: TextAlign.center,
-            ),
-          )
-        ],
-      ),
-    );
+  Widget _sleep(BuildContext context) {
+    return FutureBuilder(
+        future: sleepData(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            Map<String, SleepDay> sleepMap =
+                snapshot.data as Map<String, SleepDay>;
+            // sleepMap contiene i dati del sonno della settimana corrente
+            // per estrarre i dati di ogni giorno guardare il file sleepday.dart
+            // La variabile thisWeek contiene i giorni della settimana in formato
+            // YYYY-MM-DD come stringa, usate i valori per accedere ai dati del
+            // all'interno di sleepMap (dovrebbero essere quindi gli stessi dentro
+            // sleepMap.keys).
+            // Esempio:
+            /*
+          SleepDay lunedi = sleepMap[thisWeek[0]]!; //null check
+          lunedi.duration;
+          lunedi.minAsleep;
+          */
+
+            // NB: usate un FutureBuilder, come future mettete sleepData(), e mettete
+            // SEMPRE un if(snapshot.hasData){
+            // ...
+            // } else {
+            //  return Center(child: CircularPrograssiIndicator);
+            // }
+            // così mentre carica i dati ci sarà il coso che gira
+
+            return Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "This week you slept\nan average of",
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 20),
+                  Center(
+                    child: Text(
+                      "hs",
+                      style: TextStyle(fontSize: 30),
+                      textAlign: TextAlign.center,
+                    ),
+                  )
+                ],
+              ),
+            );
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        });
   }
 }

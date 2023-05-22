@@ -140,17 +140,15 @@ class _HomePageState extends State<HomePage> {
                 style: TextStyle(fontSize: 20, color: Colors.white),
               ),
             ),
+            const SizedBox(height: 400),
             ListTile(
               onTap: () {
-                setState(() {
-                  UserPrefs.resetUser();
-                  log(UserPrefs.getUID());
-                  UserPrefs.setImpactLogin(false);
-                  UserPrefs.setFBlogin(false);
-                  signOut();
-                  Navigator.popUntil(
-                      context, (route) => route.settings.name == '/');
-                });
+                UserPrefs.resetUser();
+                UserPrefs.setImpactLogin(false);
+                UserPrefs.setFBlogin(false);
+                signOut();
+                Navigator.popUntil(
+                    context, (route) => route.settings.name == '/');
               },
               leading: Icon(Icons.logout, color: Colors.white),
               title: Text(
