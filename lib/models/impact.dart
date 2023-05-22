@@ -26,16 +26,13 @@ class Impact with ChangeNotifier {
 
     log('Calling: $url');
     final response = await http.post(Uri.parse(url), body: body);
-
-    //If response is OK, decode it and store the tokens. Otherwise do nothing.
     if (response.statusCode == 200) {
       final decodedResponse = jsonDecode(response.body);
       UserPrefs.setImpactAccess(decodedResponse['access']);
       UserPrefs.setImpactRefresh(decodedResponse['refresh']);
       return response.statusCode;
-    } //if
-
-    //Just return the status code
+    }
+    log(response.statusCode.toString());
     return response.statusCode;
   }
 
@@ -54,7 +51,7 @@ class Impact with ChangeNotifier {
     return response.statusCode;
   }
 
-  static Future<List<SleepDay>?> getSleepRangeData(
+  static Future<Map<String, SleepDay>> getSleepRangeData(
       String startDate, String endDate) async {
     var access = UserPrefs.getImpactAccess();
     if (JwtDecoder.isExpired(access!)) {
@@ -62,24 +59,23 @@ class Impact with ChangeNotifier {
       access = UserPrefs.getImpactAccess();
     }
 
-    List<SleepDay> sleepWeek = [];
+    Map<String, SleepDay> sleepRange = {};
     final url =
         "$baseUrl$sleepEndpoint$patientUsername/daterange/start_date/$startDate/end_date/$endDate/";
     final headers = {HttpHeaders.authorizationHeader: 'Bearer $access'};
 
-    //Get the response
-    print('Calling: $url');
     final response = await http.get(Uri.parse(url), headers: headers);
 
+    //log("----Impact-----${response.statusCode.toString()}");
     if (response.statusCode == 200) {
-      final decodedResponse = jsonDecode(response.body);
+      final Map<String, dynamic> decodedResponse = jsonDecode(response.body);
       for (int i = 0; i < decodedResponse['data'].length; i++) {
-        sleepWeek.add(SleepDay.fromJson(decodedResponse['data'][i]));
+        SleepDay day = SleepDay.fromJson(decodedResponse['data'][i]);
+        sleepRange[day.date] = day;
+        //print(day.duration);
       }
-      log(sleepWeek.length.toString());
-    } else {
-      return null;
     }
-    return sleepWeek;
+    //log("${sleepRange.toString()}\n----Impact-----");
+    return sleepRange;
   }
 }

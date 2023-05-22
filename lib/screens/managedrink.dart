@@ -154,7 +154,7 @@ class _ManageDrinkPageState extends State<ManageDrinkPage> {
         if (!context.read<DailyDrinkDB>().modify) {
           context.read<DailyDrinkDB>().mod(true);
 
-          Navigator.pop(context);
+          Navigator.pushReplacementNamed(context, DatabasePage.route);
         } else {
           Navigator.pop(context);
         }

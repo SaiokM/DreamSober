@@ -2,6 +2,7 @@
 
 import 'package:dreamsober/models/user.dart';
 import 'package:dreamsober/models/userprefs.dart';
+import 'package:dreamsober/models/userprefs.dart';
 import 'package:dreamsober/pages/authorization/auth_page.dart';
 import 'package:dreamsober/pages/report.dart';
 import 'package:dreamsober/screens/drinkpage.dart';
@@ -34,7 +35,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late StreamController<int> stream_controller;
-  static String userUID = UserPrefs.getUID();
 
   @override
   void initState() {
@@ -68,7 +68,7 @@ class _HomePageState extends State<HomePage> {
     ];
 
     DatabaseReference dbRef =
-        FirebaseDatabase.instance.ref().child(userUID).child("User");
+        FirebaseDatabase.instance.ref().child(UserPrefs.getUID()).child("User");
 
     return StreamBuilder(
       stream: dbRef.onValue,
@@ -95,7 +95,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _drawer(BuildContext context, CurrentUser user) {
-    log(userUID);
+    log(UserPrefs.getUID());
     return Drawer(
       child: Container(
         color: Colors.brown[900],
@@ -132,7 +132,7 @@ class _HomePageState extends State<HomePage> {
             ),
             ListTile(
               onTap: () {
-                Navigator.pushNamed(context, '/impact/');
+                Navigator.pushNamed(context, ImpactTest.route);
               },
               leading: Icon(Icons.login, color: Colors.white),
               title: Text(
@@ -142,11 +142,15 @@ class _HomePageState extends State<HomePage> {
             ),
             ListTile(
               onTap: () {
-                UserPrefs.resetUser();
-                UserPrefs.setImpactLogin(false);
-                UserPrefs.setFBlogin(false);
-                signOut();
-                Navigator.popUntil(context, (route) => route.settings.name =='/');
+                setState(() {
+                  UserPrefs.resetUser();
+                  log(UserPrefs.getUID());
+                  UserPrefs.setImpactLogin(false);
+                  UserPrefs.setFBlogin(false);
+                  signOut();
+                  Navigator.popUntil(
+                      context, (route) => route.settings.name == '/');
+                });
               },
               leading: Icon(Icons.logout, color: Colors.white),
               title: Text(

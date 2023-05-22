@@ -25,7 +25,7 @@ class UserPrefs {
 
   //Impact
   static Future setImpactUsername(String username) async =>
-      await _preferences.setString('imapactUsername', username);
+      await _preferences.setString('impactUsername', username);
   static Future setImpactPsw(String password) async =>
       await _preferences.setString('impactPassword', password);
   static Future setImpactAccess(String access) async =>
@@ -41,7 +41,7 @@ class UserPrefs {
   }
 
   static String getImpactUser() =>
-      _preferences.getString('imapactUsername') ?? '';
+      _preferences.getString('impactUsername') ?? '';
   static String getImpactPsw() =>
       _preferences.getString('impactPassword') ?? '';
   static String? getImpactAccess() => _preferences.getString('access');

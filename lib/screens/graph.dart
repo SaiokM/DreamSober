@@ -28,15 +28,30 @@ class ChartPage extends StatefulWidget {
 class _ChartPageState extends State<ChartPage> {
   final Future<FirebaseApp> _fApp = Firebase.initializeApp();
 
-  final Color mainColor = const Color.fromARGB(255, 42, 41, 50);
-
+  final Color? mainColor = Colors.brown[900];
   final Color secondaryColor = Color.fromARGB(255, 146, 138, 122);
-
   final Color alcColor = Color.fromARGB(255, 61, 56, 47);
-
   final Color sleepColor = Color.fromARGB(255, 114, 99, 78);
 
   int dayIdx = 0;
+  List<String> refDay = DateTime.now().toString().split(" ")[0].split("-");
+  late List<String> weekList;
+
+  @override
+  void initState() {
+    weekList = _generateWeek(DateTime(int.parse(refDay[0]),
+            int.parse(refDay[1]), int.parse(refDay[2]) - dayIdx)
+        .toString()
+        .split(" ")[0]);
+    super.initState();
+  }
+
+  void updateWeek() {
+    weekList = _generateWeek(DateTime(int.parse(refDay[0]),
+            int.parse(refDay[1]), int.parse(refDay[2]) - dayIdx)
+        .toString()
+        .split(" ")[0]);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,6 +114,7 @@ class _ChartPageState extends State<ChartPage> {
     );
   }
 
+  //generates a list of the days of the current week from a day
   List<String> _generateWeek(String day) {
     List<String> weekList = ["", "", "", "", "", "", ""];
     List date = day.split("-"); //[YYYY, MM, DD]
@@ -115,146 +131,177 @@ class _ChartPageState extends State<ChartPage> {
     return weekList;
   }
 
-  Widget _graph(BuildContext context) {
+  //Function to fetch sleep data from impact and alcohol data from firebase db
+  Future<List<Map<dynamic, dynamic>>> _graphAlcData() async {
+    List<Map> alcSleepList = [];
+    Map<dynamic, dynamic> alcMap = {};
+    Map<String, SleepDay> impactSleep = {};
+
+    // Firebase
     DatabaseReference dbRef =
         FirebaseDatabase.instance.ref().child(widget.userUID).child("Data");
+    await dbRef.once().then((DatabaseEvent event) {
+      if (event.snapshot.value == null) {}
+      alcMap =
+          event.snapshot.value as Map<dynamic, dynamic>; // save alcohol data
+    });
+    // Impact
+    impactSleep = await Impact.getSleepRangeData(
+        weekList[0], weekList[weekList.length - 1]);
+    alcSleepList = [alcMap, impactSleep];
+    return alcSleepList;
+  }
 
-    return StreamBuilder(
-      stream: dbRef.onValue,
-      builder: (context, AsyncSnapshot<DatabaseEvent> snapshot) {
-        if (snapshot.hasData) {
-          if (snapshot.data!.snapshot.value != null) {
-            Map<dynamic, dynamic> map =
-                snapshot.data!.snapshot.value as dynamic;
-            //log(map.toString());
-            List<String> dateList = [];
-            List<double> alcList = [];
-            List<double> sleepList = [];
+  Widget _graph(BuildContext context) {
+    return FutureBuilder(
+        future: _graphAlcData(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            //log("-----snapshot-----\n${snapshot.data}\n-----snapshot-----");
+            Map<dynamic, dynamic> alcMap = snapshot.data![0];
+            Map<String, SleepDay> sleepMap =
+                snapshot.data![1] as Map<String, SleepDay>;
+            //log("-----alcMap------\n$alcMap\n------alcMap------");
+            //log("-----sleepMap------\n$sleepMap\n------sleepMap------");
+            if (alcMap.isNotEmpty) {
+              //log(map.toString());
+              List<String> alcdateList = [];
+              List<double> alcList = [];
+              List<double> sleepList = [];
 
-            dateList.clear();
-            alcList.clear();
-            sleepList.clear();
-
-            for (var key in map.keys) {
-              dateList.add(key);
-            }
-            // Sort List
-            dateList.sort((a, b) {
-              return DateTime.parse(a).compareTo(DateTime.parse(b));
-            });
-
-            List<String> refDay =
-                DateTime.now().toString().split(" ")[0].split("-");
-            String lastDate = DateTime(int.parse(refDay[0]),
-                    int.parse(refDay[1]), int.parse(refDay[2]) - dayIdx)
-                .toString()
-                .split(" ")[0];
-
-            //log(lastDate);
-            //log("WeekDay: ${DateTime.parse(lastDate).weekday}");
-
-            List<String> weekList = _generateWeek(lastDate);
-            //log("Generated week: ${weekList.toString()}");
-
-            for (var day in weekList) {
-              if (dateList.contains(day)) {
-                alcList.add(map[day]['TotalAlcohol'].toDouble());
-                sleepList.add(map[day]['SleepScore'].toDouble());
-              } else {
-                alcList.add(0);
-                sleepList.add(0);
+              for (var key in alcMap.keys) {
+                alcdateList.add(key);
               }
-            }
 
-            BarData mybarData = BarData(
-              dayList: weekList,
-              alcList: alcList,
-              sleepList: sleepList,
-            );
-            mybarData.initializeBarData();
+              // Sort List
+              alcdateList.sort((a, b) {
+                return DateTime.parse(a).compareTo(DateTime.parse(b));
+              });
 
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(height: 20),
-                Text(
-                  "${DateFormat('dd-MM-yyyy').format(DateTime.parse(weekList[0])).split(' ')[0].replaceAll("-", "/")} - ${DateFormat('dd-MM-yyyy').format(DateTime.parse(weekList[weekList.length - 1])).split(' ')[0].replaceAll("-", "/")}",
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
+              for (var day in weekList) {
+                if (alcdateList.contains(day)) {
+                  alcList.add(alcMap[day]['TotalAlcohol'].toDouble());
+                } else {
+                  alcList.add(0);
+                }
+                if (sleepMap.keys.contains(day)) {
+                  //log(sleepMap[weekList[0]]!.duration.toString());
+                  sleepList.add(sleepMap[day]!.duration / 3600);
+                } else {
+                  sleepList.add(0);
+                }
+              }
+              //print(sleepList.toString());
+              BarData mybarData = BarData(
+                dayList: weekList,
+                alcList: alcList,
+                sleepList: sleepList,
+              );
+              mybarData.initializeBarData();
+
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(height: 20),
+                  Text(
+                    "${DateFormat('dd-MM-yyyy').format(DateTime.parse(weekList[0])).split(' ')[0].replaceAll("-", "/")} - ${DateFormat('dd-MM-yyyy').format(DateTime.parse(weekList[weekList.length - 1])).split(' ')[0].replaceAll("-", "/")}",
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 360,
-                  child: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Center(
-                        child: SizedBox(
-                          height: 200,
-                          width: 50 * dateList.length.toDouble(),
-                          child: Container(
-                            alignment: Alignment.topCenter,
-                            child: BarChart(
-                              BarChartData(
-                                borderData: FlBorderData(
-                                  border: const Border(
-                                    top: BorderSide.none,
-                                    right: BorderSide.none,
-                                    left: BorderSide.none,
-                                    bottom: BorderSide(width: 1),
+                  SizedBox(
+                    height: 360,
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Center(
+                          child: SizedBox(
+                            height: 200,
+                            width: 50 * 7,
+                            child: Container(
+                              alignment: Alignment.topCenter,
+                              child: BarChart(
+                                BarChartData(
+                                  borderData: FlBorderData(
+                                    border: const Border(
+                                      top: BorderSide.none,
+                                      right: BorderSide.none,
+                                      left: BorderSide.none,
+                                      bottom: BorderSide(width: 1),
+                                    ),
                                   ),
+                                  titlesData: FlTitlesData(
+                                      bottomTitles: AxisTitles(
+                                          drawBehindEverything: true,
+                                          sideTitles: _bottomTitles(mybarData)),
+                                      topTitles: AxisTitles(
+                                          sideTitles:
+                                              SideTitles(showTitles: false)),
+                                      leftTitles: AxisTitles(
+                                          sideTitles:
+                                              SideTitles(showTitles: false)),
+                                      rightTitles: AxisTitles(
+                                          sideTitles:
+                                              SideTitles(showTitles: false))),
+                                  gridData: FlGridData(show: true),
+                                  minY: 0,
+                                  barGroups: mybarData.barData
+                                      .map(
+                                        (data) => BarChartGroupData(
+                                          x: data.x,
+                                          barRods: [
+                                            BarChartRodData(
+                                              width: 15,
+                                              borderRadius:
+                                                  BorderRadius.circular(2),
+                                              toY: data.y1,
+                                              color: alcColor,
+                                            ),
+                                            BarChartRodData(
+                                              width: 15,
+                                              borderRadius:
+                                                  BorderRadius.circular(1),
+                                              toY: data.y2,
+                                              color: sleepColor,
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                      .toList(),
                                 ),
-                                titlesData: FlTitlesData(
-                                    bottomTitles: AxisTitles(
-                                        drawBehindEverything: true,
-                                        sideTitles: _bottomTitles(mybarData)),
-                                    topTitles: AxisTitles(
-                                        sideTitles:
-                                            SideTitles(showTitles: false)),
-                                    leftTitles: AxisTitles(
-                                        sideTitles:
-                                            SideTitles(showTitles: false)),
-                                    rightTitles: AxisTitles(
-                                        sideTitles:
-                                            SideTitles(showTitles: false))),
-                                gridData: FlGridData(show: true),
-                                minY: 0,
-                                barGroups: mybarData.barData
-                                    .map(
-                                      (data) => BarChartGroupData(
-                                        x: data.x,
-                                        barRods: [
-                                          BarChartRodData(
-                                            width: 15,
-                                            borderRadius:
-                                                BorderRadius.circular(2),
-                                            toY: data.y1,
-                                            color: alcColor,
-                                          ),
-                                          BarChartRodData(
-                                            width: 15,
-                                            borderRadius:
-                                                BorderRadius.circular(1),
-                                            toY: data.y2,
-                                            color: sleepColor,
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                    .toList(),
+                                swapAnimationDuration: Duration(seconds: 0),
                               ),
-                              swapAnimationDuration: Duration(seconds: 0),
                             ),
                           ),
                         ),
                       ),
                     ),
                   ),
+                ],
+              );
+            } else {
+              return const SizedBox(
+                //No Entries
+                height: 380,
+                child: Card(
+                  color: Color.fromARGB(255, 170, 167, 196),
+                  child: Padding(
+                    padding: EdgeInsets.all(5),
+                    child: Center(
+                      child: Text(
+                        "No entries found!",
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromARGB(255, 81, 81, 81)),
+                      ),
+                    ),
+                  ),
                 ),
-              ],
-            );
+              );
+            }
           } else {
             return const SizedBox(
               //No Entries
@@ -264,25 +311,13 @@ class _ChartPageState extends State<ChartPage> {
                 child: Padding(
                   padding: EdgeInsets.all(5),
                   child: Center(
-                    child: Text(
-                      "No entries found!",
-                      style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 81, 81, 81)),
-                    ),
+                    child: CircularProgressIndicator(),
                   ),
                 ),
               ),
             );
           }
-        } else {
-          return CircularProgressIndicator(
-            color: mainColor,
-          );
-        }
-      },
-    );
+        });
   }
 
   SideTitles _bottomTitles(BarData myBarData) {
@@ -330,6 +365,7 @@ class _ChartPageState extends State<ChartPage> {
               onPressed: () {
                 setState(() {
                   dayIdx += 7;
+                  updateWeek();
                 });
               },
               child: Icon(Icons.arrow_left),
@@ -345,6 +381,7 @@ class _ChartPageState extends State<ChartPage> {
               onPressed: () {
                 setState(() {
                   dayIdx -= 7;
+                  updateWeek();
                 });
               },
               child: Icon(Icons.arrow_right),

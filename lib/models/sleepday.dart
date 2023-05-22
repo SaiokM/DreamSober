@@ -11,7 +11,8 @@ class SleepDay {
 
   SleepDay.fromJson(Map<dynamic, dynamic> json) {
     date = json['date'];
-    if (json['data'].runtimeType == Map) {
+    if (json['data'] != null && json['data'].runtimeType != List) {
+      //print(json['data'].runtimeType);
       duration = json['data']['duration'].toDouble() / 1000 ?? 0;
       minToFall = json['data']['minutesToFallAsleep'] ?? 0;
       minAsleep = json['data']['minutesAsleep'] ?? 0;
@@ -30,6 +31,7 @@ class SleepDay {
       minAwake = 0;
       for (String phase in phasesName) {
         SleepPhase slpphase = SleepPhase(0, 0);
+        phases[phase] = slpphase;
       }
     }
   }

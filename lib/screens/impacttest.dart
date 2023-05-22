@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:dreamsober/models/sleepday.dart';
+import 'package:dreamsober/pages/authorization/auth_page.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:dreamsober/models/userprefs.dart';
 import 'package:dreamsober/pages/home_page.dart';
@@ -109,8 +110,9 @@ class ImpactTest extends StatelessWidget {
                   child: const Text('Delete tokens')),
               ElevatedButton(
                   onPressed: () async {
-                    List<SleepDay>? results = await Impact.getSleepRangeData(
-                        '2023-05-04', '2023-05-10');
+                    Map<String, SleepDay>? results =
+                        await Impact.getSleepRangeData(
+                            '2023-05-04', '2023-05-10');
                     String message =
                         results != null ? "Data retrived!" : "Error!";
                     ScaffoldMessenger.of(context)
@@ -121,7 +123,7 @@ class ImpactTest extends StatelessWidget {
               SizedBox(height: 10),
               ElevatedButton(
                   onPressed: () {
-                    Navigator.pushReplacementNamed(context, HomePage.route);
+                    Navigator.pushReplacementNamed(context, AuthPage.route);
                   },
                   child: const Text('HOME PAGE')),
             ],
@@ -143,9 +145,9 @@ class ImpactTest extends StatelessWidget {
     return response.statusCode == 200;
   } //_isImpactUp
 
-  Future<int> getandsaveTokens() {
+  Future<int> getandsaveTokens() async {
     UserPrefs.setImpactUsername(userController.text.trim());
     UserPrefs.setImpactPsw(pswController.text.trim());
-    return Impact.getTokens();
+    return await Impact.getTokens();
   }
 }
