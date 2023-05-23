@@ -54,6 +54,10 @@ class Impact with ChangeNotifier {
   static Future<Map<String, SleepDay>> getSleepRangeData(
       String startDate, String endDate) async {
     var access = UserPrefs.getImpactAccess();
+    if (access == null) {
+      getTokens();
+      var access = UserPrefs.getImpactAccess();
+    }
     if (JwtDecoder.isExpired(access!)) {
       await refreshTokens();
       access = UserPrefs.getImpactAccess();

@@ -1,6 +1,6 @@
 // ignore_for_file: prefer_const_constructors, unused_import
 
-import 'dart:math' as math;
+import 'dart:math';
 import 'package:dreamsober/models/impact.dart';
 import 'package:dreamsober/models/userprefs.dart';
 import 'package:dreamsober/models/sleepday.dart';
@@ -19,15 +19,13 @@ class ChartPage extends StatefulWidget {
   final String userUID = UserPrefs.getUID();
   ChartPage({super.key});
   static String route = "/chart/";
-  static String routeName = "Data Chart";
+  static String routeName = "Chart Data";
 
   @override
   State<ChartPage> createState() => _ChartPageState();
 }
 
 class _ChartPageState extends State<ChartPage> {
-  final Future<FirebaseApp> _fApp = Firebase.initializeApp();
-
   final Color? mainColor = Colors.brown[900];
   final Color secondaryColor = Color.fromARGB(255, 146, 138, 122);
   final Color alcColor = Color.fromARGB(255, 61, 56, 47);
@@ -56,7 +54,7 @@ class _ChartPageState extends State<ChartPage> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _fApp,
+      future: Firebase.initializeApp(),
       builder: (context, snapshot) {
         double height = MediaQuery.of(context).size.height;
         //log(height.toString());
@@ -92,25 +90,11 @@ class _ChartPageState extends State<ChartPage> {
 
   Widget _pageBody(BuildContext context) {
     return Center(
-      child: Stack(
-        children: [
-          Column(
-            children: [
-              SizedBox(height: 20),
-              Text(
-                "How well did you sleep?",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 20),
-              Card(
-                color: Color.fromARGB(255, 237, 237, 237),
-                child: _graph(context),
-              ),
-            ],
-          ),
-          _buttons(context)
-        ],
+      child: Card(
+        color: Color.fromARGB(255, 237, 237, 237),
+        child: _graph(context),
       ),
+      //_buttons(context)
     );
   }
 
@@ -186,7 +170,8 @@ class _ChartPageState extends State<ChartPage> {
                 }
                 if (sleepMap.keys.contains(day)) {
                   //log(sleepMap[weekList[0]]!.duration.toString());
-                  sleepList.add(sleepMap[day]!.duration / 3600);
+                  sleepList.add(
+                      (sleepMap[day]!.duration / 36).truncateToDouble() / 100);
                 } else {
                   sleepList.add(0);
                 }
@@ -210,20 +195,66 @@ class _ChartPageState extends State<ChartPage> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+                  SizedBox(height: 10),
+                  //legend
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                                color: alcColor,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5))),
+                            child: SizedBox(
+                              height: 20,
+                              width: 20,
+                            ),
+                          ),
+                          SizedBox(width: 5),
+                          Text("Alcohol Drank"),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                                color: sleepColor,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5))),
+                            child: SizedBox(
+                              height: 20,
+                              width: 20,
+                            ),
+                          ),
+                          SizedBox(width: 5),
+                          Text("Sleep Hrs"),
+                        ],
+                      )
+                    ],
+                  ),
+                  SizedBox(height: 10),
                   SizedBox(
-                    height: 360,
+                    height: 300,
                     child: Padding(
                       padding: EdgeInsets.all(10),
                       child: SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Center(
                           child: SizedBox(
-                            height: 200,
+                            height: 300,
                             width: 50 * 7,
                             child: Container(
                               alignment: Alignment.topCenter,
+                              //color: Colors.green,
                               child: BarChart(
                                 BarChartData(
+                                  barTouchData: BarTouchData(
+                                      enabled: true,
+                                      touchTooltipData: BarTouchTooltipData(
+                                        tooltipBgColor: Colors.transparent,
+                                      )),
                                   borderData: FlBorderData(
                                     border: const Border(
                                       top: BorderSide.none,
@@ -233,6 +264,7 @@ class _ChartPageState extends State<ChartPage> {
                                     ),
                                   ),
                                   titlesData: FlTitlesData(
+                                      show: true,
                                       bottomTitles: AxisTitles(
                                           drawBehindEverything: true,
                                           sideTitles: _bottomTitles(mybarData)),
@@ -245,8 +277,9 @@ class _ChartPageState extends State<ChartPage> {
                                       rightTitles: AxisTitles(
                                           sideTitles:
                                               SideTitles(showTitles: false))),
-                                  gridData: FlGridData(show: true),
+                                  gridData: FlGridData(show: false),
                                   minY: 0,
+                                  maxY: maxList(alcList, sleepList),
                                   barGroups: mybarData.barData
                                       .map(
                                         (data) => BarChartGroupData(
@@ -279,6 +312,7 @@ class _ChartPageState extends State<ChartPage> {
                       ),
                     ),
                   ),
+                  _buttons(context)
                 ],
               );
             } else {
@@ -320,17 +354,27 @@ class _ChartPageState extends State<ChartPage> {
         });
   }
 
+  double maxList(List<double> list1, List<double> list2) {
+    var max1 = list1.reduce(max) * 1.40;
+    var max2 = list2.reduce(max) * 1.40;
+    return max(max1, max2);
+  }
+
   SideTitles _bottomTitles(BarData myBarData) {
+    List<String> dayList = ["Mon", "Tue", "Wen", "Thu", "Fri", "Sat", "Sun"];
     return SideTitles(
         showTitles: true,
+        reservedSize: 30,
         getTitlesWidget: (value, meta) {
+          /*
           String text = DateFormat('dd-MM-yyyy')
               .format(DateTime.parse(myBarData.dayList[value.toInt()]))
               .split(' ')[0]
-              .replaceAll("-", "/");
-
+              .replaceAll("-", "/");*/
+          String text = dayList[value.toInt()];
+          /*
           return Column(children: [
-            SizedBox(height: 9),
+            //SizedBox(height: 9),
             Transform.rotate(
                 angle: -math.pi / 10,
                 child: Text(
@@ -340,7 +384,12 @@ class _ChartPageState extends State<ChartPage> {
                     fontWeight: FontWeight.bold,
                   ),
                 )),
-          ]);
+          ]);*/
+          return SideTitleWidget(
+            child: Text(text),
+            axisSide: meta.axisSide,
+            space: 4,
+          );
         });
   }
 

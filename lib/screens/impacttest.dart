@@ -122,7 +122,8 @@ class ImpactTest extends StatelessWidget {
                   child: Text("Get Data")),
               SizedBox(height: 10),
               ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    await getandsaveTokens();
                     Navigator.pushReplacementNamed(context, AuthPage.route);
                   },
                   child: const Text('HOME PAGE')),
