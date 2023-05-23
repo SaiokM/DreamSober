@@ -33,7 +33,7 @@ class UserPrefs {
   static Future setImpactRefresh(String refresh) async =>
       await _preferences.setString('refresh', refresh);
   static Future setImpactLogin(bool login) =>
-      _preferences.setBool('impactlogin', login);
+      _preferences.setBool('impactLogin', login);
 
   static void clearTokens() {
     _preferences.remove('access');

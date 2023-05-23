@@ -17,7 +17,6 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   // text editing controllers
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -72,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void navigateToImpactPage() {
-    Navigator.pushReplacementNamed(context, ImpactOnboarding.route);
+    Navigator.popAndPushNamed(context, ImpactOnboarding.route);
   }
 
   @override
@@ -93,16 +92,6 @@ class _LoginPageState extends State<LoginPage> {
                 ),
 
                 const SizedBox(height: 20),
-
-                // welcome back, you've been missed!
-                /* Text(
-                  'Welcome back you\'ve been missed!',
-                  style: TextStyle(
-                    color: Colors.grey[600],
-                    fontSize: 16,
-                  ),
-                ),  
-                const SizedBox(height: 20), */
 
                 // email textfield
                 MyTextField(

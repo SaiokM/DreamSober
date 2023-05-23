@@ -17,7 +17,6 @@ class Impact with ChangeNotifier {
   static String patientUsername = 'Jpefaq6m58';
 
   static Future<int> getTokens() async {
-    //Create the request
     final url = baseUrl + tokenEndpoint;
     final body = {
       'username': UserPrefs.getImpactUser(),
@@ -30,6 +29,7 @@ class Impact with ChangeNotifier {
       final decodedResponse = jsonDecode(response.body);
       UserPrefs.setImpactAccess(decodedResponse['access']);
       UserPrefs.setImpactRefresh(decodedResponse['refresh']);
+      UserPrefs.setImpactLogin(true);
       return response.statusCode;
     }
     log(response.statusCode.toString());
@@ -54,9 +54,15 @@ class Impact with ChangeNotifier {
   static Future<Map<String, SleepDay>> getSleepRangeData(
       String startDate, String endDate) async {
     var access = UserPrefs.getImpactAccess();
-    if (JwtDecoder.isExpired(access!)) {
-      await refreshTokens();
-      access = UserPrefs.getImpactAccess();
+    if (access == null) {
+      getTokens();
+      var access = UserPrefs.getImpactAccess();
+    }
+    if (access != null) {
+      if (JwtDecoder.isExpired(access!)) {
+        await refreshTokens();
+        access = UserPrefs.getImpactAccess();
+      }
     }
 
     Map<String, SleepDay> sleepRange = {};

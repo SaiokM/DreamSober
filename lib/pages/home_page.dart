@@ -64,7 +64,12 @@ class _HomePageState extends State<HomePage> {
     final List<Widget> _widgetList = <Widget>[
       ReportPage(),
       DrinkPage(),
-      ChartPage(), // 4 Giulio: add userUID to profPage
+      ChartPage(),
+    ];
+    final List<String> _nameList = [
+      ReportPage.routeName,
+      DrinkPage.routeName,
+      ChartPage.routeName,
     ];
 
     DatabaseReference dbRef =
@@ -86,6 +91,10 @@ class _HomePageState extends State<HomePage> {
           ),
           appBar: AppBar(
             backgroundColor: Colors.brown[900],
+            centerTitle: true,
+            title: Text(
+              _nameList[_selectedIdx],
+            ),
           ),
           drawer: _drawer(context, _currentUser),
           bottomNavigationBar: _bottomNavBar(context),

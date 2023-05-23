@@ -15,6 +15,8 @@ class ReportPage extends StatefulWidget {
   final String userUID = UserPrefs.getUID();
   ReportPage({super.key});
 
+  static String route = "/report/";
+  static String routeName = "Weekly Report";
   @override
   State<ReportPage> createState() => _ReportPageState();
 }
@@ -53,20 +55,7 @@ class _ReportPageState extends State<ReportPage> {
     //double height = MediaQuery.of(context).size.height;
     return Container(
       color: const Color.fromRGBO(215, 204, 200, 1),
-      child: Column(
-        children: <Widget>[
-          SizedBox(height: 10),
-          Text(
-            "How did you do this Week?",
-            style: TextStyle(
-              fontSize: 25,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: 10),
-          _weeklyList(context),
-        ],
-      ),
+      child: _weeklyList(context),
     );
   }
 
@@ -227,7 +216,7 @@ class _ReportPageState extends State<ReportPage> {
           physics: BouncingScrollPhysics(),
           childAspectRatio: 1,
           crossAxisCount: 2,
-          children: List.generate(4, (idx) {
+          children: List.generate(2, (idx) {
             return Card(
               color: Colors.brown[300],
               child: SizedBox(
