@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 
 class SleepFunction {
   late final int _age;
-  late final _timeAsleep;
-  late final _sleepDuration;
-  late final _timeToFallAsleep;
-  late final _timeAwake;
+  late final int _timeAsleep;
+  late final double _sleepDuration;
+  late final int _timeToFallAsleep;
+  late final int _timeAwake;
   late final double _sleepEfficiencyScore;
   late final double _sleepLatencyScore;
   late final double _sleepDurationScore;
@@ -34,7 +34,7 @@ class SleepFunction {
 
   //Sleep Effinciency (SE) = time asleep/total time in bed
   double? SleepEfficiency() {
-    int sleepEfficiency = (_timeAsleep * 60 / _sleepDuration) * 100; //%
+    double sleepEfficiency = (_timeAsleep * 60 / _sleepDuration) * 100; //%
     if (_age >= 25) {
       //adult
       if (sleepEfficiency >= 85) {

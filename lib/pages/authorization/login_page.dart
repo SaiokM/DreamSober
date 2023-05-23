@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:dreamsober/components/my_button.dart';
-import 'package:dreamsober/components/my_textfield.dart';
+import 'package:dreamsober/components/textfield_mail.dart';
+import 'package:dreamsober/components/textfiel_psw.dart';
 import 'package:dreamsober/components/square_tile.dart';
 
 import '../impact_on.dart';
@@ -94,7 +95,7 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 20),
 
                 // email textfield
-                MyTextField(
+                MailTextField(
                   controller: emailController,
                   hintText: 'Email',
                   obscureText: false,
@@ -103,7 +104,7 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 10),
 
                 // password textfield
-                MyTextField(
+                PswTextField(
                   controller: passwordController,
                   hintText: 'Password',
                   obscureText: true,
@@ -117,9 +118,22 @@ class _LoginPageState extends State<LoginPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Text(
-                        'Forgot Password?',
-                        style: TextStyle(color: Colors.grey[600]),
+                      GestureDetector(
+                        onTap: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Avaible from the next update"),
+                              duration: Duration(seconds: 1),
+                            ),
+                          );
+                        },
+                        child: const Text(
+                          'Forgot Password?',
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ],
                   ),

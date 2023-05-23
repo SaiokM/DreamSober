@@ -2,7 +2,8 @@ import 'package:dreamsober/pages/profilePage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:dreamsober/components/my_button.dart';
-import 'package:dreamsober/components/my_textfield.dart';
+import 'package:dreamsober/components/textfield_mail.dart';
+import 'package:dreamsober/components/textfiel_psw.dart';
 import 'package:dreamsober/components/square_tile.dart';
 import 'package:dreamsober/screens/impacttest.dart';
 
@@ -43,13 +44,12 @@ class _RegisterPageState extends State<RegisterPage> {
           email: emailController.text.trim(),
           password: passwordController.text.trim(),
         );
-        
+
         //Navigator.pop(context);
 
         //navigateToImpactPage();
 
         navigateToProfilePage();
-
       } else {
         //show error message, passwords don't match
         showErrorMessage("Passwords don't match!");
@@ -88,20 +88,18 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
- /* void navigateToImpactPage() {
+  /* void navigateToImpactPage() {
     Navigator.pushReplacementNamed(context, ImpactTest.route);
   }*/
 
   void navigateToProfilePage() {
-  Navigator.pushReplacement(
-    context,
-    MaterialPageRoute(
-      builder: (context) => ProfilePage(registerPage: true),
-    ),
-  );
-}
-
-  
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProfilePage(registerPage: true),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,13 +112,11 @@ class _RegisterPageState extends State<RegisterPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                
-
                 // logo
-                 Image.asset(
+                Image.asset(
                   'assets/logo_full_name.png',
                   fit: BoxFit.fitWidth,
-                  ),
+                ),
 
                 const SizedBox(height: 20),
 
@@ -136,7 +132,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 const SizedBox(height: 25),
 
                 // email textfield
-                MyTextField(
+                MailTextField(
                   controller: emailController,
                   hintText: 'Email',
                   obscureText: false,
@@ -145,7 +141,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 const SizedBox(height: 10),
 
                 // password textfield
-                MyTextField(
+                PswTextField(
                   controller: passwordController,
                   hintText: 'Password',
                   obscureText: true,
@@ -154,7 +150,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 const SizedBox(height: 10),
 
                 // confirm password textfield
-                MyTextField(
+                PswTextField(
                   controller: confirmpasswordController,
                   hintText: 'Confirm Password',
                   obscureText: true,
@@ -206,29 +202,29 @@ class _RegisterPageState extends State<RegisterPage> {
                   children: [
                     // google button
                     SquareTile(
-                       onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("Avaible from the next update"),
-                            duration: Duration(seconds: 1),
-                          ),
-                        );
-                      },
-                      imagePath: 'assets/google.png'),
+                        onTap: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Avaible from the next update"),
+                              duration: Duration(seconds: 1),
+                            ),
+                          );
+                        },
+                        imagePath: 'assets/google.png'),
 
                     const SizedBox(width: 35),
 
                     // apple button
                     SquareTile(
-                       onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("Avaible from the next update"),
-                            duration: Duration(seconds: 1),
-                          ),
-                        );
-                      },
-                      imagePath: 'assets/apple.png')
+                        onTap: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Avaible from the next update"),
+                              duration: Duration(seconds: 1),
+                            ),
+                          );
+                        },
+                        imagePath: 'assets/apple.png')
                   ],
                 ),
 

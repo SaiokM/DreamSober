@@ -1,5 +1,6 @@
 import 'package:dreamsober/models/userprefs.dart';
 import 'package:dreamsober/pages/authorization/auth_page.dart';
+import 'package:dreamsober/pages/impact_on.dart';
 import 'package:flutter/material.dart';
 import 'package:dreamsober/models/user.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -314,8 +315,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                   _currentUser = CurrentUser(
                                       name, age, height, weight, sex);
                                   _currentUser.saveToDB(dbRef.child("User"));
-                                  Navigator.pushReplacementNamed(context,
-                                      ImpactTest.route); // Torna home page
+                                  Navigator.pushReplacementNamed(
+                                      context,
+                                      ImpactOnboarding
+                                          .route); // Torna home page
                                 }
                               },
                               child: const Text(

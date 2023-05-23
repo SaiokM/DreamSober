@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class MyTextField extends StatelessWidget {
+class MailTextField extends StatelessWidget {
   final controller;
   final String hintText;
   final bool obscureText;
 
-  const MyTextField({
+  const MailTextField({
     super.key,
     required this.controller,
     required this.hintText,
@@ -20,11 +20,12 @@ class MyTextField extends StatelessWidget {
         controller: controller,
         obscureText: obscureText,
         decoration: InputDecoration(
+            prefixIcon: const Icon(Icons.mail),
             enabledBorder: const OutlineInputBorder(
               borderSide: BorderSide(color: Colors.white),
             ),
             focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey.shade400),
+              borderSide: BorderSide(color: Colors.brown),
             ),
             fillColor: Colors.grey.shade200,
             filled: true,
