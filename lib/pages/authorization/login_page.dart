@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:dreamsober/components/my_button.dart';
 import 'package:dreamsober/components/my_textfield.dart';
 import 'package:dreamsober/components/square_tile.dart';
-import 'package:dreamsober/screens/impacttest.dart';
+
+import '../impact_on.dart';
 
 class LoginPage extends StatefulWidget {
   final Function()? onTap;
@@ -71,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void navigateToImpactPage() {
-    Navigator.pushReplacementNamed(context, ImpactTest.route);
+    Navigator.pushReplacementNamed(context, ImpactOnboarding.route);
   }
 
   @override

@@ -140,7 +140,6 @@ class _HomePageState extends State<HomePage> {
                 style: TextStyle(fontSize: 20, color: Colors.white),
               ),
             ),
-            const SizedBox(height: 400),
             ListTile(
               onTap: () {
                 UserPrefs.resetUser();

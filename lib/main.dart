@@ -2,6 +2,7 @@
 
 import 'package:dreamsober/pages/authorization/login_or_register.dart';
 import 'package:dreamsober/pages/home_page.dart';
+import 'package:dreamsober/pages/impact_on.dart';
 import 'package:dreamsober/pages/profilePage.dart';
 import 'package:flutter/material.dart';
 import 'package:dreamsober/pages/authorization/auth_page.dart';
@@ -49,7 +50,7 @@ class MyApp extends StatelessWidget {
         //DrinkPage.route: (context) => DrinkPage(userUID: userUID)
         //DatabasePage.route: (context) => DatabasePage(),
         AuthPage.route: (context) => AuthPage(),
-        ImpactTest.route: (context) => ImpactTest(),
+        ImpactOnboarding.route: (context) => ImpactOnboarding(),
         HomePage.route: (context) => HomePage(),
       },
     );
