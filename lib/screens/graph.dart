@@ -10,7 +10,7 @@ import 'package:dreamsober/bar_graph/bar_data.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'dart:developer';
+import 'dart:developer' as dev;
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:dreamsober/models/drinkDB.dart';
@@ -30,6 +30,7 @@ class _ChartPageState extends State<ChartPage> {
   final Color secondaryColor = Color.fromARGB(255, 146, 138, 122);
   final Color alcColor = Color.fromARGB(255, 61, 56, 47);
   final Color sleepColor = Color.fromARGB(255, 114, 99, 78);
+  final Color moneyColor = Color.fromARGB(255, 163, 132, 89);
 
   int dayIdx = 0;
   List<String> refDay = DateTime.now().toString().split(" ")[0].split("-");
@@ -64,11 +65,7 @@ class _ChartPageState extends State<ChartPage> {
             body: (snapshot.hasError)
                 ? _error(context)
                 : (snapshot.hasData)
-                    ? (height < 700)
-                        ? SingleChildScrollView(
-                            child: _pageBody(context),
-                          )
-                        : _pageBody(context)
+                    ? _pageBody(context)
                     : _wait(context));
       },
     );
@@ -90,12 +87,10 @@ class _ChartPageState extends State<ChartPage> {
 
   Widget _pageBody(BuildContext context) {
     return Center(
-      child: Card(
-        color: Color.fromARGB(255, 237, 237, 237),
-        child: _graph(context),
-      ),
-      //_buttons(context)
-    );
+      child: _graph(context),
+    )
+        //_buttons(context)
+        ;
   }
 
   //generates a list of the days of the current week from a day
@@ -140,7 +135,8 @@ class _ChartPageState extends State<ChartPage> {
     return FutureBuilder(
         future: _graphAlcData(),
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
+          if (snapshot.hasData && snapshot.data![1].isNotEmpty) {
+            //dev.log(snapshot.data!.length.toString());
             //log("-----snapshot-----\n${snapshot.data}\n-----snapshot-----");
             Map<dynamic, dynamic> alcMap = snapshot.data![0];
             Map<String, SleepDay> sleepMap =
@@ -152,6 +148,7 @@ class _ChartPageState extends State<ChartPage> {
               List<String> alcdateList = [];
               List<double> alcList = [];
               List<double> sleepList = [];
+              List<double> moneyList = [];
 
               for (var key in alcMap.keys) {
                 alcdateList.add(key);
@@ -163,7 +160,7 @@ class _ChartPageState extends State<ChartPage> {
               });
 
               for (var day in weekList) {
-                if (alcdateList.contains(day)) {
+                if (alcMap.keys.contains(day)) {
                   alcList.add(alcMap[day]['TotalAlcohol'].toDouble());
                 } else {
                   alcList.add(0);
@@ -175,12 +172,18 @@ class _ChartPageState extends State<ChartPage> {
                 } else {
                   sleepList.add(0);
                 }
+                if (alcMap.keys.contains(day)) {
+                  moneyList.add(alcMap[day]['TotalSpent'].toDouble());
+                } else {
+                  moneyList.add(0);
+                }
               }
               //print(sleepList.toString());
               BarData mybarData = BarData(
                 dayList: weekList,
                 alcList: alcList,
                 sleepList: sleepList,
+                moneyList: moneyList,
               );
               mybarData.initializeBarData();
 
@@ -213,7 +216,7 @@ class _ChartPageState extends State<ChartPage> {
                             ),
                           ),
                           SizedBox(width: 5),
-                          Text("Alcohol Drank"),
+                          Text("Alcohol [ml]"),
                         ],
                       ),
                       Row(
@@ -229,9 +232,25 @@ class _ChartPageState extends State<ChartPage> {
                             ),
                           ),
                           SizedBox(width: 5),
-                          Text("Sleep Hrs"),
+                          Text("Sleep [Hrs]"),
                         ],
-                      )
+                      ),
+                      Row(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                                color: moneyColor,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5))),
+                            child: SizedBox(
+                              height: 20,
+                              width: 20,
+                            ),
+                          ),
+                          SizedBox(width: 5),
+                          Text("Money [€]"),
+                        ],
+                      ),
                     ],
                   ),
                   SizedBox(height: 10),
@@ -244,7 +263,7 @@ class _ChartPageState extends State<ChartPage> {
                         child: Center(
                           child: SizedBox(
                             height: 300,
-                            width: 50 * 7,
+                            width: 60 * 7,
                             child: Container(
                               alignment: Alignment.topCenter,
                               //color: Colors.green,
@@ -286,18 +305,25 @@ class _ChartPageState extends State<ChartPage> {
                                           x: data.x,
                                           barRods: [
                                             BarChartRodData(
-                                              width: 15,
+                                              width: 13,
                                               borderRadius:
                                                   BorderRadius.circular(2),
                                               toY: data.y1,
                                               color: alcColor,
                                             ),
                                             BarChartRodData(
-                                              width: 15,
+                                              width: 13,
                                               borderRadius:
                                                   BorderRadius.circular(1),
                                               toY: data.y2,
                                               color: sleepColor,
+                                            ),
+                                            BarChartRodData(
+                                              width: 13,
+                                              borderRadius:
+                                                  BorderRadius.circular(1),
+                                              toY: data.y3,
+                                              color: moneyColor,
                                             ),
                                           ],
                                         ),
@@ -341,7 +367,7 @@ class _ChartPageState extends State<ChartPage> {
               //No Entries
               height: 380,
               child: Card(
-                color: Color.fromARGB(255, 170, 167, 196),
+                color: Color.fromRGBO(215, 204, 200, 1),
                 child: Padding(
                   padding: EdgeInsets.all(5),
                   child: Center(

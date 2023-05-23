@@ -5,11 +5,13 @@ class BarData {
   final List<String> dayList;
   final List<dynamic> alcList;
   final List<dynamic> sleepList;
+  final List<dynamic> moneyList;
 
   BarData({
     required this.dayList,
     required this.alcList,
     required this.sleepList,
+    required this.moneyList,
   });
 
   List<IndividualBar> barData = [];
@@ -19,6 +21,7 @@ class BarData {
         x: i,
         y1: alcList[i],
         y2: sleepList[i],
+        y3: moneyList[i],
       ));
     }
   }

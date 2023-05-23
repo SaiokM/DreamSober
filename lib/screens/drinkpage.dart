@@ -30,7 +30,7 @@ class _DrinkState extends State<DrinkPage> {
     'assets/wine-bottle.png'
   ];
   final List<Drink> drinks = [
-    Drink('Beer', 4, 500, 5),
+    Drink('Beer', 5, 400, 5),
     Drink('Cocktail', 8, 200, 8),
     Drink('Super Alcoholics', 40, 40, 6),
     Drink('Wine', 12, 150, 4)
@@ -48,18 +48,14 @@ class _DrinkState extends State<DrinkPage> {
     //log(height.toString());
     if (height < 700) {
       return SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
         child: SizedBox(
           height: height - 100,
           child: _mainApp(context),
         ),
       );
     } else {
-      return Scaffold(
-        backgroundColor: Color.fromRGBO(215, 204, 200, 1),
-        resizeToAvoidBottomInset: false,
-        body: _appBody(context),
-        floatingActionButton: _floatingButtons(context),
-      );
+      return _mainApp(context);
     }
   }
 

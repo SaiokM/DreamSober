@@ -214,6 +214,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                             child: Column(
                               children: [
+                                const SizedBox(height: 5),
                                 const Text('Sex'),
                                 Row(
                                   mainAxisAlignment:

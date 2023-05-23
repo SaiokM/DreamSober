@@ -17,13 +17,15 @@ class DailyDrinkDB with ChangeNotifier {
     Drink('Wine', 12, 150, 4)
   ];
   DateTime _date = DateTime.now();
-  double _sleepScore = 0;
-  double _totAlc = 0;
+  late double _totAlc;
+  late double _totCal;
+  late double _totSpent;
 
   Map<String, int> get drinkList => _drinkList;
-  double get total => _totAlc;
+  double get totAlc => _totAlc;
+  double get totCal => _totCal;
+  double get totSpent => _totSpent;
   DateTime get date => _date;
-  double get sleep => _sleepScore;
 
   bool _modify = true;
 
@@ -41,12 +43,32 @@ class DailyDrinkDB with ChangeNotifier {
         'Super Alcoholics', (value) => json['Drinks']['Super Alcoholics']);
     drinkList.update('Wine', (value) => json['Drinks']['Wine']);
     _totAlc = json['TotalAlcohol'].toDouble();
-    _sleepScore = json['SleepScore'].toDouble();
+    _totCal = json['TotalCal'].toDouble();
+    _totSpent = json['TotalSpent'].toDouble();
+  }
+
+  Future<void> saveDay(DatabaseReference dbRef) async {
+    String dateName = _date.toString().split(' ')[0];
+    //print(dateName);
+    totalAlcohol();
+    dbRef.child(dateName).set(
+      {
+        "Drinks": {
+          "Beer": _drinkList["Beer"],
+          "Cocktail": _drinkList["Cocktail"],
+          "Wine": _drinkList["Wine"],
+          "Super Alcoholics": _drinkList["Super Alcoholics"],
+        },
+        "Date": _date.toString(),
+        "TotalAlcohol": _totAlc,
+        "TotalCal": _totCal,
+        "TotalSpent": _totSpent,
+      },
+    );
   }
 
   void addDate(DateTime newDate) {
     _date = newDate;
-    //print(_date);
     notifyListeners();
   }
 
@@ -81,6 +103,13 @@ class DailyDrinkDB with ChangeNotifier {
     notifyListeners();
   }
 
+  void calc() {
+    totalAlcohol();
+    totalCal();
+    totalSpent();
+    notifyListeners();
+  }
+
   void totalAlcohol() {
     _totAlc = 0;
     for (Drink drink in drinks) {
@@ -93,26 +122,32 @@ class DailyDrinkDB with ChangeNotifier {
       //print(drink.name);
     }
     notifyListeners();
-    //print(sum);
+    print(_totAlc);
   }
 
-  Future<void> saveDay(DatabaseReference dbRef) async {
-    String dateName = _date.toString().split(' ')[0];
-    //print(dateName);
-    totalAlcohol();
-    dbRef.child(dateName).set(
-      {
-        "Drinks": {
-          "Beer": _drinkList["Beer"],
-          "Cocktail": _drinkList["Cocktail"],
-          "Wine": _drinkList["Wine"],
-          "Super Alcoholics": _drinkList["Super Alcoholics"],
-        },
-        "Date": _date.toString(),
-        "TotalAlcohol": _totAlc,
-        "SleepScore": _sleepScore,
-      },
-    );
+  void totalCal() {
+    _totCal = 0;
+    for (Drink drink in drinks) {
+      if (_drinkList.containsKey(drink.name)) {
+        drink.calCal();
+        _totCal += drink.cal * getDrinkCount(drink.name)!;
+      } else {
+        _totCal += 0;
+      }
+    }
+    notifyListeners();
+  }
+
+  void totalSpent() {
+    _totSpent = 0;
+    for (Drink drink in drinks) {
+      if (_drinkList.containsKey(drink.name)) {
+        _totSpent += drink.price * getDrinkCount(drink.name)!;
+      } else {
+        _totSpent += 0;
+      }
+    }
+    notifyListeners();
   }
 
   Future<void> removeDay(DatabaseReference dbRef, String date) async {

@@ -32,7 +32,7 @@ class ImpactTest extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               ElevatedButton(
                   onPressed: () async {
                     final result = await _isImpactUp();
@@ -44,11 +44,11 @@ class ImpactTest extends StatelessWidget {
                       ..showSnackBar(SnackBar(content: Text(message)));
                   },
                   child: Text('Ping IMPACT')),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               TextFormField(
                 controller: userController,
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               TextFormField(
                 controller: pswController,
               ),
@@ -104,8 +104,8 @@ class ImpactTest extends StatelessWidget {
                     UserPrefs.clearTokens();
                     ScaffoldMessenger.of(context)
                       ..removeCurrentSnackBar()
-                      ..showSnackBar(
-                          SnackBar(content: Text('Tokens have been deleted')));
+                      ..showSnackBar(SnackBar(
+                          content: const Text('Tokens have been deleted')));
                   },
                   child: const Text('Delete tokens')),
               ElevatedButton(
@@ -120,7 +120,7 @@ class ImpactTest extends StatelessWidget {
                       ..showSnackBar(SnackBar(content: Text(message)));
                   },
                   child: Text("Get Data")),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               ElevatedButton(
                   onPressed: () async {
                     await getandsaveTokens();

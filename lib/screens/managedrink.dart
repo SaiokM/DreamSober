@@ -80,53 +80,55 @@ class _ManageDrinkPageState extends State<ManageDrinkPage> {
       color: Color.fromARGB(255, 170, 167, 196),
       child: Padding(
         padding: EdgeInsets.all(5),
-        child: ListView.builder(
-          shrinkWrap: true,
-          itemCount: drinks.length,
-          itemBuilder: (context, idx) {
-            return Card(
-              child: ListTile(
-                contentPadding: EdgeInsets.all(10),
-                tileColor: Color.fromARGB(255, 147, 145, 170),
-                title: Text(
-                  drinks[idx].name,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
+        child: Column(
+          children: List.generate(
+            4,
+            (idx) {
+              return Card(
+                child: ListTile(
+                  contentPadding: EdgeInsets.all(10),
+                  tileColor: Color.fromARGB(255, 147, 145, 170),
+                  title: Text(
+                    drinks[idx].name,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Alcohol Content: ~ ${drinks[idx].perc.toString()} %",
+                        style: TextStyle(fontSize: 13),
+                      ),
+                      Text(
+                        "Volume: ~ ${drinks[idx].volume.toString()} ml",
+                        style: TextStyle(fontSize: 13),
+                      ),
+                    ],
+                  ),
+                  leading: Image.asset(
+                    imgs[idx],
+                    height: 50,
+                  ),
+                  trailing: Container(
+                    margin: EdgeInsets.only(right: 10),
+                    child:
+                        Consumer<DailyDrinkDB>(builder: (context, dailyDB, _) {
+                      return Text(
+                        dailyDB.getDrinkCount(drinks[idx].name).toString(),
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      );
+                    }),
                   ),
                 ),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Alcohol Content: ~ ${drinks[idx].perc.toString()} %",
-                      style: TextStyle(fontSize: 13),
-                    ),
-                    Text(
-                      "Volume: ~ ${drinks[idx].volume.toString()} ml",
-                      style: TextStyle(fontSize: 13),
-                    ),
-                  ],
-                ),
-                leading: Image.asset(
-                  imgs[idx],
-                  height: 50,
-                ),
-                trailing: Container(
-                  margin: EdgeInsets.only(right: 10),
-                  child: Consumer<DailyDrinkDB>(builder: (context, dailyDB, _) {
-                    return Text(
-                      dailyDB.getDrinkCount(drinks[idx].name).toString(),
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    );
-                  }),
-                ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     );
@@ -139,6 +141,7 @@ class _ManageDrinkPageState extends State<ManageDrinkPage> {
         .child("Data");
     return FloatingActionButton(
       onPressed: () {
+        context.read<DailyDrinkDB>().calc();
         context.read<DailyDrinkDB>().saveDay(dbRef);
         String msg = 'Daily drink list saved!';
         if (!context.read<DailyDrinkDB>().modify) {

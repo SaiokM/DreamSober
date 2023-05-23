@@ -86,6 +86,7 @@ class _HomePageState extends State<HomePage> {
           _currentUser = CurrentUser.fromJson(user);
         }
         return Scaffold(
+          backgroundColor: Color.fromRGBO(215, 204, 200, 1),
           body: Center(
             child: _widgetList[_selectedIdx],
           ),

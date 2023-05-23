@@ -151,9 +151,9 @@ class _DatabasePageState extends State<DatabasePage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                  "Alcohol Drank: ${map[list[idx]]["TotalAlcohol"].toString()}"),
+                                  "Alcohol Drank: ${map[list[idx]]["TotalAlcohol"].toString()}ml"),
                               Text(
-                                  "Sleep Score: ${map[list[idx]]["SleepScore"].toString()}"),
+                                  "Money Spent: ${map[list[idx]]["TotalSpent"].toString()}€"),
                             ],
                           ),
                           trailing: IconButton(
