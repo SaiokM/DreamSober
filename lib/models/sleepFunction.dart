@@ -38,44 +38,45 @@ class SleepFunction {
     if (_age >= 25) {
       //adult
       if (sleepEfficiency >= 85) {
-        _sleepEfficiencyScore = 100; //good
+        _sleepEfficiencyScore = 100; //good, at least 85%
       } else if (sleepEfficiency >= 74) {
         _sleepEfficiencyScore = (sleepEfficiency - 74) * (100 / 11);
       } else {
-        _sleepEfficiencyScore = 0; //poor
+        _sleepEfficiencyScore = 0; //poor, lesser than 74%
       }
     } else {
       //young adult
       if (sleepEfficiency >= 85) {
-        _sleepEfficiencyScore = 100; //good
+        _sleepEfficiencyScore = 100; //good, al least 85%
       } else if (sleepEfficiency >= 64) {
         _sleepEfficiencyScore = (sleepEfficiency - 64) * (100 / 11);
       } else {
-        _sleepEfficiencyScore = 0; //poor
+        _sleepEfficiencyScore = 0; //poor, lesser than 74%
       }
     }
     return _sleepEfficiencyScore;
   }
 
-//Sleep Latency= time wakefulness-slepp [min]
+//Sleep Latency= time wakefulness to slepp [min]
   double? SleepLatency() {
     if (_timeToFallAsleep <= 30) {
-      _sleepLatencyScore = 100; //good
+      _sleepLatencyScore = 100; //good, lesser than 30 min
     } else if (_timeToFallAsleep <= 60) {
       _sleepLatencyScore = (60 - _timeToFallAsleep) * (100 / 30);
     } else {
-      _sleepLatencyScore = 0; //poor
+      _sleepLatencyScore = 0; //poor, bigger than 60min
     }
     return _sleepLatencyScore;
   }
 
-// duration [min]
+// duration [min]: 
   double? SleepDuration() {
+    _sleepDuration = _sleepDuration / 3600; //min -> hours
     if (_sleepDuration >= 7 && _age >= 18) {
-      //Adults
+      //Adults, at least 7 hours
       _sleepDurationScore = 100; //good
     } else if (_sleepDuration >= 8 && _age < 18) {
-      //Young
+      //Young, at least 8 hours
       _sleepDurationScore = 100; //good
     } else {
       _sleepDurationScore = 0; //poor
@@ -86,11 +87,11 @@ class SleepFunction {
 //WASO: Wake After Sleep Onset [min]
   num? WASO() {
     if (_timeAwake <= 20) {
-      _wasoScore = 100; //good
+      _wasoScore = 100; //good, lesser than 20min
     } else if (_timeAwake <= 51) {
       _wasoScore = (100 - (_timeAwake - 20) * (100 / 31));
     } else {
-      _wasoScore = 0; //poor
+      _wasoScore = 0; //poor, bigger than 51 min
     }
     return _wasoScore;
   }

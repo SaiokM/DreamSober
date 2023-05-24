@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:dreamsober/models/sleepday.dart';
 import 'package:dreamsober/pages/authorization/auth_page.dart';
+import 'package:flutter/services.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:dreamsober/models/userprefs.dart';
 import 'package:dreamsober/pages/home_page.dart';
@@ -178,9 +179,8 @@ class _ImpactOnboardingState extends State<ImpactOnboarding> {
                                 ..removeCurrentSnackBar()
                                 ..showSnackBar(
                                     SnackBar(content: Text(message)));
-                              Navigator.pushReplacementNamed(
-                                  context, AuthPage.route);
-                              message == 200
+                                    log('Response: $message');
+                              result == 200
                                   ? Navigator.pushReplacementNamed(
                                       context, AuthPage.route)
                                   : null;

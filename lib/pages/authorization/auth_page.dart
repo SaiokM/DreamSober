@@ -19,7 +19,7 @@ class AuthPage extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           // user is logged in
-          if (snapshot.hasData) {
+          if (snapshot.hasData && UserPrefs.getImpactLogin()) {
             final String userUID = FirebaseAuth.instance.currentUser!.uid;
             UserPrefs.setUID(userUID);
             return HomePage();

@@ -59,7 +59,7 @@ class Impact with ChangeNotifier {
       var access = UserPrefs.getImpactAccess();
     }
     if (access != null) {
-      if (JwtDecoder.isExpired(access!)) {
+      if (JwtDecoder.isExpired(access)) {
         await refreshTokens();
         access = UserPrefs.getImpactAccess();
       }
