@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'dart:developer';
 import 'package:dreamsober/models/drink.dart';
+import 'package:dreamsober/models/drinkDB.dart';
 import 'package:dreamsober/models/userprefs.dart';
 import 'package:dreamsober/models/sleepday.dart';
 import 'package:dreamsober/models/impact.dart';
@@ -53,11 +54,28 @@ class _ReportPageState extends State<ReportPage> {
   @override
   Widget build(BuildContext context) {
     //double height = MediaQuery.of(context).size.height;
-    return Container(
-      color: const Color.fromRGBO(215, 204, 200, 1),
-      child: _weeklyList(context),
+    return Scaffold(
+      backgroundColor: Colors.brown[100],
+      body: _buildForm(context), //_weeklyList(context),
     );
   }
+
+  Widget _buildForm(BuildContext context) {
+    return SingleChildScrollView(
+      child: Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _sleep(context),
+              _weeklyList(context),  
+            ],
+        ),
+      ),
+    );
+  }
+
+
+
 
   List<String> _generateWeek(String day) {
     List<String> weekList = ["", "", "", "", "", "", ""];
@@ -205,8 +223,10 @@ class _ReportPageState extends State<ReportPage> {
 
   Widget _weekGrid(BuildContext context, List<int> totList) {
     double totSpent = 0;
+    double totKcal = 0;                 
     for (int i = 0; i < 4; i++) {
       totSpent += drinks[i].price * totList[i];
+      totKcal += drinks[i].kcal * totList[i];
     }
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 4),
@@ -228,7 +248,7 @@ class _ReportPageState extends State<ReportPage> {
                     child: (idx == 0)
                         ? _money(context, totSpent)
                         : (idx == 1)
-                            ? _sleep(context)
+                            ? _kcal(context, totKcal)
                             : SizedBox(),
                   ),
                 ),
@@ -253,6 +273,28 @@ class _ReportPageState extends State<ReportPage> {
           Center(
             child: Text(
               "$totSpent€",
+              style: TextStyle(fontSize: 30),
+              textAlign: TextAlign.center,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _kcal(BuildContext context, double totKcal){
+    return Center(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            "This week you introduce",
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 40),
+          Center(
+            child: Text(
+              "$totKcal Kcal",
               style: TextStyle(fontSize: 30),
               textAlign: TextAlign.center,
             ),
@@ -311,7 +353,7 @@ class _ReportPageState extends State<ReportPage> {
             );
           } else {
             return Center(child: CircularProgressIndicator());
-          }
+          }    
         });
   }
 }

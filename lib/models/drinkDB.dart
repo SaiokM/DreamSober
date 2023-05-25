@@ -18,12 +18,12 @@ class DailyDrinkDB with ChangeNotifier {
   ];
   DateTime _date = DateTime.now();
   late double _totAlc;
-  late double _totCal;
+  late double _totKcal;
   late double _totSpent;
 
   Map<String, int> get drinkList => _drinkList;
   double get totAlc => _totAlc;
-  double get totCal => _totCal;
+  double get totKcal => _totKcal;
   double get totSpent => _totSpent;
   DateTime get date => _date;
 
@@ -43,7 +43,7 @@ class DailyDrinkDB with ChangeNotifier {
         'Super Alcoholics', (value) => json['Drinks']['Super Alcoholics']);
     drinkList.update('Wine', (value) => json['Drinks']['Wine']);
     _totAlc = json['TotalAlcohol'].toDouble();
-    _totCal = json['TotalCal'].toDouble();
+    _totKcal = json['TotalKcal'].toDouble();
     _totSpent = json['TotalSpent'].toDouble();
   }
 
@@ -61,7 +61,7 @@ class DailyDrinkDB with ChangeNotifier {
         },
         "Date": _date.toString(),
         "TotalAlcohol": _totAlc,
-        "TotalCal": _totCal,
+        "TotalKcal": _totKcal,
         "TotalSpent": _totSpent,
       },
     );
@@ -105,7 +105,7 @@ class DailyDrinkDB with ChangeNotifier {
 
   void calc() {
     totalAlcohol();
-    totalCal();
+    totalKcal();
     totalSpent();
     notifyListeners();
   }
@@ -125,14 +125,14 @@ class DailyDrinkDB with ChangeNotifier {
     print(_totAlc);
   }
 
-  void totalCal() {
-    _totCal = 0;
+  void totalKcal() {
+    _totKcal = 0;
     for (Drink drink in drinks) {
       if (_drinkList.containsKey(drink.name)) {
-        drink.calCal();
-        _totCal += drink.cal * getDrinkCount(drink.name)!;
+        drink.calKcal();
+        _totKcal += drink.kcal * getDrinkCount(drink.name)!;
       } else {
-        _totCal += 0;
+        _totKcal += 0;
       }
     }
     notifyListeners();
