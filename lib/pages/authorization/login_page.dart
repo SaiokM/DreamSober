@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:dreamsober/components/my_button.dart';
 import 'package:dreamsober/components/textfield_mail.dart';
-import 'package:dreamsober/components/textfiel_psw.dart';
+import 'package:dreamsober/components/textfield_psw.dart';
 import 'package:dreamsober/components/square_tile.dart';
 
 import '../impact_on.dart';
@@ -40,9 +40,7 @@ class _LoginPageState extends State<LoginPage> {
         password: passwordController.text.trim(),
       );
 
-      // pop the loading circle
-      //Navigator.pop(context);
-
+      //Navigate to Impact page
       navigateToImpactPage();
     } on FirebaseAuthException catch (e) {
       // pop the loading circle

@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:dreamsober/components/my_button.dart';
 import 'package:dreamsober/components/textfield_mail.dart';
-import 'package:dreamsober/components/textfiel_psw.dart';
+import 'package:dreamsober/components/textfield_psw.dart';
 import 'package:dreamsober/components/square_tile.dart';
 import 'package:dreamsober/screens/impacttest.dart';
 

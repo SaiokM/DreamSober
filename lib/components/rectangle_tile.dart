@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-class SquareTile extends StatelessWidget {
+class RectangleTile extends StatelessWidget {
   final String imagePath;
   final Function()? onTap;
 
-  const SquareTile({
-    super.key,
+  const RectangleTile({
+    Key? key,
     required this.imagePath,
     required this.onTap,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,9 @@ class SquareTile extends StatelessWidget {
         ),
         child: Image.asset(
           imagePath,
-          height: 40,
+          height: 60,
+          width: 240,
+          fit: BoxFit.cover,
         ),
       ),
     );

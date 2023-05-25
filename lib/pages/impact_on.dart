@@ -1,5 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:dreamsober/components/my_button.dart';
+import 'package:dreamsober/components/rectangle_tile.dart';
+import 'package:dreamsober/components/textfield_psw.dart';
+import 'package:dreamsober/components/textfield_user.dart';
 import 'package:dreamsober/models/sleepday.dart';
 import 'package:dreamsober/pages/authorization/auth_page.dart';
 import 'package:flutter/services.dart';
@@ -22,7 +26,6 @@ class ImpactOnboarding extends StatefulWidget {
 }
 
 class _ImpactOnboardingState extends State<ImpactOnboarding> {
-  static bool _passwordVisible = false;
   final TextEditingController userController = TextEditingController();
   final TextEditingController pswController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -35,12 +38,6 @@ class _ImpactOnboardingState extends State<ImpactOnboarding> {
       pswController.text = UserPrefs.getImpactPsw();
     }
     super.initState();
-  }
-
-  void _showPassword() {
-    setState(() {
-      _passwordVisible = !_passwordVisible;
-    });
   }
 
   Future<int> getandsaveTokens() async {
@@ -65,6 +62,7 @@ class _ImpactOnboardingState extends State<ImpactOnboarding> {
                 key: _formKey,
                 child: Column(
                   children: <Widget>[
+                    const SizedBox(height: 10),
                     Image.asset(
                       'assets/impact_logo.png',
                       fit: BoxFit.fitWidth,
@@ -73,154 +71,91 @@ class _ImpactOnboardingState extends State<ImpactOnboarding> {
                         style: TextStyle(
                           fontSize: 16,
                         )),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    const Align(
-                      alignment: Alignment.topLeft,
-                      child: Text('Username',
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold)),
-                    ),
-                    const SizedBox(
-                      height: 7,
-                    ),
-                    TextFormField(
-                      validator: (String? value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Username is required';
-                        }
-                        return null;
-                      },
-                      controller: userController,
-                      cursorColor: const Color(0xFF83AA99),
-                      decoration: InputDecoration(
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                          borderSide: const BorderSide(
-                            color: Color(0xFF89453C),
-                          ),
-                        ),
-                        border: const OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0))),
-                        prefixIcon: const Icon(
-                          Icons.person,
-                          color: Color(0xFF89453C),
-                        ),
-                        hintText: 'Username',
-                        hintStyle: const TextStyle(color: Color(0xFF89453C)),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    const Align(
-                      alignment: Alignment.topLeft,
-                      child: Text('Password',
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold)),
-                    ),
-                    const SizedBox(
-                      height: 7,
-                    ),
-                    TextFormField(
-                      validator: (String? value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Password is required';
-                        }
-                        return null;
-                      },
-                      controller: pswController,
-                      cursorColor: const Color(0xFF83AA99),
-                      obscureText: !_passwordVisible,
-                      decoration: InputDecoration(
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                          borderSide: const BorderSide(
-                            color: Color(0xFF89453C),
-                          ),
-                        ),
-                        border: const OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0))),
-                        prefixIcon: const Icon(
-                          Icons.lock,
-                          color: Color(0xFF89453C),
-                        ),
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            // Based on passwordVisible state choose the icon
-                            _passwordVisible
-                                ? Icons.visibility
-                                : Icons.visibility_off,
-                            color: Colors.grey,
-                          ),
-                          onPressed: () {
-                            _showPassword();
-                          },
-                        ),
-                        hintText: 'Password',
-                        hintStyle: const TextStyle(color: Color(0xFF89453C)),
-                      ),
-                    ),
+
                     const SizedBox(height: 20),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: ElevatedButton(
-                            onPressed: () async {
-                              final result = await getandsaveTokens();
-                              final message = result == 200
-                                  ? 'Login successful'
-                                  : 'Login failed';
-                              ScaffoldMessenger.of(context)
-                                ..removeCurrentSnackBar()
-                                ..showSnackBar(
-                                    SnackBar(content: Text(message)));
-                                    log('Response: $message');
-                              result == 200
-                                  ? Navigator.pushReplacementNamed(
-                                      context, AuthPage.route)
-                                  : null;
-                            },
-                            child: const Text('Login')),
-                        /*child: ElevatedButton(
-                          onPressed: () async {
-                            bool? validation = true;
-                            if (!validation) {
-                              // if not correct show message
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(const SnackBar(
-                                backgroundColor: Colors.red,
-                                behavior: SnackBarBehavior.floating,
-                                margin: EdgeInsets.all(8),
-                                content: Text('Wrong Credentials'),
-                                duration: Duration(seconds: 2),
-                              ));
-                            } else {
-                              // else move to Purpleair Onboarding if we have not saved a api key yet
-                              UserPrefs.setImpactUsername(userController.text);
-                              UserPrefs.setImpactPsw(pswController.text);
-                            }
-                          },
-                          style: ButtonStyle(
-                              //maximumSize: const MaterialStatePropertyAll(Size(50, 20)),
-                              shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10))),
-                              elevation: MaterialStateProperty.all(0),
-                              padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                                  const EdgeInsets.symmetric(
-                                      horizontal: 80, vertical: 12)),
-                              foregroundColor:
-                                  MaterialStateProperty.all<Color>(Colors.white),
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  const Color(0xFF89453C))),
-                          child: const Text('Authorize'),
-                        ),*/
+
+                    //User textfield
+                    UserTextField(
+                      controller: userController,
+                      hintText: 'Username',
+                      obscureText: false,
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    //password textfield
+                    PswTextField(
+                      controller: pswController,
+                      hintText: 'Password',
+                      obscureText: true,
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    // SIgn in button
+                    MyButton(
+                        text: 'Authorize',
+                        onTap: () async {
+                          final result = await getandsaveTokens();
+                          final message = result == 200
+                              ? 'Login successful'
+                              : 'Login failed';
+                          ScaffoldMessenger.of(context)
+                            ..removeCurrentSnackBar()
+                            ..showSnackBar(SnackBar(content: Text(message)));
+                          log('Response: $message');
+                          result == 200
+                              ? Navigator.pushReplacementNamed(
+                                  context, AuthPage.route)
+                              : null;
+                        }),
+
+                    const SizedBox(height: 20),
+
+                    // or continue with
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Divider(
+                              thickness: 0.5,
+                              color: Colors.grey[400],
+                            ),
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 10.0),
+                            child: Text(
+                              'Or continue with',
+                              style: TextStyle(color: Colors.grey[700]),
+                            ),
+                          ),
+                          Expanded(
+                            child: Divider(
+                              thickness: 0.5,
+                              color: Colors.grey[400],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
+
+                    const SizedBox(height: 20),
+
+                    // fitbit button
+                    RectangleTile(
+                        onTap: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Avaible from the next update"),
+                              duration: Duration(seconds: 1),
+                            ),
+                          );
+                        },
+                        imagePath: 'assets/fitbit_logo.png'),
+
+                    const SizedBox(width: 35),
                   ],
                 ),
               ),
