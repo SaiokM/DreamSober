@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, unused_import, unused_local_variable, prefer_const_literals_to_create_immutables
 
 import 'dart:async';
+import 'package:dreamsober/models/sleepFunction.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -62,19 +63,54 @@ class _ReportPageState extends State<ReportPage> {
 
   Widget _buildForm(BuildContext context) {
     return SingleChildScrollView(
-      child: Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              _sleep(context),
-              _weeklyList(context),  
-            ],
-        ),
+      child: FutureBuilder(
+        future: _AlcSleepData(), 
+        builder: (context, snapshot) {
+          if (snapshot.hasData){
+            Map<dynamic, dynamic> alcMap = snapshot.data![0];
+            Map<String, SleepDay> sleepMap =
+                snapshot.data![1] as Map<String, SleepDay>;
+          if (sleepMap.isNotEmpty){
+          return Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  _sleep(context, sleepMap),
+                  _weeklyList(context),  
+                ],
+            ),
+          );
+          }else {
+            return Center(child: CircularProgressIndicator());
+          }
+          }else {
+            return Center(child: CircularProgressIndicator());
+          } 
+        } 
       ),
     );
   }
 
 
+  Future<List<Map<dynamic, dynamic>>> _AlcSleepData() async {
+    List<Map> alcSleepList = [];
+    Map<dynamic, dynamic> alcMap = {};
+    Map<String, SleepDay> impactSleep = {};
+
+    // Firebase
+    DatabaseReference dbRef =
+        FirebaseDatabase.instance.ref().child(widget.userUID).child("Data");
+    await dbRef.once().then((DatabaseEvent event) {
+      if (event.snapshot.value == null) {}
+      alcMap =
+          event.snapshot.value as Map<dynamic, dynamic>; // save alcohol data
+    });
+    // Impact
+    impactSleep = await Impact.getSleepRangeData(
+        thisWeek[0], thisWeek[thisWeek.length - 1]);
+    alcSleepList = [alcMap, impactSleep];
+    return alcSleepList;
+  }
 
 
   List<String> _generateWeek(String day) {
@@ -138,7 +174,6 @@ class _ReportPageState extends State<ReportPage> {
                 shrinkWrap: true,
                 children: [
                   _weekDrinks(context, totList),
-                  _weekGrid(context, totList),
                 ],
               ),
             );
@@ -221,46 +256,12 @@ class _ReportPageState extends State<ReportPage> {
     );
   }
 
-  Widget _weekGrid(BuildContext context, List<int> totList) {
-    double totSpent = 0;
-    double totKcal = 0;                 
-    for (int i = 0; i < 4; i++) {
-      totSpent += drinks[i].price * totList[i];
-      totKcal += drinks[i].kcal * totList[i];
-    }
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 4),
-      child: SizedBox(
-        height: 400,
-        child: GridView.count(
-          physics: BouncingScrollPhysics(),
-          childAspectRatio: 1,
-          crossAxisCount: 2,
-          children: List.generate(2, (idx) {
-            return Card(
-              color: Colors.brown[300],
-              child: SizedBox(
-                height: 30,
-                child: Padding(
-                  padding: EdgeInsets.all(4),
-                  child: Card(
-                    color: Colors.brown[200],
-                    child: (idx == 0)
-                        ? _money(context, totSpent)
-                        : (idx == 1)
-                            ? _kcal(context, totKcal)
-                            : SizedBox(),
-                  ),
-                ),
-              ),
-            );
-          }),
-        ),
-      ),
-    );
-  }
 
-  Widget _money(BuildContext context, double totSpent) {
+  Widget _money(BuildContext context, Map<String, dynamic> AlcMap) {
+    double totSpent = 0;                    
+    for (int i = 0; i < 7; i++) {
+      totSpent += AlcMap[thisWeek[i]]["TotalSpent"];
+    }
     return Center(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -282,7 +283,11 @@ class _ReportPageState extends State<ReportPage> {
     );
   }
 
-  Widget _kcal(BuildContext context, double totKcal){
+  Widget _kcal(BuildContext context, Map<String, dynamic> AlcMap){
+    double totCal = 0;                
+      for (int i = 0; i < 7; i++) {
+        totCal += AlcMap[thisWeek[i]]['TotalKcal'];
+      }
     return Center(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -294,7 +299,7 @@ class _ReportPageState extends State<ReportPage> {
           SizedBox(height: 40),
           Center(
             child: Text(
-              "$totKcal Kcal",
+              "$totCal Kcal",
               style: TextStyle(fontSize: 30),
               textAlign: TextAlign.center,
             ),
@@ -304,7 +309,36 @@ class _ReportPageState extends State<ReportPage> {
     );
   }
 
-  Widget _sleep(BuildContext context) {
+  Widget _sleep(BuildContext context, Map<String, SleepDay> sleepMap) {
+    //elaborazione
+    double totQuality = 0;
+    double totEfficiency = 0;
+    double totLatency = 0;
+    double totWaso = 0;
+    double totDuration = 0;
+    double totLightPhase = 0;
+    double totDeepPhase = 0;
+    double totRemPhase = 0;
+    for (int i=0; i <7; i++){
+      SleepFunction day = SleepFunction.fromSleepDay(sleepMap[thisWeek[i]]!);
+      totQuality += day.SleepQualityDS()!;
+      totEfficiency += day.SleepEfficiency()![0];
+      totLatency += day.SleepLatency()![0];
+      totWaso += day.WASO()![0];
+      totDuration += day.SleepDuration()![0];
+      totLightPhase += day.SleepPhases()![0];
+      totDeepPhase += day.SleepPhases()![1];
+      totRemPhase += day.SleepPhases()![2];
+    }
+    double meanTotQuality = totQuality/7;
+    double meanTotEfficiency = totEfficiency/7;
+    double meanTotLatency = totLatency/7;
+    double meanTotWaso = totWaso/7;
+    double meanTotDuration = totDuration/7;
+    double meanTotLightPhase = totLightPhase/7;
+    double meanTotDeepPhase = totDeepPhase/7;
+    double meanTotRemPhase = totRemPhase/7;
+
     return FutureBuilder(
         future: sleepData(),
         builder: (context, snapshot) {

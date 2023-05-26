@@ -22,7 +22,7 @@ class SleepFunction {
   late final double _sleepQualityScore;
 
   void addAge(int age) => _age = age;
-  void fromSleepDay(SleepDay day) {
+  SleepFunction.fromSleepDay(SleepDay day) {
     _timeAsleep = day.minAsleep;
     _sleepDuration = day.duration;
     _timeToFallAsleep = day.minToFall;
@@ -33,7 +33,7 @@ class SleepFunction {
   }
 
   //Sleep Effinciency (SE) = time asleep/total time in bed
-  double? SleepEfficiency() {
+  List <double>? SleepEfficiency() {
     double sleepEfficiency = (_timeAsleep * 60 / _sleepDuration) * 100; //%
     if (_age >= 25) {
       //adult
@@ -54,11 +54,11 @@ class SleepFunction {
         _sleepEfficiencyScore = 0; //poor, lesser than 74%
       }
     }
-    return _sleepEfficiencyScore;
+    return [sleepEfficiency, _sleepEfficiencyScore];
   }
 
 //Sleep Latency= time wakefulness to slepp [min]
-  double? SleepLatency() {
+  List <double>? SleepLatency() {
     if (_timeToFallAsleep <= 30) {
       _sleepLatencyScore = 100; //good, lesser than 30 min
     } else if (_timeToFallAsleep <= 60) {
@@ -66,11 +66,11 @@ class SleepFunction {
     } else {
       _sleepLatencyScore = 0; //poor, bigger than 60min
     }
-    return _sleepLatencyScore;
+    return [_timeToFallAsleep.toDouble(), _sleepLatencyScore];
   }
 
 // duration [min]: 
-  double? SleepDuration() {
+  List <double>? SleepDuration() {
     _sleepDuration = _sleepDuration / 3600; //min -> hours
     if (_sleepDuration >= 7 && _age >= 18) {
       //Adults, at least 7 hours
@@ -81,11 +81,11 @@ class SleepFunction {
     } else {
       _sleepDurationScore = 0; //poor
     }
-    return _sleepDurationScore;
+    return [_sleepDuration, _sleepDurationScore];
   }
 
 //WASO: Wake After Sleep Onset [min]
-  num? WASO() {
+  List<double>? WASO() {
     if (_timeAwake <= 20) {
       _wasoScore = 100; //good, lesser than 20min
     } else if (_timeAwake <= 51) {
@@ -93,11 +93,11 @@ class SleepFunction {
     } else {
       _wasoScore = 0; //poor, bigger than 51 min
     }
-    return _wasoScore;
+    return [_timeAwake.toDouble(), _wasoScore.toDouble()];
   }
 
 //Sleep Phase: Light 60%, Deep 15%, REM 25% od the total sleep duration
-  double? SleepPhases() {
+  List? SleepPhases() {
     double totalSleepDuration =
         (_lightDuration + _deepDuration + _remDuration).toDouble();
     _lightScore = (_lightDuration / totalSleepDuration) * 100;
@@ -108,7 +108,8 @@ class SleepFunction {
         (_remScore - 25)
             .abs(); //Sum of the differences between the sleep phases percentage scores and the desired baseline
     _phaseScores = 100 - _phaseScores;
-    return _phaseScores;
+    List _phases = [_lightScore, _deepScore, _remScore];
+    return _phases;
   }
 
   double? SleepQualityDS() {
