@@ -8,6 +8,11 @@ class UserPrefs {
 
   static void resetUser() => _preferences.clear();
 
+  //Various
+  static Future setAge(int userage) async =>
+      await _preferences.setInt('age', userage);
+  static int getAge() => _preferences.getInt('age') ?? 0;
+
   //Firebase
   static Future setUID(String userUID) async =>
       await _preferences.setString('userUID', userUID);

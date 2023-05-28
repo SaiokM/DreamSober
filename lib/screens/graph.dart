@@ -135,14 +135,14 @@ class _ChartPageState extends State<ChartPage> {
     return FutureBuilder(
         future: _graphAlcData(),
         builder: (context, snapshot) {
-          if (snapshot.hasData && snapshot.data![1].isNotEmpty) {
+          if (snapshot.hasData) {
             //dev.log(snapshot.data!.length.toString());
             //log("-----snapshot-----\n${snapshot.data}\n-----snapshot-----");
             Map<dynamic, dynamic> alcMap = snapshot.data![0];
             Map<String, SleepDay> sleepMap =
                 snapshot.data![1] as Map<String, SleepDay>;
-            //log("-----alcMap------\n$alcMap\n------alcMap------");
-            //log("-----sleepMap------\n$sleepMap\n------sleepMap------");
+            //dev.log("-----alcMap------\n$alcMap\n------alcMap------");
+            //dev.log("-----sleepMap------\n$sleepMap\n------sleepMap------");
             if (alcMap.isNotEmpty) {
               //log(map.toString());
               List<String> alcdateList = [];

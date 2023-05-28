@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  static int _selectedIdx = 0;
+  static int _selectedIdx = 1;
 
   void signOut() {
     setState(() {
@@ -84,6 +84,7 @@ class _HomePageState extends State<HomePage> {
               Map<String, dynamic>.from(snapshot.data!.snapshot.value as Map);
 
           _currentUser = CurrentUser.fromJson(user);
+          UserPrefs.setAge(_currentUser.age);
         }
         return Scaffold(
           backgroundColor: Color.fromRGBO(215, 204, 200, 1),

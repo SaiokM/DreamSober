@@ -1,27 +1,27 @@
 import 'package:dreamsober/models/sleepday.dart';
+import 'package:dreamsober/models/userprefs.dart';
 import 'package:dreamsober/pages/profilePage.dart';
 import 'package:flutter/material.dart';
 
 class SleepFunction {
-  late final int _age;
-  late final int _timeAsleep;
-  late final double _sleepDuration;
-  late final int _timeToFallAsleep;
-  late final int _timeAwake;
-  late final double _sleepEfficiencyScore;
-  late final double _sleepLatencyScore;
-  late final double _sleepDurationScore;
-  late final num _wasoScore;
-  late final double _phaseScores;
-  late final double _lightScore;
-  late final double _deepScore;
-  late final double _remScore;
-  late final int _lightDuration;
-  late final int _deepDuration;
-  late final int _remDuration;
-  late final double _sleepQualityScore;
+  final int _age = UserPrefs.getAge();
+  int _timeAsleep = 0;
+  double _sleepDuration = 0;
+  int _timeToFallAsleep = 0;
+  int _timeAwake = 0;
+  double _sleepEfficiencyScore = 0;
+  double _sleepLatencyScore = 0;
+  double _sleepDurationScore = 0;
+  num _wasoScore = 0;
+  double _phaseScores = 0;
+  double _lightScore = 0;
+  double _deepScore = 0;
+  double _remScore = 0;
+  int _lightDuration = 0;
+  int _deepDuration = 0;
+  int _remDuration = 0;
+  double _sleepQualityScore = 0;
 
-  void addAge(int age) => _age = age;
   SleepFunction.fromSleepDay(SleepDay day) {
     _timeAsleep = day.minAsleep;
     _sleepDuration = day.duration;
@@ -30,10 +30,16 @@ class SleepFunction {
     _lightDuration = day.phases['light']!.min;
     _deepDuration = day.phases['deep']!.min;
     _remDuration = day.phases['rem']!.min;
+    SleepEfficiency();
+    SleepLatency();
+    SleepDuration();
+    WASO();
+    SleepPhases();
+    SleepQualityDS();
   }
 
   //Sleep Effinciency (SE) = time asleep/total time in bed
-  List <double>? SleepEfficiency() {
+  List<double>? SleepEfficiency() {
     double sleepEfficiency = (_timeAsleep * 60 / _sleepDuration) * 100; //%
     if (_age >= 25) {
       //adult
@@ -58,7 +64,7 @@ class SleepFunction {
   }
 
 //Sleep Latency= time wakefulness to slepp [min]
-  List <double>? SleepLatency() {
+  List<double>? SleepLatency() {
     if (_timeToFallAsleep <= 30) {
       _sleepLatencyScore = 100; //good, lesser than 30 min
     } else if (_timeToFallAsleep <= 60) {
@@ -69,8 +75,8 @@ class SleepFunction {
     return [_timeToFallAsleep.toDouble(), _sleepLatencyScore];
   }
 
-// duration [min]: 
-  List <double>? SleepDuration() {
+// duration [min]:
+  List<double>? SleepDuration() {
     _sleepDuration = _sleepDuration / 3600; //min -> hours
     if (_sleepDuration >= 7 && _age >= 18) {
       //Adults, at least 7 hours

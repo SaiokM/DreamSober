@@ -15,7 +15,6 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
 import 'package:d_chart/d_chart.dart';
 
-
 class ReportPage extends StatefulWidget {
   final String userUID = UserPrefs.getUID();
   ReportPage({super.key});
@@ -46,7 +45,8 @@ class _ReportPageState extends State<ReportPage> {
     Drink('Wine', 12, 150, 4)
   ];
 
-  final String today = DateTime.now().toString().split(' ')[0];
+  //final String today = DateTime.now().toString().split(' ')[0];
+  final String today = "2023-05-08";
   late final List<String> thisWeek;
 
   @override
@@ -67,34 +67,32 @@ class _ReportPageState extends State<ReportPage> {
   Widget _buildForm(BuildContext context) {
     return SingleChildScrollView(
       child: FutureBuilder(
-        future: _AlcSleepData(), 
-        builder: (context, snapshot) {
-          if (snapshot.hasData){
-            Map<dynamic, dynamic> alcMap = snapshot.data![0];
-            Map<String, SleepDay> sleepMap =
-                snapshot.data![1] as Map<String, SleepDay>;
-          if (sleepMap.isNotEmpty){
-          return Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  _sleep(context, sleepMap),
-                  _weeklyList(context),
-                  _moneyKcal(context, alcMap), 
-                ],
-            ),
-          );
-          }else {
-            return Center(child: CircularProgressIndicator());
-          }
-          }else {
-            return Center(child: CircularProgressIndicator());
-          } 
-        } 
-      ),
+          future: _AlcSleepData(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              Map<dynamic, dynamic> alcMap = snapshot.data![0];
+              Map<String, SleepDay> sleepMap =
+                  snapshot.data![1] as Map<String, SleepDay>;
+              if (sleepMap.isNotEmpty) {
+                return Center(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      _sleep(context, sleepMap),
+                      _weeklyList(context),
+                      _moneyKcal(context, alcMap),
+                    ],
+                  ),
+                );
+              } else {
+                return Center(child: CircularProgressIndicator());
+              }
+            } else {
+              return Center(child: CircularProgressIndicator());
+            }
+          }),
     );
   }
-
 
   Future<List<Map<dynamic, dynamic>>> _AlcSleepData() async {
     List<Map> alcSleepList = [];
@@ -115,7 +113,6 @@ class _ReportPageState extends State<ReportPage> {
     alcSleepList = [alcMap, impactSleep];
     return alcSleepList;
   }
-
 
   List<String> _generateWeek(String day) {
     List<String> weekList = ["", "", "", "", "", "", ""];
@@ -260,13 +257,17 @@ class _ReportPageState extends State<ReportPage> {
     );
   }
 
-
   Widget _moneyKcal(BuildContext context, Map<dynamic, dynamic> alcMap) {
     double totSpent = 0;
-    double totCal = 0;                    
+    double totCal = 0;
     for (int i = 0; i < 7; i++) {
-      totSpent += alcMap[thisWeek[i]]["TotalSpent"];
-      totCal += alcMap[thisWeek[i]]['TotalKcal'];
+      if (alcMap[thisWeek[i]] != null) {
+        totSpent += alcMap[thisWeek[i]]["TotalSpent"];
+        totCal += alcMap[thisWeek[i]]['TotalKcal'];
+      } else {
+        totSpent += 0;
+        totCal += 0;
+      }
     }
     return Row(
       children: [
@@ -286,7 +287,6 @@ class _ReportPageState extends State<ReportPage> {
                   textAlign: TextAlign.center,
                 ),
               )
-              
             ],
           ),
         ),
@@ -323,8 +323,8 @@ class _ReportPageState extends State<ReportPage> {
     double totLightPhase = 0;
     double totDeepPhase = 0;
     double totRemPhase = 0;
-    for (int i=0; i <7; i++){
-      SleepFunction day = SleepFunction.fromSleepDay(sleepMap[thisWeek[i]]!);
+    for (int i = 0; i < 7; i++) {
+      SleepFunction? day = SleepFunction.fromSleepDay(sleepMap[thisWeek[i]]!);
       totQuality += day.SleepQualityDS()!;
       totEfficiency += day.SleepEfficiency()![0];
       totLatency += day.SleepLatency()![0];
@@ -333,15 +333,16 @@ class _ReportPageState extends State<ReportPage> {
       totLightPhase += day.SleepPhases()![0];
       totDeepPhase += day.SleepPhases()![1];
       totRemPhase += day.SleepPhases()![2];
+      day = null;
     }
-    double meanTotQuality = totQuality/7;
-    double meanTotEfficiency = totEfficiency/7;
-    double meanTotLatency = totLatency/7;
-    double meanTotWaso = totWaso/7;
-    double meanTotDuration = totDuration/7;
-    double meanTotLightPhase = totLightPhase/7;
-    double meanTotDeepPhase = totDeepPhase/7;
-    double meanTotRemPhase = totRemPhase/7;
+    double meanTotQuality = totQuality / 7;
+    double meanTotEfficiency = totEfficiency / 7;
+    double meanTotLatency = totLatency / 7;
+    double meanTotWaso = totWaso / 7;
+    double meanTotDuration = totDuration / 7;
+    double meanTotLightPhase = totLightPhase / 7;
+    double meanTotDeepPhase = totDeepPhase / 7;
+    double meanTotRemPhase = totRemPhase / 7;
 
     return FutureBuilder(
         future: sleepData(),
@@ -384,18 +385,18 @@ class _ReportPageState extends State<ReportPage> {
                     //valueNotifier: valueNotifier,
                     mergeMode: true,
                     progressColors: const [
-                    Colors.redAccent,
-                    Colors.orangeAccent,
-                    Colors.amberAccent,
-                    Colors.greenAccent,
-                    Colors.blueAccent,
+                      Colors.redAccent,
+                      Colors.orangeAccent,
+                      Colors.amberAccent,
+                      Colors.greenAccent,
+                      Colors.blueAccent,
                     ],
                     backColor: Colors.white,
                     onGetText: (double meanTotQuality) {
                       TextStyle centerTextStyle = TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.brown,
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.brown,
                       );
                       return Text(
                         '$meanTotQuality',
@@ -412,14 +413,14 @@ class _ReportPageState extends State<ReportPage> {
                             //valueNotifier: valueNotifier,
                             mergeMode: true,
                             progressColors: const [
-                            Colors.brown,
+                              Colors.brown,
                             ],
                             backColor: Colors.white,
                             onGetText: (double meanTotEfficiency) {
                               TextStyle centerTextStyle = TextStyle(
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.brown,
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.brown,
                               );
                               return Text(
                                 '$meanTotEfficiency%',
@@ -509,7 +510,6 @@ class _ReportPageState extends State<ReportPage> {
                           )
                         ],
                       ),
-
                     ],
                   ),
                 ],
@@ -517,7 +517,7 @@ class _ReportPageState extends State<ReportPage> {
             );
           } else {
             return Center(child: CircularProgressIndicator());
-          }    
+          }
         });
   }
 }

@@ -1,10 +1,6 @@
-import 'dart:convert';
-import 'dart:io';
 import 'package:dreamsober/models/sleepday.dart';
 import 'package:dreamsober/pages/authorization/auth_page.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:dreamsober/models/userprefs.dart';
-import 'package:dreamsober/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import "package:dreamsober/models/impact.dart";
 import 'package:http/http.dart' as http;
@@ -26,7 +22,7 @@ class ImpactTest extends StatelessWidget {
     pswController.text = UserPrefs.getImpactPsw();
 
     return Scaffold(
-      //appBar: AppBar(        title: Text(ImpactTest.routename),      ),
+      //appBar: AppBar(title: Text(ImpactTest.routename),),
       body: SingleChildScrollView(
         child: Center(
           child: Column(
@@ -118,6 +114,7 @@ class ImpactTest extends StatelessWidget {
                     ScaffoldMessenger.of(context)
                       ..removeCurrentSnackBar()
                       ..showSnackBar(SnackBar(content: Text(message)));
+                    log(results.toString());
                   },
                   child: Text("Get Data")),
               const SizedBox(height: 10),
