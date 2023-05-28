@@ -12,6 +12,9 @@ import 'package:dreamsober/models/userprefs.dart';
 import 'package:dreamsober/models/sleepday.dart';
 import 'package:dreamsober/models/impact.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
+import 'package:d_chart/d_chart.dart';
+
 
 class ReportPage extends StatefulWidget {
   final String userUID = UserPrefs.getUID();
@@ -76,7 +79,8 @@ class _ReportPageState extends State<ReportPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   _sleep(context, sleepMap),
-                  _weeklyList(context),  
+                  _weeklyList(context),
+                  _moneyKcal(context, alcMap), 
                 ],
             ),
           );
@@ -257,55 +261,55 @@ class _ReportPageState extends State<ReportPage> {
   }
 
 
-  Widget _money(BuildContext context, Map<String, dynamic> AlcMap) {
-    double totSpent = 0;                    
+  Widget _moneyKcal(BuildContext context, Map<dynamic, dynamic> alcMap) {
+    double totSpent = 0;
+    double totCal = 0;                    
     for (int i = 0; i < 7; i++) {
-      totSpent += AlcMap[thisWeek[i]]["TotalSpent"];
+      totSpent += alcMap[thisWeek[i]]["TotalSpent"];
+      totCal += alcMap[thisWeek[i]]['TotalKcal'];
     }
-    return Center(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            "This week you spent",
-            textAlign: TextAlign.center,
+    return Row(
+      children: [
+        Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                "This week you spent",
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 40),
+              Center(
+                child: Text(
+                  "$totSpent€",
+                  style: TextStyle(fontSize: 30),
+                  textAlign: TextAlign.center,
+                ),
+              )
+              
+            ],
           ),
-          SizedBox(height: 40),
-          Center(
-            child: Text(
-              "$totSpent€",
-              style: TextStyle(fontSize: 30),
-              textAlign: TextAlign.center,
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _kcal(BuildContext context, Map<String, dynamic> AlcMap){
-    double totCal = 0;                
-      for (int i = 0; i < 7; i++) {
-        totCal += AlcMap[thisWeek[i]]['TotalKcal'];
-      }
-    return Center(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            "This week you introduce",
-            textAlign: TextAlign.center,
+        ),
+        Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                "This week you introduce",
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 40),
+              Center(
+                child: Text(
+                  "$totCal Kcal",
+                  style: TextStyle(fontSize: 30),
+                  textAlign: TextAlign.center,
+                ),
+              )
+            ],
           ),
-          SizedBox(height: 40),
-          Center(
-            child: Text(
-              "$totCal Kcal",
-              style: TextStyle(fontSize: 30),
-              textAlign: TextAlign.center,
-            ),
-          )
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -375,13 +379,139 @@ class _ReportPageState extends State<ReportPage> {
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 20),
-                  Center(
-                    child: Text(
-                      "hs",
-                      style: TextStyle(fontSize: 30),
-                      textAlign: TextAlign.center,
-                    ),
-                  )
+                  Text('Sleep Quality'),
+                  SimpleCircularProgressBar(
+                    //valueNotifier: valueNotifier,
+                    mergeMode: true,
+                    progressColors: const [
+                    Colors.redAccent,
+                    Colors.orangeAccent,
+                    Colors.amberAccent,
+                    Colors.greenAccent,
+                    Colors.blueAccent,
+                    ],
+                    backColor: Colors.white,
+                    onGetText: (double meanTotQuality) {
+                      TextStyle centerTextStyle = TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.brown,
+                      );
+                      return Text(
+                        '$meanTotQuality',
+                        style: centerTextStyle,
+                      );
+                    },
+                  ),
+                  Row(
+                    children: [
+                      Column(
+                        children: [
+                          Text('Efficiency'),
+                          SimpleCircularProgressBar(
+                            //valueNotifier: valueNotifier,
+                            mergeMode: true,
+                            progressColors: const [
+                            Colors.brown,
+                            ],
+                            backColor: Colors.white,
+                            onGetText: (double meanTotEfficiency) {
+                              TextStyle centerTextStyle = TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.brown,
+                              );
+                              return Text(
+                                '$meanTotEfficiency%',
+                                style: centerTextStyle,
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        child: DChartPie(
+                          data: [
+                            {'domain': 'Light', 'measure': meanTotLightPhase},
+                            {'domain': 'Deep', 'measure': meanTotDeepPhase},
+                            {'domain': 'REM', 'measure': meanTotDeepPhase},
+                          ],
+                          fillColor: (pieData, index) {
+                            switch (pieData['domain']) {
+                              case 'Light':
+                                return Colors.green;
+                              case 'Deep':
+                                return Colors.blue;
+                              case 'REM':
+                                return Colors.red;
+                            }
+                          },
+                          labelPosition: PieLabelPosition.outside,
+                          labelFontSize: 14,
+                          labelLineColor: Colors.black,
+                          showLabelLine: true,
+                          donutWidth: 20,
+                          labelColor: Colors.black,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Duration",
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: 40),
+                          Center(
+                            child: Text(
+                              "$meanTotDuration h",
+                              style: TextStyle(fontSize: 30),
+                              textAlign: TextAlign.center,
+                            ),
+                          )
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Latency",
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: 40),
+                          Center(
+                            child: Text(
+                              "$meanTotLatency min",
+                              style: TextStyle(fontSize: 30),
+                              textAlign: TextAlign.center,
+                            ),
+                          )
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "WASO",
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: 40),
+                          Center(
+                            child: Text(
+                              "$meanTotWaso min",
+                              style: TextStyle(fontSize: 30),
+                              textAlign: TextAlign.center,
+                            ),
+                          )
+                        ],
+                      ),
+
+                    ],
+                  ),
                 ],
               ),
             );
