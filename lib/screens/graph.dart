@@ -2,8 +2,10 @@
 
 import 'dart:math';
 import 'package:dreamsober/models/impact.dart';
+import 'package:dreamsober/models/sleepFunction.dart';
 import 'package:dreamsober/models/userprefs.dart';
 import 'package:dreamsober/models/sleepday.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:dreamsober/bar_graph/bar_data.dart';
@@ -149,6 +151,7 @@ class _ChartPageState extends State<ChartPage> {
               List<double> alcList = [];
               List<double> sleepList = [];
               List<double> moneyList = [];
+              List<double> slpqltList = [];
 
               for (var key in alcMap.keys) {
                 alcdateList.add(key);
@@ -166,10 +169,18 @@ class _ChartPageState extends State<ChartPage> {
                   alcList.add(0);
                 }
                 if (sleepMap.keys.contains(day)) {
-                  //log(sleepMap[weekList[0]]!.duration.toString());
+                  dev.log(SleepFunction.fromSleepDay(sleepMap[day]!)
+                      .SleepQualityDS()
+                      .toString());
+                  slpqltList.add((SleepFunction.fromSleepDay(sleepMap[day]!)
+                                  .SleepQualityDS()! *
+                              100)
+                          .truncateToDouble() /
+                      100);
                   sleepList.add(
                       (sleepMap[day]!.duration / 36).truncateToDouble() / 100);
                 } else {
+                  slpqltList.add(0);
                   sleepList.add(0);
                 }
                 if (alcMap.keys.contains(day)) {
@@ -178,12 +189,14 @@ class _ChartPageState extends State<ChartPage> {
                   moneyList.add(0);
                 }
               }
-              //print(sleepList.toString());
+              print(sleepList.toString());
+              print(slpqltList.toString());
               BarData mybarData = BarData(
                 dayList: weekList,
                 alcList: alcList,
                 sleepList: sleepList,
                 moneyList: moneyList,
+                slpqltList: slpqltList,
               );
               mybarData.initializeBarData();
 
@@ -232,7 +245,7 @@ class _ChartPageState extends State<ChartPage> {
                             ),
                           ),
                           SizedBox(width: 5),
-                          Text("Sleep [Hrs]"),
+                          Text("Sleep Quality"),
                         ],
                       ),
                       Row(
@@ -315,7 +328,7 @@ class _ChartPageState extends State<ChartPage> {
                                               width: 13,
                                               borderRadius:
                                                   BorderRadius.circular(1),
-                                              toY: data.y2,
+                                              toY: data.y4,
                                               color: sleepColor,
                                             ),
                                             BarChartRodData(
@@ -366,13 +379,10 @@ class _ChartPageState extends State<ChartPage> {
             return const SizedBox(
               //No Entries
               height: 380,
-              child: Card(
-                color: Color.fromRGBO(215, 204, 200, 1),
-                child: Padding(
-                  padding: EdgeInsets.all(5),
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
+              child: Padding(
+                padding: EdgeInsets.all(5),
+                child: Center(
+                  child: CircularProgressIndicator(),
                 ),
               ),
             );
@@ -392,25 +402,8 @@ class _ChartPageState extends State<ChartPage> {
         showTitles: true,
         reservedSize: 30,
         getTitlesWidget: (value, meta) {
-          /*
-          String text = DateFormat('dd-MM-yyyy')
-              .format(DateTime.parse(myBarData.dayList[value.toInt()]))
-              .split(' ')[0]
-              .replaceAll("-", "/");*/
           String text = dayList[value.toInt()];
-          /*
-          return Column(children: [
-            //SizedBox(height: 9),
-            Transform.rotate(
-                angle: -math.pi / 10,
-                child: Text(
-                  text,
-                  style: TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
-                  ),
-                )),
-          ]);*/
+
           return SideTitleWidget(
             child: Text(text),
             axisSide: meta.axisSide,

@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  static int _selectedIdx = 1;
+  static int _selectedIdx = 0;
 
   void signOut() {
     setState(() {

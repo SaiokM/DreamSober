@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dreamsober/models/sleepday.dart';
 import 'package:dreamsober/models/userprefs.dart';
 import 'package:dreamsober/pages/profilePage.dart';
@@ -24,7 +26,7 @@ class SleepFunction {
 
   SleepFunction.fromSleepDay(SleepDay day) {
     _timeAsleep = day.minAsleep;
-    _sleepDuration = day.duration;
+    _sleepDuration = day.duration / 60; //min -> hours
     _timeToFallAsleep = day.minToFall;
     _timeAwake = day.minAwake;
     _lightDuration = day.phases['light']!.min;
@@ -77,7 +79,6 @@ class SleepFunction {
 
 // duration [min]:
   List<double>? SleepDuration() {
-    _sleepDuration = _sleepDuration / 3600; //min -> hours
     if (_sleepDuration >= 7 && _age >= 18) {
       //Adults, at least 7 hours
       _sleepDurationScore = 100; //good
@@ -119,7 +120,8 @@ class SleepFunction {
   }
 
   double? SleepQualityDS() {
-    (_sleepEfficiencyScore +
+    log("-----------------\n$_sleepEfficiencyScore\n$_sleepLatencyScore\n$_sleepDurationScore\n$_wasoScore\n$_phaseScores\n----------------------");
+    _sleepQualityScore = (_sleepEfficiencyScore +
             _sleepLatencyScore +
             _sleepDurationScore +
             _wasoScore +

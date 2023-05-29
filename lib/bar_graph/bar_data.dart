@@ -6,12 +6,14 @@ class BarData {
   final List<dynamic> alcList;
   final List<dynamic> sleepList;
   final List<dynamic> moneyList;
+  final List<dynamic> slpqltList;
 
   BarData({
     required this.dayList,
     required this.alcList,
     required this.sleepList,
     required this.moneyList,
+    required this.slpqltList,
   });
 
   List<IndividualBar> barData = [];
@@ -22,6 +24,7 @@ class BarData {
         y1: alcList[i],
         y2: sleepList[i],
         y3: moneyList[i],
+        y4: slpqltList[i],
       ));
     }
   }
