@@ -59,7 +59,7 @@ class _ChartPageState extends State<ChartPage> {
     return FutureBuilder(
       future: Firebase.initializeApp(),
       builder: (context, snapshot) {
-        double height = MediaQuery.of(context).size.height;
+        //double height = MediaQuery.of(context).size.height;
         //log(height.toString());
         return Scaffold(
             backgroundColor: Color.fromRGBO(215, 204, 200, 1),
@@ -67,7 +67,7 @@ class _ChartPageState extends State<ChartPage> {
             body: (snapshot.hasError)
                 ? _error(context)
                 : (snapshot.hasData)
-                    ? _pageBody(context)
+                    ? _graph(context)
                     : _wait(context));
       },
     );
@@ -85,14 +85,6 @@ class _ChartPageState extends State<ChartPage> {
     return const Center(
       child: Text("Error: Something whent wrong"),
     );
-  }
-
-  Widget _pageBody(BuildContext context) {
-    return Center(
-      child: _graph(context),
-    )
-        //_buttons(context)
-        ;
   }
 
   //generates a list of the days of the current week from a day
@@ -121,14 +113,14 @@ class _ChartPageState extends State<ChartPage> {
     // Firebase
     DatabaseReference dbRef =
         FirebaseDatabase.instance.ref().child(widget.userUID).child("Data");
-    await dbRef.once().then((DatabaseEvent event) {
-      if (event.snapshot.value == null) {}
-      alcMap =
-          event.snapshot.value as Map<dynamic, dynamic>; // save alcohol data
-    });
+    var event = await dbRef.once();
+    if (event.snapshot.value != null) {
+      alcMap = event.snapshot.value as Map<dynamic, dynamic>;
+    }
     // Impact
     impactSleep = await Impact.getSleepRangeData(
         weekList[0], weekList[weekList.length - 1]);
+    print(impactSleep);
     alcSleepList = [alcMap, impactSleep];
     return alcSleepList;
   }
@@ -145,7 +137,7 @@ class _ChartPageState extends State<ChartPage> {
                 snapshot.data![1] as Map<String, SleepDay>;
             //dev.log("-----alcMap------\n$alcMap\n------alcMap------");
             //dev.log("-----sleepMap------\n$sleepMap\n------sleepMap------");
-            if (alcMap.isNotEmpty) {
+            if (alcMap.isNotEmpty || sleepMap.isNotEmpty) {
               //log(map.toString());
               List<String> alcdateList = [];
               List<double> alcList = [];
@@ -165,32 +157,21 @@ class _ChartPageState extends State<ChartPage> {
               for (var day in weekList) {
                 if (alcMap.keys.contains(day)) {
                   alcList.add(alcMap[day]['TotalAlcohol'].toDouble());
+                  moneyList.add(alcMap[day]['TotalSpent'].toDouble());
                 } else {
                   alcList.add(0);
+                  moneyList.add(0);
                 }
                 if (sleepMap.keys.contains(day)) {
-                  dev.log(SleepFunction.fromSleepDay(sleepMap[day]!)
-                      .SleepQualityDS()
-                      .toString());
-                  slpqltList.add((SleepFunction.fromSleepDay(sleepMap[day]!)
-                                  .SleepQualityDS()! *
-                              100)
-                          .truncateToDouble() /
-                      100);
+                  slpqltList.add(SleepFunction.fromSleepDay(sleepMap[day]!)
+                      .SleepQualityDS()!);
                   sleepList.add(
                       (sleepMap[day]!.duration / 36).truncateToDouble() / 100);
                 } else {
                   slpqltList.add(0);
                   sleepList.add(0);
                 }
-                if (alcMap.keys.contains(day)) {
-                  moneyList.add(alcMap[day]['TotalSpent'].toDouble());
-                } else {
-                  moneyList.add(0);
-                }
               }
-              print(sleepList.toString());
-              print(slpqltList.toString());
               BarData mybarData = BarData(
                 dayList: weekList,
                 alcList: alcList,
@@ -200,162 +181,166 @@ class _ChartPageState extends State<ChartPage> {
               );
               mybarData.initializeBarData();
 
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(height: 20),
-                  Text(
-                    "${DateFormat('dd-MM-yyyy').format(DateTime.parse(weekList[0])).split(' ')[0].replaceAll("-", "/")} - ${DateFormat('dd-MM-yyyy').format(DateTime.parse(weekList[weekList.length - 1])).split(' ')[0].replaceAll("-", "/")}",
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    SizedBox(height: 20),
+                    Text(
+                      "${DateFormat('dd-MM-yyyy').format(DateTime.parse(weekList[0])).split(' ')[0].replaceAll("-", "/")} - ${DateFormat('dd-MM-yyyy').format(DateTime.parse(weekList[weekList.length - 1])).split(' ')[0].replaceAll("-", "/")}",
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 10),
-                  //legend
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                                color: alcColor,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(5))),
-                            child: SizedBox(
-                              height: 20,
-                              width: 20,
+                    SizedBox(height: 10),
+                    //legend
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                  color: alcColor,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(5))),
+                              child: SizedBox(
+                                height: 20,
+                                width: 20,
+                              ),
                             ),
-                          ),
-                          SizedBox(width: 5),
-                          Text("Alcohol [ml]"),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                                color: sleepColor,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(5))),
-                            child: SizedBox(
-                              height: 20,
-                              width: 20,
+                            SizedBox(width: 5),
+                            Text("Alcohol [ml]"),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                  color: sleepColor,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(5))),
+                              child: SizedBox(
+                                height: 20,
+                                width: 20,
+                              ),
                             ),
-                          ),
-                          SizedBox(width: 5),
-                          Text("Sleep Quality"),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                                color: moneyColor,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(5))),
-                            child: SizedBox(
-                              height: 20,
-                              width: 20,
+                            SizedBox(width: 5),
+                            Text("Sleep Quality"),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                  color: moneyColor,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(5))),
+                              child: SizedBox(
+                                height: 20,
+                                width: 20,
+                              ),
                             ),
-                          ),
-                          SizedBox(width: 5),
-                          Text("Money [€]"),
-                        ],
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  SizedBox(
-                    height: 300,
-                    child: Padding(
-                      padding: EdgeInsets.all(10),
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Center(
-                          child: SizedBox(
-                            height: 300,
-                            width: 60 * 7,
-                            child: Container(
-                              alignment: Alignment.topCenter,
-                              //color: Colors.green,
-                              child: BarChart(
-                                BarChartData(
-                                  barTouchData: BarTouchData(
-                                      enabled: true,
-                                      touchTooltipData: BarTouchTooltipData(
-                                        tooltipBgColor: Colors.transparent,
-                                      )),
-                                  borderData: FlBorderData(
-                                    border: const Border(
-                                      top: BorderSide.none,
-                                      right: BorderSide.none,
-                                      left: BorderSide.none,
-                                      bottom: BorderSide(width: 1),
+                            SizedBox(width: 5),
+                            Text("Money [€]"),
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    SizedBox(
+                      height: 300,
+                      child: Padding(
+                        padding: EdgeInsets.all(10),
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Center(
+                            child: SizedBox(
+                              height: 300,
+                              width: 60 * 7,
+                              child: Container(
+                                alignment: Alignment.topCenter,
+                                //color: Colors.green,
+                                child: BarChart(
+                                  BarChartData(
+                                    barTouchData: BarTouchData(
+                                        enabled: true,
+                                        touchTooltipData: BarTouchTooltipData(
+                                          tooltipBgColor: Colors.transparent,
+                                        )),
+                                    borderData: FlBorderData(
+                                      border: const Border(
+                                        top: BorderSide.none,
+                                        right: BorderSide.none,
+                                        left: BorderSide.none,
+                                        bottom: BorderSide(width: 1),
+                                      ),
                                     ),
+                                    titlesData: FlTitlesData(
+                                        show: true,
+                                        bottomTitles: AxisTitles(
+                                            drawBehindEverything: true,
+                                            sideTitles:
+                                                _bottomTitles(mybarData)),
+                                        topTitles: AxisTitles(
+                                            sideTitles:
+                                                SideTitles(showTitles: false)),
+                                        leftTitles: AxisTitles(
+                                            sideTitles:
+                                                SideTitles(showTitles: false)),
+                                        rightTitles: AxisTitles(
+                                            sideTitles:
+                                                SideTitles(showTitles: false))),
+                                    gridData: FlGridData(show: false),
+                                    minY: 0,
+                                    maxY:
+                                        maxList(alcList, sleepList, slpqltList),
+                                    barGroups: mybarData.barData
+                                        .map(
+                                          (data) => BarChartGroupData(
+                                            x: data.x,
+                                            barRods: [
+                                              BarChartRodData(
+                                                width: 13,
+                                                borderRadius:
+                                                    BorderRadius.circular(2),
+                                                toY: data.y1,
+                                                color: alcColor,
+                                              ),
+                                              BarChartRodData(
+                                                width: 13,
+                                                borderRadius:
+                                                    BorderRadius.circular(1),
+                                                toY: data.y4,
+                                                color: sleepColor,
+                                              ),
+                                              BarChartRodData(
+                                                width: 13,
+                                                borderRadius:
+                                                    BorderRadius.circular(1),
+                                                toY: data.y3,
+                                                color: moneyColor,
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                        .toList(),
                                   ),
-                                  titlesData: FlTitlesData(
-                                      show: true,
-                                      bottomTitles: AxisTitles(
-                                          drawBehindEverything: true,
-                                          sideTitles: _bottomTitles(mybarData)),
-                                      topTitles: AxisTitles(
-                                          sideTitles:
-                                              SideTitles(showTitles: false)),
-                                      leftTitles: AxisTitles(
-                                          sideTitles:
-                                              SideTitles(showTitles: false)),
-                                      rightTitles: AxisTitles(
-                                          sideTitles:
-                                              SideTitles(showTitles: false))),
-                                  gridData: FlGridData(show: false),
-                                  minY: 0,
-                                  maxY: maxList(alcList, sleepList),
-                                  barGroups: mybarData.barData
-                                      .map(
-                                        (data) => BarChartGroupData(
-                                          x: data.x,
-                                          barRods: [
-                                            BarChartRodData(
-                                              width: 13,
-                                              borderRadius:
-                                                  BorderRadius.circular(2),
-                                              toY: data.y1,
-                                              color: alcColor,
-                                            ),
-                                            BarChartRodData(
-                                              width: 13,
-                                              borderRadius:
-                                                  BorderRadius.circular(1),
-                                              toY: data.y4,
-                                              color: sleepColor,
-                                            ),
-                                            BarChartRodData(
-                                              width: 13,
-                                              borderRadius:
-                                                  BorderRadius.circular(1),
-                                              toY: data.y3,
-                                              color: moneyColor,
-                                            ),
-                                          ],
-                                        ),
-                                      )
-                                      .toList(),
+                                  swapAnimationDuration: Duration(seconds: 0),
                                 ),
-                                swapAnimationDuration: Duration(seconds: 0),
                               ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  _buttons(context)
-                ],
+                    _buttons(context),
+                  ],
+                ),
               );
             } else {
-              return const SizedBox(
+              return SizedBox(
                 //No Entries
                 height: 380,
                 child: Card(
@@ -363,12 +348,22 @@ class _ChartPageState extends State<ChartPage> {
                   child: Padding(
                     padding: EdgeInsets.all(5),
                     child: Center(
-                      child: Text(
-                        "No entries found!",
-                        style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 81, 81, 81)),
+                      child: Column(
+                        children: <Widget>[
+                          SizedBox(
+                            height: 200,
+                            child: Center(
+                              child: Text(
+                                "No entries found!",
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color.fromARGB(255, 81, 81, 81)),
+                              ),
+                            ),
+                          ),
+                          _buttons(context),
+                        ],
                       ),
                     ),
                   ),
@@ -390,10 +385,13 @@ class _ChartPageState extends State<ChartPage> {
         });
   }
 
-  double maxList(List<double> list1, List<double> list2) {
+  double maxList(List<double> list1, List<double> list2, List<double> list3) {
     var max1 = list1.reduce(max) * 1.40;
     var max2 = list2.reduce(max) * 1.40;
-    return max(max1, max2);
+    var max3 = list3.reduce(max) * 1.40;
+    //dev.log("$list1\n$list2\n$list3");
+    return [max1, max2, max3].reduce(max);
+    ;
   }
 
   SideTitles _bottomTitles(BarData myBarData) {
@@ -405,9 +403,9 @@ class _ChartPageState extends State<ChartPage> {
           String text = dayList[value.toInt()];
 
           return SideTitleWidget(
-            child: Text(text),
             axisSide: meta.axisSide,
             space: 4,
+            child: Text(text),
           );
         });
   }

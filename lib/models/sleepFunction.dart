@@ -120,13 +120,18 @@ class SleepFunction {
   }
 
   double? SleepQualityDS() {
-    log("-----------------\n$_sleepEfficiencyScore\n$_sleepLatencyScore\n$_sleepDurationScore\n$_wasoScore\n$_phaseScores\n----------------------");
+    //log("-----------------\n$_sleepEfficiencyScore\n$_sleepLatencyScore\n$_sleepDurationScore\n$_wasoScore\n$_phaseScores\n----------------------");
+
     _sleepQualityScore = (_sleepEfficiencyScore +
             _sleepLatencyScore +
             _sleepDurationScore +
             _wasoScore +
             _phaseScores) /
         5;
+    _sleepQualityScore = (_sleepQualityScore * 100).truncateToDouble() / 100;
+    if (_sleepQualityScore.isNaN) {
+      _sleepQualityScore = 0;
+    }
     return _sleepQualityScore;
   }
 }

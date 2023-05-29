@@ -65,19 +65,18 @@ class _ReportPageState extends State<ReportPage> {
   }
 
   Widget _buildForm(BuildContext context) {
-    return SingleChildScrollView(
-      child: FutureBuilder(
-          future: _AlcSleepData(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              Map<dynamic, dynamic> alcMap = snapshot.data![0];
-              Map<String, SleepDay> sleepMap =
-                  snapshot.data![1] as Map<String, SleepDay>;
-              if (sleepMap.isNotEmpty) {
-                return Expanded(
-                  child: ListView(
-                    physics: BouncingScrollPhysics(),
-                    shrinkWrap: true,
+    return FutureBuilder(
+        future: _AlcSleepData(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            Map<dynamic, dynamic> alcMap = snapshot.data![0];
+            Map<String, SleepDay> sleepMap =
+                snapshot.data![1] as Map<String, SleepDay>;
+            if (sleepMap.isNotEmpty) {
+              return SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                child: Expanded(
+                  child: Column(
                     children: <Widget>[
                       // Problema di constrains su sleep()
                       _sleep(context, sleepMap),
@@ -85,15 +84,15 @@ class _ReportPageState extends State<ReportPage> {
                       _moneyKcal(context, alcMap),
                     ],
                   ),
-                );
-              } else {
-                return Center(child: CircularProgressIndicator());
-              }
+                ),
+              );
             } else {
               return Center(child: CircularProgressIndicator());
             }
-          }),
-    );
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        });
   }
 
   Future<List<Map<dynamic, dynamic>>> _AlcSleepData() async {
@@ -381,6 +380,7 @@ class _ReportPageState extends State<ReportPage> {
           Text('Sleep Quality'),
           SimpleCircularProgressBar(
             //valueNotifier: valueNotifier,
+            animationDuration: 1,
             mergeMode: true,
             progressColors: const [
               Colors.redAccent,
@@ -397,7 +397,7 @@ class _ReportPageState extends State<ReportPage> {
                 color: Colors.brown,
               );
               return Text(
-                '$meanTotQuality',
+                '${meanTotQuality.toInt()}',
                 style: centerTextStyle,
               );
             },
