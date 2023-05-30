@@ -14,13 +14,13 @@ class InfoPage extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Padding(
+          Padding(
             padding: EdgeInsets.only(
               top: 30.0,
             ), // Aggiungi uno spazio di 30 unità in alto
             child: Center(
               child: Column(
-                children: [
+                children: const [
                   Text(
                     'Welcome to DreamSober!',
                     style: TextStyle(fontSize: 18),
@@ -40,7 +40,7 @@ class InfoPage extends StatelessWidget {
                   ),
                   SizedBox(height: 30),
                   Text(
-                    'Come funziona l\'applicazione...',
+                    'How the app works...',
                     style: TextStyle(
                       fontSize: 16,
                     ),
@@ -87,7 +87,7 @@ class InfoPage extends StatelessWidget {
                   );
                 },
                 child: const Text(
-                  'Termini di Servizio',
+                  'Terms of Service',
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey,
