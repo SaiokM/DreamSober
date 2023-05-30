@@ -433,8 +433,11 @@ class _ReportPageState extends State<ReportPage> {
                           Card(
                             color: Colors.brown[200],
                             child: SimpleCircularProgressBar(
+                              size: 50,
+                              backStrokeWidth: 10,
+                              progressStrokeWidth: 10,
                               animationDuration: 0,
-                              //valueNotifier: valueNotifier,
+                              valueNotifier: ValueNotifier(meanTotEfficiency),
                               mergeMode: true,
                               progressColors: const [
                                 Colors.brown,
@@ -457,13 +460,16 @@ class _ReportPageState extends State<ReportPage> {
                       ),
                     ),
                   ),
-                  /*Expanded(
+                  Expanded(
                     child: Card(
-                      color: Colors.cyan,
+                      color: Colors.brown[300],
                       child: SizedBox(
                         height: 150,
                         width: (MediaQuery.of(context).size.width - 25) / 2,
-                        child: DChartPie(
+                        child: 
+
+                        
+                        /*DChartPie(
                           data: [
                             {'domain': 'Light', 'measure': meanTotLightPhase},
                             {'domain': 'Deep', 'measure': meanTotDeepPhase},
@@ -483,10 +489,10 @@ class _ReportPageState extends State<ReportPage> {
                           donutWidth: 5,
                           labelColor: Colors.black,
                           animate: false,
-                        ),
+                        ),*/
                       ),
                     ),
-                  ),*/
+                  ),
                 ],
               ),
             ),
