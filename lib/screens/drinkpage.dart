@@ -51,26 +51,25 @@ class _DrinkState extends State<DrinkPage> {
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
     //log(height.toString());
-    if (height < 700) {
-      return SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        child: SizedBox(
-          height: height - 100,
-          child: _mainApp(context),
-        ),
-      );
-    } else {
-      return _mainApp(context);
-    }
+
+    return _mainApp(context);
   }
 
   Widget _mainApp(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Color.fromRGBO(215, 204, 200, 1),
       resizeToAvoidBottomInset: false,
-      body: _appBody(context),
+      body: height < 700
+          ? SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
+              child: SizedBox(
+                height: height - 50,
+                child: _appBody(context),
+              ),
+            )
+          : _appBody(context),
       floatingActionButton: _floatingButtons(context),
     );
   }

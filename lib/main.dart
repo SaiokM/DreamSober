@@ -10,7 +10,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:dreamsober/models/drinkDB.dart';
 import 'package:dreamsober/models/userprefs.dart';
 import 'package:dreamsober/screens/drinkpage.dart';
-import 'package:dreamsober/screens/placeholder.dart';
 import 'package:dreamsober/screens/managedrink.dart';
 import 'package:dreamsober/screens/databasepage.dart';
 import 'package:dreamsober/screens/graph.dart';

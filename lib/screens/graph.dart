@@ -8,7 +8,7 @@ import 'package:dreamsober/models/sleepday.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:dreamsober/bar_graph/bar_data.dart';
+import 'package:dreamsober/components/bar_graph/bar_data.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -23,6 +23,14 @@ class ChartPage extends StatefulWidget {
   static String route = "/chart/";
   static String routeName = "Chart Data";
 
+  final gridColor = Colors.black;
+  final titleColor = Colors.black;
+  final fashionColor = Colors.red;
+  final artColor = Colors.cyan;
+  final boxingColor = Colors.green;
+  final entertainmentColor = Colors.white;
+  final offRoadColor = Colors.yellow;
+
   @override
   State<ChartPage> createState() => _ChartPageState();
 }
@@ -33,6 +41,10 @@ class _ChartPageState extends State<ChartPage> {
   final Color alcColor = Color.fromARGB(255, 61, 56, 47);
   final Color sleepColor = Color.fromARGB(255, 114, 99, 78);
   final Color moneyColor = Color.fromARGB(255, 163, 132, 89);
+
+  int selectedDataSetIndex = -1;
+  double angleValue = 0;
+  bool relativeAngleMode = true;
 
   int dayIdx = 0;
   List<String> refDay = DateTime.now().toString().split(" ")[0].split("-");
@@ -67,7 +79,7 @@ class _ChartPageState extends State<ChartPage> {
             body: (snapshot.hasError)
                 ? _error(context)
                 : (snapshot.hasData)
-                    ? _graph(context)
+                    ? SingleChildScrollView(child: _graph(context))
                     : _wait(context));
       },
     );
@@ -336,6 +348,17 @@ class _ChartPageState extends State<ChartPage> {
                       ),
                     ),
                     _buttons(context),
+                    SizedBox(height: 20),
+                    Text(
+                      "${DateFormat('dd-MM-yyyy').format(DateTime.parse(weekList[0])).split(' ')[0].replaceAll("-", "/")} - ${DateFormat('dd-MM-yyyy').format(DateTime.parse(weekList[weekList.length - 1])).split(' ')[0].replaceAll("-", "/")}",
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    _radGraph(context, sleepMap),
+                    _buttons(context),
                   ],
                 ),
               );
@@ -385,13 +408,124 @@ class _ChartPageState extends State<ChartPage> {
         });
   }
 
+  Widget _radGraph(BuildContext context, Map<String, SleepDay> sleepMap) {
+    return SizedBox(
+      height: 350,
+      child: RadarChart(
+        RadarChartData(
+          radarTouchData: RadarTouchData(
+            touchCallback: (FlTouchEvent event, response) {
+              if (!event.isInterestedForInteractions) {
+                setState(() {
+                  selectedDataSetIndex = -1;
+                });
+                return;
+              }
+              setState(() {
+                selectedDataSetIndex =
+                    response?.touchedSpot?.touchedDataSetIndex ?? -1;
+              });
+            },
+          ),
+          dataSets: showingDataSets(),
+          radarBackgroundColor: Colors.transparent, //brown[200],
+          borderData: FlBorderData(show: false),
+          radarBorderData: const BorderSide(color: Colors.transparent),
+          titlePositionPercentageOffset: 0.05,
+          titleTextStyle: TextStyle(
+              color: widget.titleColor,
+              fontSize: 14,
+              fontWeight: FontWeight.bold),
+          getTitle: (index, angle) {
+            final usedAngle =
+                relativeAngleMode ? angle + angleValue : angleValue;
+            switch (index) {
+              case 0:
+                return RadarChartTitle(
+                  text: 'Efficiency',
+                  angle: usedAngle,
+                );
+              case 1:
+                return RadarChartTitle(
+                  text: 'Latency',
+                  angle: usedAngle,
+                );
+              case 2:
+                return RadarChartTitle(
+                  text: 'Duration',
+                  angle: usedAngle,
+                );
+              case 3:
+                return RadarChartTitle(
+                  text: 'Waso',
+                  angle: usedAngle,
+                );
+              case 4:
+                return RadarChartTitle(
+                  text: 'Phase',
+                  angle: usedAngle,
+                );
+              default:
+                return const RadarChartTitle(text: '');
+            }
+          },
+          tickCount: 1,
+          ticksTextStyle:
+              const TextStyle(color: Colors.transparent, fontSize: 10),
+          tickBorderData: const BorderSide(color: Colors.transparent),
+          gridBorderData: BorderSide(color: widget.gridColor!, width: 2),
+        ),
+      ),
+    );
+  }
+
+  List<RadarDataSet> showingDataSets() {
+    return rawDataSets().asMap().entries.map((entry) {
+      final index = entry.key;
+      final rawDataSet = entry.value;
+
+      final isSelected = index == selectedDataSetIndex
+          ? true
+          : selectedDataSetIndex == -1
+              ? true
+              : false;
+
+      return RadarDataSet(
+        fillColor: isSelected
+            ? rawDataSet.color.withOpacity(0.2)
+            : rawDataSet.color.withOpacity(0.05),
+        borderColor:
+            isSelected ? rawDataSet.color : rawDataSet.color.withOpacity(0.25),
+        entryRadius: isSelected ? 3 : 2,
+        dataEntries:
+            rawDataSet.values.map((e) => RadarEntry(value: e)).toList(),
+        borderWidth: isSelected ? 2.3 : 2,
+      );
+    }).toList();
+  }
+
+  List<RawDataSet> rawDataSets() {
+    return [
+      RawDataSet(
+        title: 'Fashion',
+        color: Colors.red,
+        values: [
+          300,
+          50,
+          250,
+          400,
+          100,
+        ],
+      ),
+    ];
+  }
+
   double maxList(List<double> list1, List<double> list2, List<double> list3) {
     var max1 = list1.reduce(max) * 1.40;
     var max2 = list2.reduce(max) * 1.40;
     var max3 = list3.reduce(max) * 1.40;
     //dev.log("$list1\n$list2\n$list3");
     return [max1, max2, max3].reduce(max);
-    ;
   }
 
   SideTitles _bottomTitles(BarData myBarData) {
@@ -457,4 +591,16 @@ class _ChartPageState extends State<ChartPage> {
       ),
     );
   }
+}
+
+class RawDataSet {
+  RawDataSet({
+    required this.title,
+    required this.color,
+    required this.values,
+  });
+
+  final String title;
+  final Color color;
+  final List<double> values;
 }

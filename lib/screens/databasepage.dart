@@ -88,32 +88,35 @@ class _DatabasePageState extends State<DatabasePage> {
           title: Text(DatabasePage.routeName),
           centerTitle: true,
         ),
-        body: Padding(
-          padding: EdgeInsets.all(10),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(
-                  height: 15,
-                ),
-                Text(
-                  "List of days from database",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(10),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    height: 15,
                   ),
-                ),
-                SizedBox(height: 15),
-                _drinkList(context),
-              ],
+                  Text(
+                    "List of days from database",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 15),
+                  _drinkList(context),
+                ],
+              ),
             ),
           ),
         ));
   }
 
   Widget _drinkList(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
     DatabaseReference dbRef =
         FirebaseDatabase.instance.ref().child(widget.userUID).child("Data");
     return StreamBuilder(
@@ -131,8 +134,9 @@ class _DatabasePageState extends State<DatabasePage> {
             list.sort((a, b) {
               return DateTime.parse(a).compareTo(DateTime.parse(b));
             });
+            height = list.length < 5 ? list.length * 82 : 400;
             return SizedBox(
-              height: 600,
+              height: height,
               child: Card(
                 color: Colors.brown[300],
                 child: Padding(
