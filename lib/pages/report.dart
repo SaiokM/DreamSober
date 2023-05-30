@@ -46,7 +46,7 @@ class _ReportPageState extends State<ReportPage> {
   ];
 
   //final String today = DateTime.now().toString().split(' ')[0];
-  final String today = "2023-05-07";
+  final String today = "2023-05-07"; //change this date to change the week
   late final List<String> thisWeek;
 
   @override
@@ -72,7 +72,7 @@ class _ReportPageState extends State<ReportPage> {
             Map<dynamic, dynamic> alcMap = snapshot.data![0];
             Map<String, SleepDay> sleepMap =
                 snapshot.data![1] as Map<String, SleepDay>;
-            if (sleepMap.isNotEmpty) {
+            if (sleepMap.isNotEmpty && alcMap.isNotEmpty) {
               return SingleChildScrollView(
                 physics: BouncingScrollPhysics(),
                 child: Expanded(
@@ -87,7 +87,7 @@ class _ReportPageState extends State<ReportPage> {
                 ),
               );
             } else {
-              return Center(child: CircularProgressIndicator());
+              return Center(child: Text("No entries in the database"));
             }
           } else {
             return Center(child: CircularProgressIndicator());
@@ -117,7 +117,7 @@ class _ReportPageState extends State<ReportPage> {
 
   List<String> _generateWeek(String day) {
     List<String> weekList = ["", "", "", "", "", "", ""];
-    List date = day.split("-"); //[YYYY, MM, DD]
+    List<String> date = day.split("-"); //[YYYY, MM, DD]
     for (int i = 1; i <= 7; i++) {
       weekList[i - 1] = DateTime(
               int.parse(date[0]),
@@ -129,13 +129,6 @@ class _ReportPageState extends State<ReportPage> {
           .split(' ')[0];
     }
     return weekList;
-  }
-
-  Future<Map<dynamic, dynamic>> sleepData() async {
-    Map<String, SleepDay> impactSleep = {};
-    impactSleep = await Impact.getSleepRangeData(
-        thisWeek[0], thisWeek[thisWeek.length - 1]);
-    return impactSleep;
   }
 
   Widget _weeklyList(BuildContext context, Map<dynamic, dynamic> map) {
@@ -169,63 +162,63 @@ class _ReportPageState extends State<ReportPage> {
       child: SizedBox(
         height: 200,
         child: Card(
-            color: Colors.brown[300],
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(height: 10),
-                Text(
-                  "This week you drunk a total of",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                  ),
+          color: Colors.brown[300],
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              SizedBox(height: 10),
+              Text(
+                "This week you drunk a total of",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
                 ),
-                SizedBox(height: 10),
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 4),
-                    child: GridView.count(
-                      physics: BouncingScrollPhysics(),
-                      childAspectRatio: 2.3,
-                      crossAxisCount: 2,
-                      children: List.generate(4, (idx) {
-                        return SizedBox(
-                          height: 30,
-                          child: Card(
-                            color: Colors.brown[200],
-                            child: Center(
-                              child: ListTile(
-                                dense: true,
-                                title: Text(
-                                  totList[idx].toString(),
-                                  textAlign: TextAlign.right,
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                subtitle: Text(
-                                  drinkList[idx],
-                                  textAlign: TextAlign.right,
-                                  style: TextStyle(fontSize: 10),
-                                ),
-                                leading: SizedBox(
-                                  height: 45,
-                                  child: Image.asset(
-                                    imgs[idx],
-                                    fit: BoxFit.contain,
-                                  ),
+              ),
+              SizedBox(height: 10),
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 4),
+                  child: GridView.count(
+                    physics: BouncingScrollPhysics(),
+                    childAspectRatio: 2.3,
+                    crossAxisCount: 2,
+                    children: List.generate(4, (idx) {
+                      return SizedBox(
+                        height: 30,
+                        child: Card(
+                          color: Colors.brown[200],
+                          child: Center(
+                            child: ListTile(
+                              dense: true,
+                              title: Text(
+                                totList[idx].toString(),
+                                textAlign: TextAlign.right,
+                                style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.bold),
+                              ),
+                              subtitle: Text(
+                                drinkList[idx],
+                                textAlign: TextAlign.right,
+                                style: TextStyle(fontSize: 10),
+                              ),
+                              leading: SizedBox(
+                                height: 45,
+                                child: Image.asset(
+                                  imgs[idx],
+                                  fit: BoxFit.contain,
                                 ),
                               ),
                             ),
                           ),
-                        );
-                      }),
-                    ),
+                        ),
+                      );
+                    }),
                   ),
                 ),
-              ],
-            )),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
