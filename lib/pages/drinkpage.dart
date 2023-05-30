@@ -6,8 +6,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dreamsober/models/drink.dart';
 import 'package:dreamsober/models/drinkDB.dart';
 import 'package:dreamsober/models/userprefs.dart';
-import 'package:dreamsober/screens/managedrink.dart';
-import 'package:dreamsober/screens/databasepage.dart';
+import 'package:dreamsober/pages/managedrink.dart';
+import 'package:dreamsober/pages/databasepage.dart';
 import 'package:provider/provider.dart';
 import 'dart:developer';
 

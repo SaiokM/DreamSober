@@ -1,12 +1,12 @@
 import 'package:dreamsober/models/userprefs.dart';
 import 'package:dreamsober/pages/authorization/auth_page.dart';
-import 'package:dreamsober/pages/impact_on.dart';
+import 'package:dreamsober/pages/authorization/impact_on.dart';
 import 'package:flutter/material.dart';
 import 'package:dreamsober/models/user.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:developer';
-import 'package:dreamsober/screens/impacttest.dart';
+import 'package:dreamsober/pages/impacttest.dart';
 
 class ProfilePage extends StatefulWidget {
   final String userUID = UserPrefs.getUID();

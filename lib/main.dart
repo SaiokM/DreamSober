@@ -2,18 +2,18 @@
 
 import 'package:dreamsober/pages/authorization/login_or_register.dart';
 import 'package:dreamsober/pages/home_page.dart';
-import 'package:dreamsober/pages/impact_on.dart';
+import 'package:dreamsober/pages/authorization/impact_on.dart';
 import 'package:dreamsober/pages/profilePage.dart';
 import 'package:flutter/material.dart';
 import 'package:dreamsober/pages/authorization/auth_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:dreamsober/models/drinkDB.dart';
 import 'package:dreamsober/models/userprefs.dart';
-import 'package:dreamsober/screens/drinkpage.dart';
-import 'package:dreamsober/screens/managedrink.dart';
-import 'package:dreamsober/screens/databasepage.dart';
-import 'package:dreamsober/screens/graph.dart';
-import 'package:dreamsober/screens/impacttest.dart';
+import 'package:dreamsober/pages/drinkpage.dart';
+import 'package:dreamsober/pages/managedrink.dart';
+import 'package:dreamsober/pages/databasepage.dart';
+import 'package:dreamsober/pages/graph.dart';
+import 'package:dreamsober/pages/impacttest.dart';
 import 'package:provider/provider.dart';
 import 'package:dreamsober/pages/authorization/login_page.dart';
 import 'firebase/firebase_options.dart';

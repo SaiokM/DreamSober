@@ -5,7 +5,7 @@ import 'package:dreamsober/components/my_button.dart';
 import 'package:dreamsober/components/textfield_mail.dart';
 import 'package:dreamsober/components/textfield_psw.dart';
 import 'package:dreamsober/components/square_tile.dart';
-import 'package:dreamsober/screens/impacttest.dart';
+import 'package:dreamsober/pages/impacttest.dart';
 
 class RegisterPage extends StatefulWidget {
   final Function()? onTap;

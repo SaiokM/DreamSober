@@ -5,7 +5,7 @@ import 'package:dreamsober/components/textfield_mail.dart';
 import 'package:dreamsober/components/textfield_psw.dart';
 import 'package:dreamsober/components/square_tile.dart';
 
-import '../impact_on.dart';
+import 'impact_on.dart';
 
 class LoginPage extends StatefulWidget {
   final Function()? onTap;

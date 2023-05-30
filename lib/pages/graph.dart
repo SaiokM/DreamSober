@@ -413,6 +413,7 @@ class _ChartPageState extends State<ChartPage> {
       height: 350,
       child: RadarChart(
         RadarChartData(
+          radarShape: RadarShape.polygon,
           radarTouchData: RadarTouchData(
             touchCallback: (FlTouchEvent event, response) {
               if (!event.isInterestedForInteractions) {
@@ -428,7 +429,7 @@ class _ChartPageState extends State<ChartPage> {
             },
           ),
           dataSets: showingDataSets(),
-          radarBackgroundColor: Colors.transparent, //brown[200],
+          radarBackgroundColor: Colors.transparent,
           borderData: FlBorderData(show: false),
           radarBorderData: const BorderSide(color: Colors.transparent),
           titlePositionPercentageOffset: 0.05,
@@ -473,7 +474,7 @@ class _ChartPageState extends State<ChartPage> {
           ticksTextStyle:
               const TextStyle(color: Colors.transparent, fontSize: 10),
           tickBorderData: const BorderSide(color: Colors.transparent),
-          gridBorderData: BorderSide(color: widget.gridColor!, width: 2),
+          gridBorderData: BorderSide(color: Colors.black, width: 2),
         ),
       ),
     );

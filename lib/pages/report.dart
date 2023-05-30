@@ -369,7 +369,7 @@ class _ReportPageState extends State<ReportPage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
-            height: 180,
+            height: 200,
             child: Card(
               color: Colors.brown[300],
               child: Expanded(
@@ -383,7 +383,11 @@ class _ReportPageState extends State<ReportPage> {
                         Card(
                           color: Colors.brown[200],
                           child: SimpleCircularProgressBar(
-                            //valueNotifier: valueNotifier,
+                            valueNotifier: ValueNotifier(meanTotQuality),
+                            size: 120,
+                            backStrokeWidth: 20,
+                            progressStrokeWidth: 20,
+                            //maxValue: meanTotQuality,
                             animationDuration: 1,
                             mergeMode: true,
                             progressColors: const [

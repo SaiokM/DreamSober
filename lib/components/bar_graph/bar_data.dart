@@ -1,4 +1,4 @@
-import 'package:dreamsober/bar_graph/individual_bar.dart';
+import 'package:dreamsober/components/bar_graph/individual_bar.dart';
 import 'dart:developer';
 
 class BarData {

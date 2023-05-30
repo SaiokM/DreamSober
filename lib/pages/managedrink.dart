@@ -1,6 +1,6 @@
 // ignore_for_file: prefer_const_constructors, unused_import
 
-import 'package:dreamsober/screens/drinkpage.dart';
+import 'package:dreamsober/pages/drinkpage.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -8,7 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:dreamsober/models/drink.dart';
 import 'package:dreamsober/models/drinkDB.dart';
-import 'package:dreamsober/screens/databasepage.dart';
+import 'package:dreamsober/pages/databasepage.dart';
 import 'package:provider/provider.dart';
 
 class ManageDrinkPage extends StatefulWidget {

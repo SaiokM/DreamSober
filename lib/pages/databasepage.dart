@@ -11,8 +11,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dreamsober/models/drink.dart';
 import 'package:dreamsober/models/drinkDB.dart';
 import 'package:dreamsober/models/userprefs.dart';
-import 'package:dreamsober/screens/drinkpage.dart';
-import 'package:dreamsober/screens/managedrink.dart';
+import 'package:dreamsober/pages/drinkpage.dart';
+import 'package:dreamsober/pages/managedrink.dart';
 import 'package:provider/provider.dart';
 
 class DatabasePage extends StatefulWidget {
