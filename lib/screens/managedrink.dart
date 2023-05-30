@@ -46,7 +46,7 @@ class _ManageDrinkPageState extends State<ManageDrinkPage> {
   Widget build(BuildContext context) {
     _updateCurrentUser();
     return Scaffold(
-      backgroundColor: Colors.grey,
+      backgroundColor: Colors.brown[100],
       appBar: AppBar(
         title: Text(ManageDrinkPage.routeName),
         centerTitle: true,
@@ -77,7 +77,7 @@ class _ManageDrinkPageState extends State<ManageDrinkPage> {
 
   Widget _drinkList(BuildContext context) {
     return Card(
-      color: Color.fromARGB(255, 170, 167, 196),
+      color: Colors.brown[300],
       child: Padding(
         padding: EdgeInsets.all(5),
         child: Column(
@@ -87,7 +87,7 @@ class _ManageDrinkPageState extends State<ManageDrinkPage> {
               return Card(
                 child: ListTile(
                   contentPadding: EdgeInsets.all(10),
-                  tileColor: Color.fromARGB(255, 147, 145, 170),
+                  tileColor: Colors.brown[200],
                   title: Text(
                     drinks[idx].name,
                     style: TextStyle(

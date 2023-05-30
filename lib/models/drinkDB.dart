@@ -43,7 +43,7 @@ class DailyDrinkDB with ChangeNotifier {
         'Super Alcoholics', (value) => json['Drinks']['Super Alcoholics']);
     drinkList.update('Wine', (value) => json['Drinks']['Wine']);
     _totAlc = json['TotalAlcohol'].toDouble();
-    _totCal = json['TotalKcal'].toDouble();
+    _totCal = json['TotalCal'].toDouble();
     _totSpent = json['TotalSpent'].toDouble();
   }
 
@@ -61,7 +61,7 @@ class DailyDrinkDB with ChangeNotifier {
         },
         "Date": _date.toString(),
         "TotalAlcohol": _totAlc,
-        "TotalKcal": _totCal,
+        "TotalCal": _totCal,
         "TotalSpent": _totSpent,
       },
     );
@@ -129,7 +129,7 @@ class DailyDrinkDB with ChangeNotifier {
     _totCal = 0;
     for (Drink drink in drinks) {
       if (_drinkList.containsKey(drink.name)) {
-        drink.calKcal();
+        drink.calCal();
         _totCal += drink.cal * getDrinkCount(drink.name)!;
       } else {
         _totCal += 0;

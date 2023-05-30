@@ -11,7 +11,7 @@ class Drink {
   double get cal => _cal;
   double get price => _price;
 
-  void calKcal() {
+  void calCal() {
     _cal = (_alchPerc / 100 * _volume * 5.53 * 100).truncateToDouble() / 100;
   }
 }

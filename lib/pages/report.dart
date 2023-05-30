@@ -46,12 +46,14 @@ class _ReportPageState extends State<ReportPage> {
   ];
 
   //final String today = DateTime.now().toString().split(' ')[0];
-  final String today = "2023-05-07"; //change this date to change the week
+  final String today = "2023-05-10"; //change this date to change the week
   late final List<String> thisWeek;
+  late final int weekDay;
 
   @override
   void initState() {
     thisWeek = _generateWeek(today);
+    weekDay = DateTime.parse(today).weekday;
     super.initState();
   }
 
@@ -138,6 +140,7 @@ class _ReportPageState extends State<ReportPage> {
       var totCocktails = 0;
       var totSuper = 0;
       var totWine = 0;
+      // Giulio aggiusta
       for (String day in thisWeek) {
         if (map.keys.contains(day)) {
           totAlc += int.parse(map[day]["TotalAlcohol"].toString());
@@ -226,10 +229,10 @@ class _ReportPageState extends State<ReportPage> {
   Widget _moneyKcal(BuildContext context, Map<dynamic, dynamic> alcMap) {
     double totSpent = 0;
     double totCal = 0;
-    for (int i = 0; i < 7; i++) {
+    for (int i = 0; i < weekDay; i++) {
       if (alcMap[thisWeek[i]] != null) {
         totSpent += alcMap[thisWeek[i]]["TotalSpent"];
-        totCal += alcMap[thisWeek[i]]['TotalKcal'];
+        totCal += alcMap[thisWeek[i]]['TotalCal'];
       } else {
         totSpent += 0;
         totCal += 0;
@@ -327,7 +330,7 @@ class _ReportPageState extends State<ReportPage> {
     double totLightPhase = 0;
     double totDeepPhase = 0;
     double totRemPhase = 0;
-    for (int i = 0; i < 7; i++) {
+    for (int i = 0; i < weekDay; i++) {
       SleepFunction? day = SleepFunction.fromSleepDay(sleepMap[thisWeek[i]]!);
       totQuality += day.SleepQualityDS()!;
       totEfficiency += day.SleepEfficiency()![0];
@@ -339,14 +342,14 @@ class _ReportPageState extends State<ReportPage> {
       totRemPhase += day.SleepPhases()![2];
       day = null;
     }
-    double meanTotQuality = totQuality / 7;
-    double meanTotEfficiency = totEfficiency / 7;
-    double meanTotLatency = totLatency / 7;
-    double meanTotWaso = totWaso / 7;
-    double meanTotDuration = totDuration / 7;
-    double meanTotLightPhase = totLightPhase / 7;
-    double meanTotDeepPhase = totDeepPhase / 7;
-    double meanTotRemPhase = totRemPhase / 7;
+    double meanTotQuality = totQuality / weekDay;
+    double meanTotEfficiency = totEfficiency / weekDay;
+    double meanTotLatency = totLatency / weekDay;
+    double meanTotWaso = totWaso / weekDay;
+    double meanTotDuration = totDuration / weekDay;
+    double meanTotLightPhase = totLightPhase / weekDay;
+    double meanTotDeepPhase = totDeepPhase / weekDay;
+    double meanTotRemPhase = totRemPhase / weekDay;
 
     // sleepMap contiene i dati del sonno della settimana corrente
     // per estrarre i dati di ogni giorno guardare il file sleepday.dart
@@ -365,145 +368,215 @@ class _ReportPageState extends State<ReportPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            "This week you slept\nan average of",
-            textAlign: TextAlign.center,
+          SizedBox(
+            height: 150,
+            child: Card(
+              color: Colors.brown[300],
+              child: Expanded(child: Text("Cacca")),
+            ),
           ),
-          SizedBox(height: 20),
-          Text('Sleep Quality'),
-          SimpleCircularProgressBar(
-            //valueNotifier: valueNotifier,
-            animationDuration: 1,
-            mergeMode: true,
-            progressColors: const [
-              Colors.redAccent,
-              Colors.orangeAccent,
-              Colors.amberAccent,
-              Colors.greenAccent,
-              Colors.blueAccent,
-            ],
-            backColor: Colors.white,
-            onGetText: (double meanTotQuality) {
-              TextStyle centerTextStyle = TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
-                color: Colors.brown,
-              );
-              return Text(
-                '${meanTotQuality.toInt()}',
-                style: centerTextStyle,
-              );
-            },
-          ),
-          /*
-                  Row(
-                    children: [
-                      Column(
+          SizedBox(
+            height: 180,
+            child: Padding(
+              padding: EdgeInsets.all(4),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Card(
+                      color: Colors.brown[300],
+                      child: Column(
                         children: [
                           Text('Efficiency'),
-                          SimpleCircularProgressBar(
-                            //valueNotifier: valueNotifier,
-                            mergeMode: true,
-                            progressColors: const [
-                              Colors.brown,
-                            ],
-                            backColor: Colors.white,
-                            onGetText: (double meanTotEfficiency) {
-                              TextStyle centerTextStyle = TextStyle(
-                                fontSize: 30,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.brown,
-                              );
-                              return Text(
-                                '$meanTotEfficiency%',
-                                style: centerTextStyle,
-                              );
-                            },
+                          Card(
+                            color: Colors.brown[200],
+                            child: SimpleCircularProgressBar(
+                              animationDuration: 0,
+                              //valueNotifier: valueNotifier,
+                              mergeMode: true,
+                              progressColors: const [
+                                Colors.brown,
+                              ],
+                              backColor: Colors.white,
+                              onGetText: (double meanTotEfficiency) {
+                                TextStyle centerTextStyle = TextStyle(
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.brown,
+                                );
+                                return Text(
+                                  '${meanTotEfficiency.toInt()}%',
+                                  style: centerTextStyle,
+                                );
+                              },
+                            ),
                           ),
                         ],
                       ),
-                      SizedBox(
-                        child: DChartPie(
-                          data: [
-                            {'domain': 'Light', 'measure': meanTotLightPhase},
-                            {'domain': 'Deep', 'measure': meanTotDeepPhase},
-                            {'domain': 'REM', 'measure': meanTotDeepPhase},
+                    ),
+                  ),
+                  Expanded(
+                    child: Card(
+                      color: Colors.brown[300],
+                      child: Padding(
+                        padding: EdgeInsets.all(4),
+                        child: Column(
+                          children: [
+                            Text('Sleep Quality'),
+                            Card(
+                              color: Colors.brown[200],
+                              child: SimpleCircularProgressBar(
+                                //valueNotifier: valueNotifier,
+                                animationDuration: 1,
+                                mergeMode: true,
+                                progressColors: const [
+                                  Colors.redAccent,
+                                  Colors.orangeAccent,
+                                  Colors.amberAccent,
+                                  Colors.greenAccent,
+                                  Colors.blueAccent,
+                                ],
+                                backColor: Colors.white,
+                                onGetText: (double meanTotQuality) {
+                                  TextStyle centerTextStyle = TextStyle(
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.brown,
+                                  );
+                                  return Text(
+                                    '${meanTotQuality.toInt()}',
+                                    style: centerTextStyle,
+                                  );
+                                },
+                              ),
+                            ),
                           ],
-                          fillColor: (pieData, index) {
-                            switch (pieData['domain']) {
-                              case 'Light':
-                                return Colors.green;
-                              case 'Deep':
-                                return Colors.blue;
-                              case 'REM':
-                                return Colors.red;
-                            }
-                          },
-                          labelPosition: PieLabelPosition.outside,
-                          labelFontSize: 14,
-                          labelLineColor: Colors.black,
-                          showLabelLine: true,
-                          donutWidth: 20,
-                          labelColor: Colors.black,
                         ),
                       ),
-                    ],
-                  ),
-                  */
-          Row(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    "Duration",
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 40),
-                  Center(
-                    child: Text(
-                      "$meanTotDuration h",
-                      style: TextStyle(fontSize: 30),
-                      textAlign: TextAlign.center,
                     ),
-                  )
+                  ), /*
+                  Card(
+                    color: Colors.cyan,
+                    child: Container(
+                      height: 150,
+                      width: (MediaQuery.of(context).size.width - 25) / 2,
+                      child: DChartPie(
+                        data: [
+                          {
+                            'domain': 'Light',
+                            'measure': meanTotLightPhase.toInt()
+                          },
+                          {
+                            'domain': 'Deep',
+                            'measure': meanTotDeepPhase.toInt()
+                          },
+                          {
+                            'domain': 'REM',
+                            'measure': meanTotDeepPhase.toInt()
+                          },
+                        ],
+                        fillColor: (pieData, index) {
+                          switch (pieData['domain']) {
+                            case 'Light': return Colors.green;
+                            case 'Deep': return Colors.blue;
+                            case 'REM': return Colors.red;
+                          }
+                        },
+                        labelPosition: PieLabelPosition.outside,
+                        labelFontSize: 14,
+                        labelLineColor: Colors.black,
+                        showLabelLine: true,
+                        donutWidth: 20,
+                        labelColor: Colors.black,
+                        animate: false,
+                      ),
+                    ),
+                  ),*/
                 ],
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+            ),
+          ),
+          SizedBox(
+            height: (MediaQuery.of(context).size.width) / 3,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 4),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text(
-                    "Latency",
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 40),
-                  Center(
-                    child: Text(
-                      "$meanTotLatency min",
-                      style: TextStyle(fontSize: 30),
-                      textAlign: TextAlign.center,
+                  Expanded(
+                    child: Card(
+                      color: Colors.brown[300],
+                      child: Padding(
+                        padding: EdgeInsets.all(4),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Duration",
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(height: 5),
+                            Expanded(
+                              child: Card(
+                                color: Colors.brown[200],
+                                child: Center(
+                                  child: Text(
+                                    "${(meanTotDuration * 10).truncateToDouble() / 10} h",
+                                    style: TextStyle(fontSize: 30),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
                     ),
-                  )
+                  ),
+                  Expanded(
+                    child: Card(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Latency",
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: 40),
+                          Center(
+                            child: Text(
+                              "$meanTotLatency min",
+                              style: TextStyle(fontSize: 30),
+                              textAlign: TextAlign.center,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Card(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "WASO",
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: 40),
+                          Center(
+                            child: Text(
+                              "${meanTotWaso.toInt()} min",
+                              style: TextStyle(fontSize: 30),
+                              textAlign: TextAlign.center,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    "WASO",
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 40),
-                  Center(
-                    child: Text(
-                      "$meanTotWaso min",
-                      style: TextStyle(fontSize: 30),
-                      textAlign: TextAlign.center,
-                    ),
-                  )
-                ],
-              ),
-            ],
+            ),
           ),
         ],
       ),

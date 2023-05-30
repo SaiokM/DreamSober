@@ -26,7 +26,7 @@ class SleepFunction {
 
   SleepFunction.fromSleepDay(SleepDay day) {
     _timeAsleep = day.minAsleep;
-    _sleepDuration = day.duration / 60; //min -> hours
+    _sleepDuration = day.duration / 3600; //sec -> hours
     _timeToFallAsleep = day.minToFall;
     _timeAwake = day.minAwake;
     _lightDuration = day.phases['light']!.min;

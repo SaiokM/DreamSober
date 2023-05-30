@@ -35,6 +35,13 @@ class _DrinkState extends State<DrinkPage> {
     Drink('Super Alcoholics', 40, 40, 6),
     Drink('Wine', 12, 150, 4)
   ];
+  @override
+  void initState() {
+    for (Drink drink in drinks) {
+      drink.calCal();
+    }
+    super.initState();
+  }
 
   // Carousel Variables
   final CarouselController _carouselController = CarouselController();
@@ -89,7 +96,7 @@ class _DrinkState extends State<DrinkPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            height < 700 ? SizedBox(height: 30) : SizedBox(height: 80),
+            SizedBox(height: 30),
             _buildCarousel(context),
             _buildCard(context),
             SizedBox(height: 10),
@@ -207,7 +214,15 @@ class _DrinkState extends State<DrinkPage> {
                     style: TextStyle(fontSize: 12),
                   ),
                   Text(
-                    "Volume: ~ ${drinks[_currentIdx.toInt()].volume} ml",
+                    "Volume: ~ ${drinks[_currentIdx.toInt()].volume.toInt()} ml",
+                    style: TextStyle(fontSize: 12),
+                  ),
+                  Text(
+                    "Calories: ~ ${drinks[_currentIdx.toInt()].cal.toInt()}",
+                    style: TextStyle(fontSize: 12),
+                  ),
+                  Text(
+                    "Price: ~ ${drinks[_currentIdx.toInt()].price} €",
                     style: TextStyle(fontSize: 12),
                   ),
                 ],

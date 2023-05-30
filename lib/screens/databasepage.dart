@@ -81,8 +81,8 @@ class _DatabasePageState extends State<DatabasePage> {
 
   Widget _mainPage(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        backgroundColor: Colors.grey,
+        resizeToAvoidBottomInset: true,
+        backgroundColor: Colors.brown[100],
         appBar: AppBar(
           backgroundColor: Colors.brown[900],
           title: Text(DatabasePage.routeName),
@@ -132,12 +132,13 @@ class _DatabasePageState extends State<DatabasePage> {
               return DateTime.parse(a).compareTo(DateTime.parse(b));
             });
             return SizedBox(
-              height: 400,
+              height: 600,
               child: Card(
                 color: Colors.brown[300],
                 child: Padding(
                   padding: EdgeInsets.all(5),
                   child: ListView.builder(
+                    physics: BouncingScrollPhysics(),
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
                     itemCount: snapshot.data!.snapshot.children.length,
