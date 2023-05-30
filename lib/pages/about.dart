@@ -30,7 +30,7 @@ class InfoPage extends StatelessWidget {
                   Icon(Icons.warning,
                       size: 30, color: Color.fromRGBO(231, 209, 13, 1)),
                   Text(
-                    'To use this app, you need a Fitbit watch and Impact credentials',
+                    'To use this app, you need a Fitbit watch or Impact credentials',
                     style: TextStyle(
                       fontSize: 15,
                       color: Color.fromARGB(255, 216, 72, 70),
