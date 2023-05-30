@@ -3,10 +3,10 @@ import 'dart:developer';
 
 class BarData {
   final List<String> dayList;
-  final List<dynamic> alcList;
-  final List<dynamic> sleepList;
-  final List<dynamic> moneyList;
-  final List<dynamic> slpqltList;
+  final List<double> alcList;
+  final List<double> sleepList;
+  final List<double> moneyList;
+  final List<double> slpqltList;
 
   BarData({
     required this.dayList,

@@ -70,19 +70,23 @@ class _DrinkState extends State<DrinkPage> {
               ),
             )
           : _appBody(context),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: _floatingButtons(context),
     );
   }
 
   Widget _floatingButtons(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        _listButton(context),
-        SizedBox(width: 215),
-        _saveButton(context),
-      ],
+    double width = MediaQuery.of(context).size.width;
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 15),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          _listButton(context),
+          _saveButton(context),
+        ],
+      ),
     );
   }
 

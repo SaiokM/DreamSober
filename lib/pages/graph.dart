@@ -47,6 +47,7 @@ class _ChartPageState extends State<ChartPage> {
   bool relativeAngleMode = true;
 
   int dayIdx = 0;
+  //refDay is equal to today's date
   List<String> refDay = DateTime.now().toString().split(" ")[0].split("-");
   late List<String> weekList;
 
@@ -132,7 +133,6 @@ class _ChartPageState extends State<ChartPage> {
     // Impact
     impactSleep = await Impact.getSleepRangeData(
         weekList[0], weekList[weekList.length - 1]);
-    print(impactSleep);
     alcSleepList = [alcMap, impactSleep];
     return alcSleepList;
   }
@@ -166,6 +166,12 @@ class _ChartPageState extends State<ChartPage> {
                 return DateTime.parse(a).compareTo(DateTime.parse(b));
               });
 
+              double meanEfficiency = 0;
+              double meanLatency = 0;
+              double meanDuration = 0;
+              double meanWaso = 0;
+              double meanPhase = 0;
+
               for (var day in weekList) {
                 if (alcMap.keys.contains(day)) {
                   alcList.add(alcMap[day]['TotalAlcohol'].toDouble());
@@ -175,8 +181,15 @@ class _ChartPageState extends State<ChartPage> {
                   moneyList.add(0);
                 }
                 if (sleepMap.keys.contains(day)) {
-                  slpqltList.add(SleepFunction.fromSleepDay(sleepMap[day]!)
-                      .SleepQualityDS()!);
+                  SleepFunction currentDay =
+                      SleepFunction.fromSleepDay(sleepMap[day]!);
+                  meanDuration += currentDay.SleepDuration()![1] / 7;
+                  meanLatency += currentDay.SleepLatency()![1] / 7;
+                  meanEfficiency += currentDay.SleepEfficiency()![1] / 7;
+                  meanWaso += currentDay.WASO()![1] / 7;
+                  meanPhase += currentDay.SleepPhases()![1] / 7;
+
+                  slpqltList.add(currentDay.SleepQualityDS()!);
                   sleepList.add(
                       (sleepMap[day]!.duration / 36).truncateToDouble() / 100);
                 } else {
@@ -184,6 +197,19 @@ class _ChartPageState extends State<ChartPage> {
                   sleepList.add(0);
                 }
               }
+              List<MeanListData> meanList = [
+                MeanListData(
+                  color: Colors.brown,
+                  values: [
+                    meanEfficiency.truncateToDouble(),
+                    meanLatency.truncateToDouble(),
+                    meanDuration.truncateToDouble(),
+                    meanWaso.truncateToDouble(),
+                    meanPhase.isNaN ? 0 : meanPhase.truncateToDouble(),
+                  ],
+                )
+              ];
+              print(meanList[0].values);
               BarData mybarData = BarData(
                 dayList: weekList,
                 alcList: alcList,
@@ -261,92 +287,7 @@ class _ChartPageState extends State<ChartPage> {
                       ],
                     ),
                     SizedBox(height: 10),
-                    SizedBox(
-                      height: 300,
-                      child: Padding(
-                        padding: EdgeInsets.all(10),
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Center(
-                            child: SizedBox(
-                              height: 300,
-                              width: 60 * 7,
-                              child: Container(
-                                alignment: Alignment.topCenter,
-                                //color: Colors.green,
-                                child: BarChart(
-                                  BarChartData(
-                                    barTouchData: BarTouchData(
-                                        enabled: true,
-                                        touchTooltipData: BarTouchTooltipData(
-                                          tooltipBgColor: Colors.transparent,
-                                        )),
-                                    borderData: FlBorderData(
-                                      border: const Border(
-                                        top: BorderSide.none,
-                                        right: BorderSide.none,
-                                        left: BorderSide.none,
-                                        bottom: BorderSide(width: 1),
-                                      ),
-                                    ),
-                                    titlesData: FlTitlesData(
-                                        show: true,
-                                        bottomTitles: AxisTitles(
-                                            drawBehindEverything: true,
-                                            sideTitles:
-                                                _bottomTitles(mybarData)),
-                                        topTitles: AxisTitles(
-                                            sideTitles:
-                                                SideTitles(showTitles: false)),
-                                        leftTitles: AxisTitles(
-                                            sideTitles:
-                                                SideTitles(showTitles: false)),
-                                        rightTitles: AxisTitles(
-                                            sideTitles:
-                                                SideTitles(showTitles: false))),
-                                    gridData: FlGridData(show: false),
-                                    minY: 0,
-                                    maxY:
-                                        maxList(alcList, sleepList, slpqltList),
-                                    barGroups: mybarData.barData
-                                        .map(
-                                          (data) => BarChartGroupData(
-                                            x: data.x,
-                                            barRods: [
-                                              BarChartRodData(
-                                                width: 13,
-                                                borderRadius:
-                                                    BorderRadius.circular(2),
-                                                toY: data.y1,
-                                                color: alcColor,
-                                              ),
-                                              BarChartRodData(
-                                                width: 13,
-                                                borderRadius:
-                                                    BorderRadius.circular(1),
-                                                toY: data.y4,
-                                                color: sleepColor,
-                                              ),
-                                              BarChartRodData(
-                                                width: 13,
-                                                borderRadius:
-                                                    BorderRadius.circular(1),
-                                                toY: data.y3,
-                                                color: moneyColor,
-                                              ),
-                                            ],
-                                          ),
-                                        )
-                                        .toList(),
-                                  ),
-                                  swapAnimationDuration: Duration(seconds: 0),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
+                    _barChart(context, mybarData),
                     _buttons(context),
                     SizedBox(height: 20),
                     Text(
@@ -357,7 +298,7 @@ class _ChartPageState extends State<ChartPage> {
                       ),
                     ),
                     SizedBox(height: 10),
-                    _radGraph(context, sleepMap),
+                    _radGraph(context, meanList),
                     _buttons(context),
                   ],
                 ),
@@ -408,27 +349,94 @@ class _ChartPageState extends State<ChartPage> {
         });
   }
 
-  Widget _radGraph(BuildContext context, Map<String, SleepDay> sleepMap) {
+  Widget _barChart(BuildContext context, BarData mybarData) {
+    return SizedBox(
+      height: 300,
+      child: Padding(
+        padding: EdgeInsets.all(10),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Center(
+            child: SizedBox(
+              height: 300,
+              width: 60 * 7,
+              child: Container(
+                alignment: Alignment.topCenter,
+                child: BarChart(
+                  BarChartData(
+                    barTouchData: BarTouchData(
+                        enabled: true,
+                        touchTooltipData: BarTouchTooltipData(
+                          tooltipBgColor: Colors.transparent,
+                        )),
+                    borderData: FlBorderData(
+                      border: const Border(
+                        top: BorderSide.none,
+                        right: BorderSide.none,
+                        left: BorderSide.none,
+                        bottom: BorderSide(width: 1),
+                      ),
+                    ),
+                    titlesData: FlTitlesData(
+                        show: true,
+                        bottomTitles: AxisTitles(
+                            drawBehindEverything: true,
+                            sideTitles: _bottomTitles(mybarData)),
+                        topTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false)),
+                        leftTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false)),
+                        rightTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false))),
+                    gridData: FlGridData(show: false),
+                    minY: 0,
+                    maxY: maxList(mybarData.alcList, mybarData.sleepList,
+                        mybarData.slpqltList),
+                    barGroups: mybarData.barData
+                        .map(
+                          (data) => BarChartGroupData(
+                            x: data.x,
+                            barRods: [
+                              BarChartRodData(
+                                width: 13,
+                                borderRadius: BorderRadius.circular(2),
+                                toY: data.y1,
+                                color: alcColor,
+                              ),
+                              BarChartRodData(
+                                width: 13,
+                                borderRadius: BorderRadius.circular(1),
+                                toY: data.y4,
+                                color: sleepColor,
+                              ),
+                              BarChartRodData(
+                                width: 13,
+                                borderRadius: BorderRadius.circular(1),
+                                toY: data.y3,
+                                color: moneyColor,
+                              ),
+                            ],
+                          ),
+                        )
+                        .toList(),
+                  ),
+                  swapAnimationDuration: Duration(seconds: 0),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _radGraph(BuildContext context, List<MeanListData> meanList) {
     return SizedBox(
       height: 350,
       child: RadarChart(
         RadarChartData(
-          radarShape: RadarShape.polygon,
-          radarTouchData: RadarTouchData(
-            touchCallback: (FlTouchEvent event, response) {
-              if (!event.isInterestedForInteractions) {
-                setState(() {
-                  selectedDataSetIndex = -1;
-                });
-                return;
-              }
-              setState(() {
-                selectedDataSetIndex =
-                    response?.touchedSpot?.touchedDataSetIndex ?? -1;
-              });
-            },
-          ),
-          dataSets: showingDataSets(),
+          radarShape: RadarShape.circle,
+          dataSets: showingDataSets(meanList),
           radarBackgroundColor: Colors.transparent,
           borderData: FlBorderData(show: false),
           radarBorderData: const BorderSide(color: Colors.transparent),
@@ -470,55 +478,29 @@ class _ChartPageState extends State<ChartPage> {
                 return const RadarChartTitle(text: '');
             }
           },
-          tickCount: 1,
-          ticksTextStyle:
-              const TextStyle(color: Colors.transparent, fontSize: 10),
-          tickBorderData: const BorderSide(color: Colors.transparent),
-          gridBorderData: BorderSide(color: Colors.black, width: 2),
+          tickCount: 4,
+          ticksTextStyle: const TextStyle(color: Colors.black, fontSize: 10),
+          tickBorderData: const BorderSide(color: Colors.black),
+          gridBorderData: const BorderSide(color: Colors.black, width: 2),
         ),
       ),
     );
   }
 
-  List<RadarDataSet> showingDataSets() {
-    return rawDataSets().asMap().entries.map((entry) {
+  List<RadarDataSet> showingDataSets(List<MeanListData> meanList) {
+    return meanList.asMap().entries.map((entry) {
       final index = entry.key;
       final rawDataSet = entry.value;
 
-      final isSelected = index == selectedDataSetIndex
-          ? true
-          : selectedDataSetIndex == -1
-              ? true
-              : false;
-
       return RadarDataSet(
-        fillColor: isSelected
-            ? rawDataSet.color.withOpacity(0.2)
-            : rawDataSet.color.withOpacity(0.05),
-        borderColor:
-            isSelected ? rawDataSet.color : rawDataSet.color.withOpacity(0.25),
-        entryRadius: isSelected ? 3 : 2,
+        fillColor: rawDataSet.color.withOpacity(0.5),
+        borderColor: rawDataSet.color,
+        entryRadius: 5,
         dataEntries:
             rawDataSet.values.map((e) => RadarEntry(value: e)).toList(),
-        borderWidth: isSelected ? 2.3 : 2,
+        borderWidth: 2.5,
       );
     }).toList();
-  }
-
-  List<RawDataSet> rawDataSets() {
-    return [
-      RawDataSet(
-        title: 'Fashion',
-        color: Colors.red,
-        values: [
-          300,
-          50,
-          250,
-          400,
-          100,
-        ],
-      ),
-    ];
   }
 
   double maxList(List<double> list1, List<double> list2, List<double> list3) {
@@ -594,14 +576,12 @@ class _ChartPageState extends State<ChartPage> {
   }
 }
 
-class RawDataSet {
-  RawDataSet({
-    required this.title,
+class MeanListData {
+  MeanListData({
     required this.color,
     required this.values,
   });
 
-  final String title;
   final Color color;
   final List<double> values;
 }
