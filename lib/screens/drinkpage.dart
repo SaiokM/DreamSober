@@ -218,7 +218,7 @@ class _DrinkState extends State<DrinkPage> {
                     style: TextStyle(fontSize: 12),
                   ),
                   Text(
-                    "Calories: ~ ${drinks[_currentIdx.toInt()].cal.toInt()}",
+                    "Calories: ~ ${drinks[_currentIdx.toInt()].cal.toInt()} Kcal",
                     style: TextStyle(fontSize: 12),
                   ),
                   Text(

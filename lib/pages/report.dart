@@ -302,7 +302,7 @@ class _ReportPageState extends State<ReportPage> {
                           color: Colors.brown[200],
                           child: Center(
                             child: Text(
-                              "${totCal.toInt()} Cal",
+                              "${totCal.toInt()} Kcal",
                               style: TextStyle(fontSize: 25),
                               textAlign: TextAlign.center,
                             ),
@@ -369,10 +369,49 @@ class _ReportPageState extends State<ReportPage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
-            height: 150,
+            height: 180,
             child: Card(
               color: Colors.brown[300],
-              child: Expanded(child: Text("Cacca")),
+              child: Expanded(
+                child: Card(
+                  color: Colors.brown[300],
+                  child: Padding(
+                    padding: EdgeInsets.all(4),
+                    child: Column(
+                      children: [
+                        Text('Sleep Quality'),
+                        Card(
+                          color: Colors.brown[200],
+                          child: SimpleCircularProgressBar(
+                            //valueNotifier: valueNotifier,
+                            animationDuration: 1,
+                            mergeMode: true,
+                            progressColors: const [
+                              Colors.redAccent,
+                              Colors.orangeAccent,
+                              Colors.amberAccent,
+                              Colors.greenAccent,
+                              Colors.blueAccent,
+                            ],
+                            backColor: Colors.white,
+                            onGetText: (double meanTotQuality) {
+                              TextStyle centerTextStyle = TextStyle(
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.brown,
+                              );
+                              return Text(
+                                '${meanTotQuality.toInt()}',
+                                style: centerTextStyle,
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
           SizedBox(
@@ -414,80 +453,33 @@ class _ReportPageState extends State<ReportPage> {
                       ),
                     ),
                   ),
-                  Expanded(
+                  /*Expanded(
                     child: Card(
-                      color: Colors.brown[300],
-                      child: Padding(
-                        padding: EdgeInsets.all(4),
-                        child: Column(
-                          children: [
-                            Text('Sleep Quality'),
-                            Card(
-                              color: Colors.brown[200],
-                              child: SimpleCircularProgressBar(
-                                //valueNotifier: valueNotifier,
-                                animationDuration: 1,
-                                mergeMode: true,
-                                progressColors: const [
-                                  Colors.redAccent,
-                                  Colors.orangeAccent,
-                                  Colors.amberAccent,
-                                  Colors.greenAccent,
-                                  Colors.blueAccent,
-                                ],
-                                backColor: Colors.white,
-                                onGetText: (double meanTotQuality) {
-                                  TextStyle centerTextStyle = TextStyle(
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.brown,
-                                  );
-                                  return Text(
-                                    '${meanTotQuality.toInt()}',
-                                    style: centerTextStyle,
-                                  );
-                                },
-                              ),
-                            ),
+                      color: Colors.cyan,
+                      child: SizedBox(
+                        height: 150,
+                        width: (MediaQuery.of(context).size.width - 25) / 2,
+                        child: DChartPie(
+                          data: [
+                            {'domain': 'Light', 'measure': meanTotLightPhase},
+                            {'domain': 'Deep', 'measure': meanTotDeepPhase},
+                            {'domain': 'REM', 'measure': meanTotDeepPhase},
                           ],
+                          fillColor: (pieData, index) {
+                            switch (pieData['domain']) {
+                              case 'Light': return Colors.green;
+                              case 'Deep': return Colors.blue;
+                              case 'REM': return Colors.red;
+                            }
+                          },
+                          labelPosition: PieLabelPosition.inside,
+                          labelFontSize: 2,
+                          labelLineColor: Colors.black,
+                          showLabelLine: true,
+                          donutWidth: 5,
+                          labelColor: Colors.black,
+                          animate: false,
                         ),
-                      ),
-                    ),
-                  ), /*
-                  Card(
-                    color: Colors.cyan,
-                    child: Container(
-                      height: 150,
-                      width: (MediaQuery.of(context).size.width - 25) / 2,
-                      child: DChartPie(
-                        data: [
-                          {
-                            'domain': 'Light',
-                            'measure': meanTotLightPhase.toInt()
-                          },
-                          {
-                            'domain': 'Deep',
-                            'measure': meanTotDeepPhase.toInt()
-                          },
-                          {
-                            'domain': 'REM',
-                            'measure': meanTotDeepPhase.toInt()
-                          },
-                        ],
-                        fillColor: (pieData, index) {
-                          switch (pieData['domain']) {
-                            case 'Light': return Colors.green;
-                            case 'Deep': return Colors.blue;
-                            case 'REM': return Colors.red;
-                          }
-                        },
-                        labelPosition: PieLabelPosition.outside,
-                        labelFontSize: 14,
-                        labelLineColor: Colors.black,
-                        showLabelLine: true,
-                        donutWidth: 20,
-                        labelColor: Colors.black,
-                        animate: false,
                       ),
                     ),
                   ),*/
@@ -521,7 +513,7 @@ class _ReportPageState extends State<ReportPage> {
                                 child: Center(
                                   child: Text(
                                     "${(meanTotDuration * 10).truncateToDouble() / 10} h",
-                                    style: TextStyle(fontSize: 30),
+                                    style: TextStyle(fontSize: 25),
                                     textAlign: TextAlign.center,
                                   ),
                                 ),
@@ -534,43 +526,61 @@ class _ReportPageState extends State<ReportPage> {
                   ),
                   Expanded(
                     child: Card(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Latency",
-                            textAlign: TextAlign.center,
-                          ),
-                          SizedBox(height: 40),
-                          Center(
-                            child: Text(
-                              "$meanTotLatency min",
-                              style: TextStyle(fontSize: 30),
+                      color: Colors.brown[300],
+                      child: Padding(
+                        padding: const EdgeInsets.all(4),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Latency",
                               textAlign: TextAlign.center,
                             ),
-                          )
-                        ],
+                            SizedBox(height: 5),
+                            Expanded(
+                              child: Card(
+                                color: Colors.brown[200],
+                                child: Center(
+                                  child: Text(
+                                    "$meanTotLatency min",
+                                    style: TextStyle(fontSize: 25),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
                   Expanded(
                     child: Card(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            "WASO",
-                            textAlign: TextAlign.center,
-                          ),
-                          SizedBox(height: 40),
-                          Center(
-                            child: Text(
-                              "${meanTotWaso.toInt()} min",
-                              style: TextStyle(fontSize: 30),
+                      color: Colors.brown[300],
+                      child: Padding(
+                        padding: const EdgeInsets.all(4),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              "WASO",
                               textAlign: TextAlign.center,
                             ),
-                          )
-                        ],
+                            SizedBox(height: 5),
+                            Expanded(
+                              child: Card(
+                                color: Colors.brown[200],
+                                child: Center(
+                                  child: Text(
+                                    "${meanTotWaso.toInt()} min",
+                                    style: TextStyle(fontSize: 25),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
