@@ -180,7 +180,7 @@ class _ChartPageState extends State<ChartPage> {
                   alcList.add(0);
                   moneyList.add(0);
                 }
-                if (sleepMap.keys.contains(day)) {
+                if (sleepMap.keys.contains(day) && !sleepMap[day]!.emptyDay) {
                   SleepFunction currentDay =
                       SleepFunction.fromSleepDay(sleepMap[day]!);
                   meanDuration += currentDay.SleepDuration()![1] / 7;
@@ -191,7 +191,7 @@ class _ChartPageState extends State<ChartPage> {
 
                   slpqltList.add(currentDay.SleepQualityDS()!);
                   sleepList.add(
-                      (sleepMap[day]!.duration / 36).truncateToDouble() / 100);
+                      (sleepMap[day]!.duration! / 36).truncateToDouble() / 100);
                 } else {
                   slpqltList.add(0);
                   sleepList.add(0);
@@ -489,16 +489,15 @@ class _ChartPageState extends State<ChartPage> {
 
   List<RadarDataSet> showingDataSets(List<MeanListData> meanList) {
     return meanList.asMap().entries.map((entry) {
-      final index = entry.key;
       final rawDataSet = entry.value;
 
       return RadarDataSet(
         fillColor: rawDataSet.color.withOpacity(0.5),
         borderColor: rawDataSet.color,
+        borderWidth: 2.5,
         entryRadius: 5,
         dataEntries:
             rawDataSet.values.map((e) => RadarEntry(value: e)).toList(),
-        borderWidth: 2.5,
       );
     }).toList();
   }
