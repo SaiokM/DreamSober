@@ -366,49 +366,58 @@ class _ReportPageState extends State<ReportPage> {
 
     return Center(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           SizedBox(
             height: 200,
-            child: Card(
-              color: Colors.brown[300],
+            child: Padding(
+              padding: EdgeInsets.all(4),
               child: Expanded(
                 child: Card(
                   color: Colors.brown[300],
                   child: Padding(
                     padding: EdgeInsets.all(4),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Text('Sleep Quality'),
-                        Card(
-                          color: Colors.brown[200],
-                          child: SimpleCircularProgressBar(
-                            valueNotifier: ValueNotifier(meanTotQuality),
-                            size: 120,
-                            backStrokeWidth: 20,
-                            progressStrokeWidth: 20,
-                            //maxValue: meanTotQuality,
-                            animationDuration: 1,
-                            mergeMode: true,
-                            progressColors: const [
-                              Colors.redAccent,
-                              Colors.orangeAccent,
-                              Colors.amberAccent,
-                              Colors.greenAccent,
-                              Colors.blueAccent,
-                            ],
-                            backColor: Colors.white,
-                            onGetText: (double meanTotQuality) {
-                              TextStyle centerTextStyle = TextStyle(
-                                fontSize: 30,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.brown,
-                              );
-                              return Text(
-                                '${meanTotQuality.toInt()}',
-                                style: centerTextStyle,
-                              );
-                            },
+                        Text(
+                          'Sleep Quality',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Expanded(
+                          child: Card(
+                            color: Colors.brown[200],
+                            child: Center(
+                              child: SimpleCircularProgressBar(
+                                valueNotifier: ValueNotifier(meanTotQuality),
+                                size: 120,
+                                backStrokeWidth: 20,
+                                progressStrokeWidth: 20,
+                                //maxValue: meanTotQuality,
+                                animationDuration: 1,
+                                mergeMode: true,
+                                progressColors: const [
+                                  Colors.redAccent,
+                                  Colors.orangeAccent,
+                                  Colors.amberAccent,
+                                  Colors.greenAccent,
+                                  Colors.blueAccent,
+                                ],
+                                backColor: Colors.white,
+                                onGetText: (double meanTotQuality) {
+                                  TextStyle centerTextStyle = TextStyle(
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.brown,
+                                  );
+                                  return Text(
+                                    '${meanTotQuality.toInt()}',
+                                    style: centerTextStyle,
+                                  );
+                                },
+                              ),
+                            ),
                           ),
                         ),
                       ],
@@ -419,7 +428,7 @@ class _ReportPageState extends State<ReportPage> {
             ),
           ),
           SizedBox(
-            height: 180,
+            height: 150,
             child: Padding(
               padding: EdgeInsets.all(4),
               child: Row(
@@ -427,36 +436,48 @@ class _ReportPageState extends State<ReportPage> {
                   Expanded(
                     child: Card(
                       color: Colors.brown[300],
-                      child: Column(
-                        children: [
-                          Text('Efficiency'),
-                          Card(
-                            color: Colors.brown[200],
-                            child: SimpleCircularProgressBar(
-                              size: 50,
-                              backStrokeWidth: 10,
-                              progressStrokeWidth: 10,
-                              animationDuration: 0,
-                              valueNotifier: ValueNotifier(meanTotEfficiency),
-                              mergeMode: true,
-                              progressColors: const [
-                                Colors.brown,
-                              ],
-                              backColor: Colors.white,
-                              onGetText: (double meanTotEfficiency) {
-                                TextStyle centerTextStyle = TextStyle(
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.brown,
-                                );
-                                return Text(
-                                  '${meanTotEfficiency.toInt()}%',
-                                  style: centerTextStyle,
-                                );
-                              },
+                      child: Padding(
+                        padding: EdgeInsets.all(4),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Text(
+                              'Efficiency',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                          ),
-                        ],
+                            Expanded(
+                              child: Card(
+                                color: Colors.brown[200],
+                                child: SimpleCircularProgressBar(
+                                  size: 80,
+                                  backStrokeWidth: 10,
+                                  progressStrokeWidth: 10,
+                                  animationDuration: 0,
+                                  valueNotifier:
+                                      ValueNotifier(meanTotEfficiency),
+                                  mergeMode: true,
+                                  progressColors: const [
+                                    Colors.brown,
+                                  ],
+                                  backColor: Colors.white,
+                                  onGetText: (double meanTotEfficiency) {
+                                    TextStyle centerTextStyle = TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.brown,
+                                    );
+                                    return Text(
+                                      '${meanTotEfficiency.toInt()}%',
+                                      style: centerTextStyle,
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -466,30 +487,26 @@ class _ReportPageState extends State<ReportPage> {
                       child: SizedBox(
                         height: 150,
                         width: (MediaQuery.of(context).size.width - 25) / 2,
-                        child: 
-
-                        
-                        /*DChartPie(
-                          data: [
-                            {'domain': 'Light', 'measure': meanTotLightPhase},
-                            {'domain': 'Deep', 'measure': meanTotDeepPhase},
-                            {'domain': 'REM', 'measure': meanTotDeepPhase},
-                          ],
-                          fillColor: (pieData, index) {
-                            switch (pieData['domain']) {
-                              case 'Light': return Colors.green;
-                              case 'Deep': return Colors.blue;
-                              case 'REM': return Colors.red;
-                            }
-                          },
-                          labelPosition: PieLabelPosition.inside,
-                          labelFontSize: 2,
-                          labelLineColor: Colors.black,
-                          showLabelLine: true,
-                          donutWidth: 5,
-                          labelColor: Colors.black,
-                          animate: false,
-                        ),*/
+                        child: Padding(
+                          padding: EdgeInsets.all(4),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: <Widget>[
+                              Text(
+                                "areo",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Card(
+                                color: Colors.brown[200],
+                                child: Container(
+                                  color: Colors.transparent,
+                                  height: 50,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -514,6 +531,7 @@ class _ReportPageState extends State<ReportPage> {
                           children: [
                             Text(
                               "Duration",
+                              style: TextStyle(fontWeight: FontWeight.bold),
                               textAlign: TextAlign.center,
                             ),
                             SizedBox(height: 5),
@@ -544,6 +562,7 @@ class _ReportPageState extends State<ReportPage> {
                           children: [
                             Text(
                               "Latency",
+                              style: TextStyle(fontWeight: FontWeight.bold),
                               textAlign: TextAlign.center,
                             ),
                             SizedBox(height: 5),
@@ -574,6 +593,7 @@ class _ReportPageState extends State<ReportPage> {
                           children: [
                             Text(
                               "WASO",
+                              style: TextStyle(fontWeight: FontWeight.bold),
                               textAlign: TextAlign.center,
                             ),
                             SizedBox(height: 5),
