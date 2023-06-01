@@ -462,12 +462,12 @@ class _ChartPageState extends State<ChartPage> {
               case 2:
                 return RadarChartTitle(
                   text: 'Duration',
-                  angle: usedAngle,
+                  angle: usedAngle + 180,
                 );
               case 3:
                 return RadarChartTitle(
                   text: 'WASO',
-                  angle: usedAngle,
+                  angle: usedAngle + 180,
                 );
               case 4:
                 return RadarChartTitle(

@@ -15,6 +15,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
 import 'package:d_chart/d_chart.dart';
 
+
 class ReportPage extends StatefulWidget {
   final String userUID = UserPrefs.getUID();
   ReportPage({super.key});
@@ -350,7 +351,7 @@ class _ReportPageState extends State<ReportPage> {
     double meanTotLightPhase = totLightPhase / weekDay;
     double meanTotDeepPhase = totDeepPhase / weekDay;
     double meanTotRemPhase = totRemPhase / weekDay;
-
+    
     // sleepMap contiene i dati del sonno della settimana corrente
     // per estrarre i dati di ogni giorno guardare il file sleepday.dart
     // La variabile thisWeek contiene i giorni della settimana in formato
@@ -369,7 +370,7 @@ class _ReportPageState extends State<ReportPage> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           SizedBox(
-            height: 200,
+            height: 250,
             child: Padding(
               padding: EdgeInsets.all(4),
               child: Expanded(
@@ -428,7 +429,7 @@ class _ReportPageState extends State<ReportPage> {
             ),
           ),
           SizedBox(
-            height: 150,
+            height: 200,
             child: Padding(
               padding: EdgeInsets.all(4),
               child: Row(
@@ -484,30 +485,75 @@ class _ReportPageState extends State<ReportPage> {
                   Expanded(
                     child: Card(
                       color: Colors.brown[300],
-                      child: SizedBox(
-                        height: 150,
-                        width: (MediaQuery.of(context).size.width - 25) / 2,
-                        child: Padding(
-                          padding: EdgeInsets.all(4),
+                      child: Container(
+                          color: Colors.brown[200],
+                          height: 200,
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: <Widget>[
+                            children: [
                               Text(
-                                "areo",
+                                "Sleep's Phases",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
-                              Card(
-                                color: Colors.brown[200],
-                                child: Container(
-                                  color: Colors.transparent,
-                                  height: 50,
-                                ),
+                              SizedBox(height: 5),
+                              Row(
+                                children: [
+                                  Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "Light",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        Text(
+                                          "${meanTotLightPhase.toInt()}%",
+                                          style: TextStyle(fontSize: 30),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ]),
+                                  Divider(),    
+                                  Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "Deep",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        SizedBox(height: 5),
+                                        Text(
+                                          "${meanTotDeepPhase.toInt()}%",
+                                          style: TextStyle(fontSize: 30),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ]),
+                                  Divider(),
+                                  Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "REM",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        SizedBox(height: 5),
+                                        Text(
+                                          "${meanTotRemPhase.toInt()}%",
+                                          style: TextStyle(fontSize: 30),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ]),
+                                ],
                               )
                             ],
-                          ),
-                        ),
-                      ),
+                          )),
                     ),
                   ),
                 ],
