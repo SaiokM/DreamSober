@@ -2,7 +2,6 @@
 
 import 'package:dreamsober/models/user.dart';
 import 'package:dreamsober/models/userprefs.dart';
-import 'package:dreamsober/models/userprefs.dart';
 import 'package:dreamsober/pages/authorization/auth_page.dart';
 import 'package:dreamsober/pages/report.dart';
 import 'package:dreamsober/pages/drinkpage.dart';

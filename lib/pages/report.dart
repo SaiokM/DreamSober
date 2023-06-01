@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'package:dreamsober/models/sleepFunction.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -14,7 +15,6 @@ import 'package:dreamsober/models/impact.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
 import 'package:d_chart/d_chart.dart';
-
 
 class ReportPage extends StatefulWidget {
   final String userUID = UserPrefs.getUID();
@@ -351,7 +351,7 @@ class _ReportPageState extends State<ReportPage> {
     double meanTotLightPhase = totLightPhase / weekDay;
     double meanTotDeepPhase = totDeepPhase / weekDay;
     double meanTotRemPhase = totRemPhase / weekDay;
-    
+
     // sleepMap contiene i dati del sonno della settimana corrente
     // per estrarre i dati di ogni giorno guardare il file sleepday.dart
     // La variabile thisWeek contiene i giorni della settimana in formato
@@ -484,76 +484,64 @@ class _ReportPageState extends State<ReportPage> {
                   ),
                   Expanded(
                     child: Card(
-                      color: Colors.brown[300],
+                      color: Colors.brown[900],
                       child: Container(
-                          color: Colors.brown[200],
-                          height: 200,
-                          child: Column(
-                            children: [
-                              Text(
+                        color: Colors.brown[300],
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Text(
                                 "Sleep's Phases",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
-                              SizedBox(height: 5),
-                              Row(
-                                children: [
-                                  Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          "Light",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                        Text(
-                                          "${meanTotLightPhase.toInt()}%",
-                                          style: TextStyle(fontSize: 30),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ]),
-                                  Divider(),    
-                                  Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          "Deep",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                        SizedBox(height: 5),
-                                        Text(
-                                          "${meanTotDeepPhase.toInt()}%",
-                                          style: TextStyle(fontSize: 30),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ]),
-                                  Divider(),
-                                  Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          "REM",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                        SizedBox(height: 5),
-                                        Text(
-                                          "${meanTotRemPhase.toInt()}%",
-                                          style: TextStyle(fontSize: 30),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ]),
-                                ],
-                              )
-                            ],
-                          )),
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(2),
+                                child: Card(
+                                  color: Colors.brown[200],
+                                  child: SizedBox(
+                                    height: 140,
+                                    child: PieChart(
+                                      PieChartData(
+                                        sections: [
+                                          PieChartSectionData(
+                                            value: meanTotLightPhase,
+                                            color: Colors.blue,
+                                            title:
+                                                'Light ${meanTotLightPhase.toInt()}%',
+                                            radius: 50,
+                                            showTitle: true,
+                                          ),
+                                          PieChartSectionData(
+                                            value: meanTotDeepPhase,
+                                            color: Colors.red,
+                                            title:
+                                                'Deep${meanTotDeepPhase.toInt()}%',
+                                            radius: 50,
+                                            showTitle: true,
+                                          ),
+                                          PieChartSectionData(
+                                            value: meanTotRemPhase,
+                                            color: Colors.green,
+                                            title:
+                                                'REM ${meanTotRemPhase.toInt()}%',
+                                            radius: 50,
+                                            showTitle: true,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 ],
