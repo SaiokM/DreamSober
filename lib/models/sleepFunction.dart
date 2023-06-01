@@ -62,6 +62,12 @@ class SleepFunction {
         _sleepEfficiencyScore = 0; //poor, lesser than 74%
       }
     }
+    if (_sleepEfficiencyScore.isNaN) {
+      _sleepEfficiencyScore = 0;
+    }
+    if (sleepEfficiency.isNaN) {
+      sleepEfficiency = 0;
+    }
     return [sleepEfficiency, _sleepEfficiencyScore];
   }
 
@@ -73,6 +79,12 @@ class SleepFunction {
       _sleepLatencyScore = (60 - _timeToFallAsleep) * (100 / 30);
     } else {
       _sleepLatencyScore = 0; //poor, bigger than 60min
+    }
+    if (_sleepLatencyScore.isNaN) {
+      _sleepLatencyScore = 0;
+    }
+    if (_timeToFallAsleep.isNaN) {
+      _timeToFallAsleep = 0;
     }
     return [_timeToFallAsleep.toDouble(), _sleepLatencyScore];
   }
@@ -88,6 +100,12 @@ class SleepFunction {
     } else {
       _sleepDurationScore = 0; //poor
     }
+    if (_sleepDurationScore.isNaN) {
+      _sleepDurationScore = 0;
+    }
+    if (_sleepDuration.isNaN) {
+      _sleepDuration = 0;
+    }
     return [_sleepDuration, _sleepDurationScore];
   }
 
@@ -99,6 +117,12 @@ class SleepFunction {
       _wasoScore = (100 - (_timeAwake - 20) * (100 / 31));
     } else {
       _wasoScore = 0; //poor, bigger than 51 min
+    }
+    if (_wasoScore.isNaN) {
+      _wasoScore = 0;
+    }
+    if (_timeAwake.isNaN) {
+      _timeAwake = 0;
     }
     return [_timeAwake.toDouble(), _wasoScore.toDouble()];
   }
@@ -115,8 +139,19 @@ class SleepFunction {
         (_remScore - 25)
             .abs(); //Sum of the differences between the sleep phases percentage scores and the desired baseline
     _phaseScores = 100 - _phaseScores;
-    List _phases = [_lightScore, _deepScore, _remScore];
-    return _phases;
+    if (_phaseScores.isNaN) {
+      _phaseScores = 0;
+    }
+    if (_lightScore.isNaN) {
+      _lightScore = 0;
+    }
+    if (_deepScore.isNaN) {
+      _deepScore = 0;
+    }
+    if (_remScore.isNaN) {
+      _remScore = 0;
+    }
+    return [_lightScore, _deepScore, _remScore, _phaseScores];
   }
 
   double? SleepQualityDS() {

@@ -170,7 +170,7 @@ class _ChartPageState extends State<ChartPage> {
               double meanLatency = 0;
               double meanDuration = 0;
               double meanWaso = 0;
-              double meanPhase = 0;
+              double meanPhases = 0;
 
               for (var day in weekList) {
                 if (alcMap.keys.contains(day)) {
@@ -187,7 +187,7 @@ class _ChartPageState extends State<ChartPage> {
                   meanLatency += currentDay.SleepLatency()![1] / 7;
                   meanEfficiency += currentDay.SleepEfficiency()![1] / 7;
                   meanWaso += currentDay.WASO()![1] / 7;
-                  meanPhase += currentDay.SleepPhases()![1] / 7;
+                  meanPhases += currentDay.SleepPhases()![3] / 7;
 
                   slpqltList.add(currentDay.SleepQualityDS()!);
                   sleepList.add(
@@ -205,7 +205,7 @@ class _ChartPageState extends State<ChartPage> {
                     meanLatency.truncateToDouble(),
                     meanDuration.truncateToDouble(),
                     meanWaso.truncateToDouble(),
-                    meanPhase.isNaN ? 0 : meanPhase.truncateToDouble(),
+                    meanPhases.isNaN ? 0 : meanPhases.truncateToDouble(),
                   ],
                 )
               ];
@@ -466,12 +466,12 @@ class _ChartPageState extends State<ChartPage> {
                 );
               case 3:
                 return RadarChartTitle(
-                  text: 'Waso',
+                  text: 'WASO',
                   angle: usedAngle,
                 );
               case 4:
                 return RadarChartTitle(
-                  text: 'Phase',
+                  text: 'Phases',
                   angle: usedAngle,
                 );
               default:
