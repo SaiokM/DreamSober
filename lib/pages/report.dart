@@ -47,7 +47,7 @@ class _ReportPageState extends State<ReportPage> {
   ];
 
   //final String today = DateTime.now().toString().split(' ')[0];
-  final String today = "2023-05-10"; //change this date to change the week
+  final String today = "2023-05-06"; //change this date to change the week
   late final List<String> thisWeek;
   late final int weekDay;
 
@@ -351,6 +351,8 @@ class _ReportPageState extends State<ReportPage> {
     double meanTotLightPhase = totLightPhase / weekDay;
     double meanTotDeepPhase = totDeepPhase / weekDay;
     double meanTotRemPhase = totRemPhase / weekDay;
+    double meanTotDurationPhases =
+        meanTotLightPhase + meanTotDeepPhase + meanTotRemPhase;
 
     // sleepMap contiene i dati del sonno della settimana corrente
     // per estrarre i dati di ogni giorno guardare il file sleepday.dart
@@ -509,26 +511,32 @@ class _ReportPageState extends State<ReportPage> {
                                       PieChartData(
                                         sections: [
                                           PieChartSectionData(
-                                            value: meanTotLightPhase,
+                                            value: (meanTotLightPhase /
+                                                    meanTotDurationPhases) *
+                                                100,
                                             color: Colors.blue,
                                             title:
-                                                'Light ${meanTotLightPhase.toInt()}%',
+                                                'Light ${((meanTotLightPhase / meanTotDurationPhases) * 100).toStringAsFixed(2)}%',
                                             radius: 50,
                                             showTitle: true,
                                           ),
                                           PieChartSectionData(
-                                            value: meanTotDeepPhase,
+                                            value: (meanTotDeepPhase /
+                                                    meanTotDurationPhases) *
+                                                100,
                                             color: Colors.red,
                                             title:
-                                                'Deep${meanTotDeepPhase.toInt()}%',
+                                                'Deep ${((meanTotDeepPhase / meanTotDurationPhases) * 100).toStringAsFixed(2)}%',
                                             radius: 50,
                                             showTitle: true,
                                           ),
                                           PieChartSectionData(
-                                            value: meanTotRemPhase,
+                                            value: (meanTotRemPhase /
+                                                    meanTotDurationPhases) *
+                                                100,
                                             color: Colors.green,
                                             title:
-                                                'REM ${meanTotRemPhase.toInt()}%',
+                                                'REM ${((meanTotRemPhase / meanTotDurationPhases) * 100).toStringAsFixed(2)}%',
                                             radius: 50,
                                             showTitle: true,
                                           ),
