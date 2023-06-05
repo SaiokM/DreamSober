@@ -18,7 +18,7 @@ class InfoPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Center(
+              Center(
                 child: Column(
                   children: [
                     Text(
