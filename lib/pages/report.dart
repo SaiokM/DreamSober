@@ -428,7 +428,7 @@ class _ReportPageState extends State<ReportPage> {
                             color: Colors.brown[200],
                             child: Center(
                               child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   SimpleCircularProgressBar(
                                     valueNotifier: ValueNotifier(meanTotQuality),
