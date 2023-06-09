@@ -20,7 +20,7 @@ class InfoPage extends StatelessWidget {
             children: [
               Center(
                 child: Column(
-                  children: [
+                  children: const [
                     Text(
                       'Welcome to DreamSober!',
                       style: TextStyle(
@@ -36,7 +36,7 @@ class InfoPage extends StatelessWidget {
                         fontSize: 17,
                         fontWeight: FontWeight.bold,
                       ),
-                      textAlign: TextAlign.center,
+                      textAlign: TextAlign.justify,
                     ),
                     SizedBox(height: 10),
                     Icon(Icons.warning,
@@ -48,7 +48,7 @@ class InfoPage extends StatelessWidget {
                         color: Color.fromARGB(255, 216, 72, 70),
                         fontWeight: FontWeight.bold,
                       ),
-                      textAlign: TextAlign.center,
+                      textAlign: TextAlign.justify,
                     ),
                     SizedBox(height: 10),
                     Text(
@@ -57,7 +57,7 @@ class InfoPage extends StatelessWidget {
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
-                      textAlign: TextAlign.center,
+                      textAlign: TextAlign.justify,
                     ),
                     SizedBox(height: 30),
                     Text(
@@ -66,11 +66,11 @@ class InfoPage extends StatelessWidget {
                       '2) Sleep Latency: is the time it takes a person to fall asleep after turning the lights out\n'
                       '3) Sleep Duration: is the quantity of time that a person sleeps\n'
                       '4) WASO (Wakefulness After Sleep Oncet): It is the total number of minutes that a person is awake after having initially fallen asleep\n'
-                      '5) Sleep\'s Phases\n\n',
+                      '5) Sleep\'s Phases',
                       style: TextStyle(
                         fontSize: 15,
                       ),
-                      textAlign: TextAlign.left,
+                      textAlign: TextAlign.justify,
                     ),
                     Text(
                       'The sleep cycle is divided into three phases:\n'
@@ -80,7 +80,7 @@ class InfoPage extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 15,
                       ),
-                      textAlign: TextAlign.left,
+                      textAlign: TextAlign.justify,
                     ),
                   ],
                 ),
