@@ -47,7 +47,7 @@ class _ReportPageState extends State<ReportPage> {
   ];
 
   //final String today = DateTime.now().toString().split(' ')[0];
-  final String today = "2023-05-07"; //change this date to change the week
+  final String today = "2023-05-6"; //change this date to change the week
   late final List<String> thisWeek;
   late final int weekDay;
 
