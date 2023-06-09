@@ -391,35 +391,64 @@ class _ReportPageState extends State<ReportPage> {
                         Expanded(
                           child: Card(
                             color: Colors.brown[200],
-                            child: Center(
-                              child: SimpleCircularProgressBar(
-                                valueNotifier: ValueNotifier(meanTotQuality),
-                                size: 120,
-                                backStrokeWidth: 20,
-                                progressStrokeWidth: 20,
-                                //maxValue: meanTotQuality,
-                                animationDuration: 1,
-                                mergeMode: true,
-                                progressColors: const [
-                                  Colors.redAccent,
-                                  Colors.orangeAccent,
-                                  Colors.amberAccent,
-                                  Colors.greenAccent,
-                                  Colors.blueAccent,
-                                ],
-                                backColor: Colors.white,
-                                onGetText: (double meanTotQuality) {
-                                  TextStyle centerTextStyle = TextStyle(
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.brown,
-                                  );
-                                  return Text(
-                                    '${meanTotQuality.toInt()}',
-                                    style: centerTextStyle,
-                                  );
-                                },
-                              ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: 15), // Padding for moving graph
+                                  child: SimpleCircularProgressBar(
+                                    valueNotifier:
+                                        ValueNotifier(meanTotQuality),
+                                    size: 120,
+                                    backStrokeWidth: 20,
+                                    progressStrokeWidth: 20,
+                                    //maxValue: meanTotQuality,
+                                    animationDuration: 1,
+                                    mergeMode: true,
+                                    progressColors: const [
+                                      Colors.redAccent,
+                                      Colors.orangeAccent,
+                                      Colors.amberAccent,
+                                      Colors.greenAccent,
+                                      Colors.blueAccent,
+                                    ],
+                                    backColor: Color.fromRGBO(161, 136, 127, 1),
+                                    onGetText: (double meanTotQuality) {
+                                      TextStyle centerTextStyle = TextStyle(
+                                        fontSize: 30,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.brown,
+                                      );
+                                      return Text(
+                                        '${meanTotQuality.toInt()}',
+                                        style: centerTextStyle,
+                                      );
+                                    },
+                                  ),
+                                ),
+                                SizedBox(
+                                    width:
+                                        12), // Space between the graph and the text
+                                Flexible(
+                                  child: Align(
+                                    alignment: Alignment.center,
+                                    child: Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 12),
+                                      child: Text(
+                                        'Slept well, but you can do better if you taper off with alcohol',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.brown,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -454,17 +483,18 @@ class _ReportPageState extends State<ReportPage> {
                               child: Card(
                                 color: Colors.brown[200],
                                 child: SimpleCircularProgressBar(
-                                  size: 80,
-                                  backStrokeWidth: 10,
-                                  progressStrokeWidth: 10,
-                                  animationDuration: 0,
+                                  size: 100,
+                                  backStrokeWidth: 20,
+                                  progressStrokeWidth: 20,
+                                  animationDuration: 1,
                                   valueNotifier:
                                       ValueNotifier(meanTotEfficiency),
                                   mergeMode: true,
-                                  progressColors: const [
-                                    Colors.brown,
-                                  ],
-                                  backColor: Colors.white,
+                                  progressColors: meanTotEfficiency <
+                                          50 //ALE SCEGLI IL LIMITE
+                                      ? [Color.fromRGBO(239, 83, 80, 1)]
+                                      : [Color.fromRGBO(102, 187, 106, 1)],
+                                  backColor: Color.fromRGBO(161, 136, 127, 1),
                                   onGetText: (double meanTotEfficiency) {
                                     TextStyle centerTextStyle = TextStyle(
                                       fontSize: 20,
@@ -493,7 +523,7 @@ class _ReportPageState extends State<ReportPage> {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             Padding(
-                              padding: EdgeInsets.all(10),
+                              padding: EdgeInsets.all(2),
                               child: Text(
                                 "Sleep's Phases",
                                 textAlign: TextAlign.center,
@@ -505,8 +535,8 @@ class _ReportPageState extends State<ReportPage> {
                                 padding: const EdgeInsets.all(2),
                                 child: Card(
                                   color: Colors.brown[200],
-                                  child: SizedBox(
-                                    height: 140,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(4),
                                     child: PieChart(
                                       PieChartData(
                                         sections: [
@@ -514,30 +544,30 @@ class _ReportPageState extends State<ReportPage> {
                                             value: (meanTotLightPhase /
                                                     meanTotDurationPhases) *
                                                 100,
-                                            color: Colors.blue,
+                                            color: Colors.blue[300],
                                             title:
-                                                'Light ${((meanTotLightPhase / meanTotDurationPhases) * 100).toStringAsFixed(2)}%',
-                                            radius: 50,
+                                                'Light\n ${((meanTotLightPhase / meanTotDurationPhases) * 100).toStringAsFixed(2)}%',
+                                            radius: 55,
                                             showTitle: true,
                                           ),
                                           PieChartSectionData(
                                             value: (meanTotDeepPhase /
                                                     meanTotDurationPhases) *
                                                 100,
-                                            color: Colors.red,
+                                            color: Colors.blue[700],
                                             title:
-                                                'Deep ${((meanTotDeepPhase / meanTotDurationPhases) * 100).toStringAsFixed(2)}%',
-                                            radius: 50,
+                                                'Deep\n ${((meanTotDeepPhase / meanTotDurationPhases) * 100).toStringAsFixed(2)}%',
+                                            radius: 55,
                                             showTitle: true,
                                           ),
                                           PieChartSectionData(
                                             value: (meanTotRemPhase /
                                                     meanTotDurationPhases) *
                                                 100,
-                                            color: Colors.green,
+                                            color: Colors.blue[500],
                                             title:
-                                                'REM ${((meanTotRemPhase / meanTotDurationPhases) * 100).toStringAsFixed(2)}%',
-                                            radius: 50,
+                                                'REM\n ${((meanTotRemPhase / meanTotDurationPhases) * 100).toStringAsFixed(2)}%',
+                                            radius: 55,
                                             showTitle: true,
                                           ),
                                         ],
