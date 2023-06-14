@@ -54,20 +54,26 @@ class SleepFunction {
         //adult
         if (sleepEfficiency >= 85) {
           _sleepEfficiencyScore = 100; //good, at least 85%
-        } else if (sleepEfficiency >= 74) {
-          _sleepEfficiencyScore = (sleepEfficiency - 74) * (100 / 11);
-        } else {
+        } else if (sleepEfficiency <= 74) {
           _sleepEfficiencyScore = 0; //poor, lesser than 74%
+        } else {
+          _sleepEfficiencyScore = ((sleepEfficiency - 74) / (85 - 74)) * 100; 
         }
       } else {
         //young adult
         if (sleepEfficiency >= 85) {
           _sleepEfficiencyScore = 100; //good, al least 85%
-        } else if (sleepEfficiency >= 64) {
-          _sleepEfficiencyScore = (sleepEfficiency - 64) * (100 / 11);
+        } else if (sleepEfficiency < 64) {
+          _sleepEfficiencyScore = 0;  //poor, lesser than 74%
         } else {
-          _sleepEfficiencyScore = 0; //poor, lesser than 74%
+          _sleepEfficiencyScore = ((sleepEfficiency - 64) * (85 - 64)) * 100; 
         }
+      }
+      if (_sleepEfficiencyScore.isNaN) {
+      _sleepEfficiencyScore = 0;
+      }
+      if (sleepEfficiency.isNaN) {
+      sleepEfficiency = 0;
       }
       return [sleepEfficiency, _sleepEfficiencyScore];
     }
@@ -79,27 +85,47 @@ class SleepFunction {
     if (!_emptyDay) {
       if (_timeToFallAsleep <= 30) {
         _sleepLatencyScore = 100; //good, lesser than 30 min
-      } else if (_timeToFallAsleep <= 60) {
-        _sleepLatencyScore = (60 - _timeToFallAsleep) * (100 / 30);
+      } else if (_timeToFallAsleep >= 60) {
+        _sleepLatencyScore = 0;   //poor, bigger than 60min
       } else {
-        _sleepLatencyScore = 0; //poor, bigger than 60min
+        _sleepLatencyScore = ((60 - _timeToFallAsleep) / (60 - 30)) * 100; 
       }
-      return [_timeToFallAsleep.toDouble(), _sleepLatencyScore];
+      if (_sleepLatencyScore.isNaN) {
+      _sleepLatencyScore = 0;
+    }
+    if (_timeToFallAsleep.isNaN) {
+      _timeToFallAsleep = 0;
+    }
+    return [_timeToFallAsleep.toDouble(), _sleepLatencyScore];
     }
     return [0, 0];
   }
 
-// duration [min]:
+// duration [hours]
   List<double>? SleepDuration() {
     if (!_emptyDay) {
-      if (_sleepDuration >= 7 && _age >= 18) {
-        //Adults, at least 7 hours
-        _sleepDurationScore = 100; //good
-      } else if (_sleepDuration >= 8 && _age < 18) {
-        //Young, at least 8 hours
-        _sleepDurationScore = 100; //good
-      } else {
-        _sleepDurationScore = 0; //poor
+      if (_age <= 18) { // Young Adults
+        if (_sleepDuration >= 8){
+          _sleepDurationScore = 100;  //good, 
+        } else if (_sleepDuration <= 7){
+          _sleepDurationScore = 0;
+        } else {
+          _sleepDurationScore = ((_sleepDuration - 7) / (8 - 7)) * 100;
+        }
+      } else {  // Adults
+        if (_sleepDuration >= 7){
+          _sleepDurationScore = 100;  //good, 
+        } else if (_sleepDuration <= 6){
+          _sleepDurationScore = 0;
+        } else {
+          _sleepDurationScore = ((_sleepDuration - 6) / (7 - 6)) * 100;
+        }    
+      }
+      if (_sleepDurationScore.isNaN) {
+        _sleepDurationScore = 0;
+      }
+      if (_sleepDuration.isNaN) {
+        _sleepDuration = 0;
       }
       return [_sleepDuration, _sleepDurationScore];
     }
@@ -110,11 +136,17 @@ class SleepFunction {
   List<double>? WASO() {
     if (!_emptyDay) {
       if (_timeAwake <= 20) {
-        _wasoScore = 100; //good, lesser than 20min
-      } else if (_timeAwake <= 51) {
-        _wasoScore = (100 - (_timeAwake - 20) * (100 / 31));
+        _wasoScore = 100; //good, lesser than 20 min
+      } else if (_timeAwake >= 51) {
+        _wasoScore = 0;  //poor, bigger than 51 min
       } else {
-        _wasoScore = 0; //poor, bigger than 51 min
+        _wasoScore = ((51 - _timeAwake) / (51 - 20)) * 100;
+      }
+      if (_wasoScore.isNaN) {
+        _wasoScore = 0;
+      }
+      if (_timeAwake.isNaN) {
+        _timeAwake = 0;
       }
       return [_timeAwake.toDouble(), _wasoScore.toDouble()];
     }
@@ -134,10 +166,22 @@ class SleepFunction {
           (_remScore - 25)
               .abs(); //Sum of the differences between the sleep phases percentage scores and the desired baseline
       _phaseScores = 100 - _phaseScores;
-      List _phases = [_lightScore, _deepScore, _remScore];
-      return _phases;
+      if (_phaseScores.isNaN) {
+        _phaseScores = 0;
+      }
+      if (_lightScore.isNaN) {
+        _lightScore = 0;
+      }
+      if (_deepScore.isNaN) {
+        _deepScore = 0;
+      }
+      if (_remScore.isNaN) {
+        _remScore = 0;
+      }
+      
+      return [_lightScore, _deepScore, _remScore, _phaseScores];
     }
-    return [0, 0, 0];
+    return [0, 0, 0, 0];
   }
 
   double? SleepQualityDS() {

@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'package:dreamsober/models/sleepFunction.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -46,7 +47,7 @@ class _ReportPageState extends State<ReportPage> {
   ];
 
   //final String today = DateTime.now().toString().split(' ')[0];
-  final String today = "2023-05-07"; //change this date to change the week
+  final String today = "2023-05-06"; //change this date to change the week
   late final List<String> thisWeek;
   late final int weekDay;
 
@@ -330,6 +331,10 @@ class _ReportPageState extends State<ReportPage> {
     double totLightPhase = 0;
     double totDeepPhase = 0;
     double totRemPhase = 0;
+    double totEfficiencyScore = 0;
+    double totLatencyScore = 0;
+    double totWasoScore = 0;
+    double totDurationScore = 0;
     for (int i = 0; i < weekDay; i++) {
       SleepFunction? day = SleepFunction.fromSleepDay(sleepMap[thisWeek[i]]!);
       totQuality += day.SleepQualityDS()!;
@@ -340,6 +345,10 @@ class _ReportPageState extends State<ReportPage> {
       totLightPhase += day.SleepPhases()![0];
       totDeepPhase += day.SleepPhases()![1];
       totRemPhase += day.SleepPhases()![2];
+      totEfficiencyScore += day.SleepEfficiency()![1];
+      totLatencyScore += day.SleepLatency()![1];
+      totWasoScore += day.WASO()![1];
+      totDurationScore += day.SleepDuration()![1];
       day = null;
     }
     double meanTotQuality = totQuality / weekDay;
@@ -350,26 +359,52 @@ class _ReportPageState extends State<ReportPage> {
     double meanTotLightPhase = totLightPhase / weekDay;
     double meanTotDeepPhase = totDeepPhase / weekDay;
     double meanTotRemPhase = totRemPhase / weekDay;
+    double meanTotEfficiencyScore = totEfficiencyScore / weekDay;
+    double meanTotLatencyScore = totLatencyScore / weekDay;
+    double meanTotWasoScore = totWasoScore / weekDay;
+    double meanTotDurationScore = totDurationScore / weekDay;
 
-    // sleepMap contiene i dati del sonno della settimana corrente
-    // per estrarre i dati di ogni giorno guardare il file sleepday.dart
-    // La variabile thisWeek contiene i giorni della settimana in formato
-    // YYYY-MM-DD come stringa, usate i valori per accedere ai dati del
-    // all'interno di sleepMap (dovrebbero essere quindi gli stessi dentro
-    // sleepMap.keys).
-    // Esempio:
-    /*
-          SleepDay lunedi = sleepMap[thisWeek[0]]!; //null check
-          lunedi.duration;
-          lunedi.minAsleep;
-          */
+    IconData _getIconForQuality(double meanTotQuality) {
+      if (meanTotQuality > 80) {
+        return Icons.sentiment_very_satisfied;
+      } else if (meanTotQuality > 60) {
+        return Icons.sentiment_satisfied;
+      } else if (meanTotQuality > 40) {
+        return Icons.sentiment_dissatisfied;
+      } else {
+        return Icons.sentiment_very_dissatisfied;
+      }
+    }
 
+    Color? _getColorForQuality(double meanTotQuality) {
+      if (meanTotQuality > 80) {
+        return Colors.blueAccent[400];
+      } else if (meanTotQuality > 60) {
+        return Colors.greenAccent[400];
+      } else if (meanTotQuality > 40) {
+        return Colors.yellowAccent[400];
+      } else {
+        return Colors.redAccent[400];
+      }
+    }
+
+    String _getTextForQuality(double meanTotQuality) {
+      if (meanTotQuality > 80) {
+        return 'Excellent Sleep Quality';
+      } else if (meanTotQuality > 60) {
+        return 'Good Sleep Quality';
+      } else if (meanTotQuality > 40) {
+        return 'Bad Sleep Quality';
+      } else {
+        return 'Very Bad Sleep Quality';
+      }
+    }
     return Center(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           SizedBox(
-            height: 200,
+            height: 250,
             child: Padding(
               padding: EdgeInsets.all(4),
               child: Expanded(
@@ -380,42 +415,74 @@ class _ReportPageState extends State<ReportPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Text(
-                          'Sleep Quality',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 5.0),
+                          child: Text(
+                            'Sleep Quality',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                          ),
                         ),
                         Expanded(
                           child: Card(
                             color: Colors.brown[200],
                             child: Center(
-                              child: SimpleCircularProgressBar(
-                                valueNotifier: ValueNotifier(meanTotQuality),
-                                size: 120,
-                                backStrokeWidth: 20,
-                                progressStrokeWidth: 20,
-                                //maxValue: meanTotQuality,
-                                animationDuration: 1,
-                                mergeMode: true,
-                                progressColors: const [
-                                  Colors.redAccent,
-                                  Colors.orangeAccent,
-                                  Colors.amberAccent,
-                                  Colors.greenAccent,
-                                  Colors.blueAccent,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SimpleCircularProgressBar(
+                                    valueNotifier: ValueNotifier(meanTotQuality),
+                                    size: 120,
+                                    backStrokeWidth: 20,
+                                    progressStrokeWidth: 20,
+                                    animationDuration: 1,
+                                    mergeMode: true,
+                                    progressColors: const [
+                                      Colors.redAccent,
+                                      Colors.orangeAccent,
+                                      Colors.amberAccent,
+                                      Colors.greenAccent,
+                                      Colors.blueAccent,
+                                    ],
+                                    backColor: Colors.transparent,
+                                    onGetText: (double meanTotQuality) {
+                                      TextStyle centerTextStyle = TextStyle(
+                                        fontSize: 30,
+                                        fontWeight: FontWeight.bold,
+                                        color: meanTotQuality > 80
+                                            ? Colors.blueAccent[400]
+                                            : meanTotQuality > 60
+                                                ? Colors.greenAccent[400]
+                                                : meanTotQuality > 40
+                                                    ? Colors.yellowAccent[400]
+                                                    : Colors.redAccent[400],
+                                      );
+                                      return Text(
+                                        '${meanTotQuality.toInt()}',
+                                        style: centerTextStyle,
+                                      );
+                                    },
+                                  ),
+                                  SizedBox(width:20), 
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        _getIconForQuality(meanTotQuality),
+                                        size: 50,
+                                        color:
+                                            _getColorForQuality(meanTotQuality),
+                                      ),
+                                      SizedBox(height: 5),
+                                      Text(
+                                        _getTextForQuality(meanTotQuality),
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                    ],
+                                  ),
                                 ],
-                                backColor: Colors.white,
-                                onGetText: (double meanTotQuality) {
-                                  TextStyle centerTextStyle = TextStyle(
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.brown,
-                                  );
-                                  return Text(
-                                    '${meanTotQuality.toInt()}',
-                                    style: centerTextStyle,
-                                  );
-                                },
                               ),
                             ),
                           ),
@@ -428,7 +495,7 @@ class _ReportPageState extends State<ReportPage> {
             ),
           ),
           SizedBox(
-            height: 150,
+            height: 200,
             child: Padding(
               padding: EdgeInsets.all(4),
               child: Row(
@@ -451,22 +518,32 @@ class _ReportPageState extends State<ReportPage> {
                               child: Card(
                                 color: Colors.brown[200],
                                 child: SimpleCircularProgressBar(
-                                  size: 80,
-                                  backStrokeWidth: 10,
-                                  progressStrokeWidth: 10,
+                                  size: 100,
+                                  backStrokeWidth: 15,
+                                  progressStrokeWidth: 15,
                                   animationDuration: 0,
                                   valueNotifier:
                                       ValueNotifier(meanTotEfficiency),
                                   mergeMode: true,
                                   progressColors: const [
-                                    Colors.brown,
+                                    Colors.redAccent,
+                                    Colors.orangeAccent,
+                                    Colors.amberAccent,
+                                    Colors.greenAccent,
+                                    Colors.blueAccent,
                                   ],
-                                  backColor: Colors.white,
+                                  backColor: Colors.transparent,
                                   onGetText: (double meanTotEfficiency) {
                                     TextStyle centerTextStyle = TextStyle(
-                                      fontSize: 20,
+                                      fontSize: 22,
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.brown,
+                                      color: meanTotEfficiencyScore > 80
+                                        ? Colors.blueAccent[400]
+                                        : meanTotEfficiencyScore > 60
+                                            ? Colors.greenAccent[400]
+                                            : meanTotEfficiencyScore > 40
+                                                ? Colors.yellowAccent[400]
+                                                : Colors.redAccent[400],
                                     );
                                     return Text(
                                       '${meanTotEfficiency.toInt()}%',
@@ -483,29 +560,70 @@ class _ReportPageState extends State<ReportPage> {
                   ),
                   Expanded(
                     child: Card(
-                      color: Colors.brown[300],
-                      child: SizedBox(
-                        height: 150,
-                        width: (MediaQuery.of(context).size.width - 25) / 2,
-                        child: Padding(
-                          padding: EdgeInsets.all(4),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: <Widget>[
-                              Text(
-                                "areo",
+                      color: Colors.brown[900],
+                      child: Container(
+                        color: Colors.brown[300],
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric( vertical : 2),
+                              child: Text(
+                                "Sleep's Phases",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
-                              Card(
-                                color: Colors.brown[200],
-                                child: Container(
-                                  color: Colors.transparent,
-                                  height: 50,
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(4),
+                                child: Card(
+                                  color: Colors.brown[200],
+                                  child: SizedBox(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(4.0),
+                                      child: Container(
+                                        color: Colors.transparent,
+                                        child: PieChart(
+                                          PieChartData(     
+                                            sections: [
+                                              PieChartSectionData(
+                                                value: meanTotLightPhase,
+                                                color: Colors.blue[100],
+                                                title:
+                                                    'Light\n${(meanTotLightPhase*10).truncateToDouble()/10}%',
+                                                radius: 50,
+                                                showTitle: true,
+                                                titleStyle: TextStyle(fontWeight: FontWeight.bold)
+                                              ),
+                                              PieChartSectionData(
+                                                value: meanTotDeepPhase,
+                                                color: Colors.blue[0],
+                                                title:
+                                                    'Deep\n${(meanTotDeepPhase*10).truncateToDouble()/10}%',
+                                                radius: 50,
+                                                showTitle: true,
+                                                titleStyle: TextStyle(fontWeight: FontWeight.bold),
+                                              ),
+                                              PieChartSectionData(
+                                                value: meanTotRemPhase,
+                                                color: Colors.blue[500],
+                                                title:
+                                                    'REM\n${(meanTotRemPhase*10+1).truncateToDouble()/10}%',
+                                                radius: 50,
+                                                showTitle: true,
+                                                titleStyle: TextStyle(fontWeight: FontWeight.bold)
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              )
-                            ],
-                          ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -541,8 +659,18 @@ class _ReportPageState extends State<ReportPage> {
                                 child: Center(
                                   child: Text(
                                     "${(meanTotDuration * 10).truncateToDouble() / 10} h",
-                                    style: TextStyle(fontSize: 25),
+                                    style: TextStyle(
+                                      fontSize: 25,
+                                      color: meanTotDurationScore > 80
+                                          ? Colors.blueAccent[400]
+                                          : meanTotDurationScore > 60
+                                              ? Colors.greenAccent[400]
+                                              : meanTotDurationScore > 40
+                                                  ? Colors.yellowAccent[400]
+                                                  : Colors.redAccent[400],
+                                    ),
                                     textAlign: TextAlign.center,
+                                    
                                   ),
                                 ),
                               ),
@@ -572,7 +700,17 @@ class _ReportPageState extends State<ReportPage> {
                                 child: Center(
                                   child: Text(
                                     "$meanTotLatency min",
-                                    style: TextStyle(fontSize: 25),
+                                    style: TextStyle(
+                                      fontSize: 25,
+                                      color: meanTotLatencyScore > 80
+                                        ? Colors.blueAccent[400]
+                                        : meanTotLatencyScore> 60
+                                            ? Colors.greenAccent[400]
+                                            : meanTotLatencyScore> 40
+                                                ? Colors.yellowAccent[400]
+                                                : Colors.redAccent[400],
+                                      
+                                      ),
                                     textAlign: TextAlign.center,
                                   ),
                                 ),
@@ -603,7 +741,16 @@ class _ReportPageState extends State<ReportPage> {
                                 child: Center(
                                   child: Text(
                                     "${meanTotWaso.toInt()} min",
-                                    style: TextStyle(fontSize: 25),
+                                    style: TextStyle(
+                                      fontSize: 25,
+                                      color: meanTotWasoScore > 80
+                                        ? Colors.blueAccent[400]
+                                        : meanTotWasoScore> 60
+                                            ? Colors.greenAccent[400]
+                                            : meanTotWasoScore> 40
+                                                ? Colors.yellowAccent[400]
+                                                : Colors.redAccent[400],
+                                      ),
                                     textAlign: TextAlign.center,
                                   ),
                                 ),

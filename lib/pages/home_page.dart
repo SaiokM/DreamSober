@@ -2,7 +2,6 @@
 
 import 'package:dreamsober/models/user.dart';
 import 'package:dreamsober/models/userprefs.dart';
-import 'package:dreamsober/models/userprefs.dart';
 import 'package:dreamsober/pages/authorization/auth_page.dart';
 import 'package:dreamsober/pages/report.dart';
 import 'package:dreamsober/pages/drinkpage.dart';
@@ -15,7 +14,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:dreamsober/pages/about.dart';
+import 'package:dreamsober/pages/infoPage.dart';
 import 'dart:developer';
 import 'package:provider/provider.dart';
 import 'dart:async';
@@ -133,7 +132,7 @@ class _HomePageState extends State<HomePage> {
             ListTile(
               leading: Icon(Icons.info_outline, color: Colors.white),
               title: Text(
-                'About',
+                'Info',
                 style: TextStyle(fontSize: 20, color: Colors.white),
               ),
               onTap: () {
