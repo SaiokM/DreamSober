@@ -161,6 +161,7 @@ class _ReportPageState extends State<ReportPage> {
   }
 
   Widget _weekDrinks(BuildContext context, List<int> totList) {
+    List<Widget> cardList = weekDrinkCards(context, totList);
     return Padding(
       padding: const EdgeInsets.all(4),
       child: SizedBox(
@@ -178,45 +179,22 @@ class _ReportPageState extends State<ReportPage> {
                   fontSize: 15,
                 ),
               ),
-              SizedBox(height: 10),
               Expanded(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 4),
-                  child: GridView.count(
-                    physics: BouncingScrollPhysics(),
-                    childAspectRatio: 2.3,
-                    crossAxisCount: 2,
-                    children: List.generate(4, (idx) {
-                      return SizedBox(
-                        height: 30,
-                        child: Card(
-                          color: Colors.brown[200],
-                          child: Center(
-                            child: ListTile(
-                              dense: true,
-                              title: Text(
-                                totList[idx].toString(),
-                                textAlign: TextAlign.right,
-                                style: TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.bold),
-                              ),
-                              subtitle: Text(
-                                drinkList[idx],
-                                textAlign: TextAlign.right,
-                                style: TextStyle(fontSize: 10),
-                              ),
-                              leading: SizedBox(
-                                height: 45,
-                                child: Image.asset(
-                                  imgs[idx],
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    }),
+                  padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                  child: Column(
+                    children: <Widget>[
+                      Expanded(
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: cardList.sublist(0, 2)),
+                      ),
+                      Expanded(
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: cardList.sublist(2, 4)),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -224,6 +202,42 @@ class _ReportPageState extends State<ReportPage> {
           ),
         ),
       ),
+    );
+  }
+
+  List<Widget> weekDrinkCards(BuildContext context, List<int> totList) {
+    return List.generate(
+      4,
+      (idx) {
+        return SizedBox(
+          width: MediaQuery.of(context).size.width / 2 - 12,
+          child: Card(
+            color: Colors.brown[200],
+            child: Center(
+              child: ListTile(
+                dense: true,
+                title: Text(
+                  totList[idx].toString(),
+                  textAlign: TextAlign.right,
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                ),
+                subtitle: Text(
+                  drinkList[idx],
+                  textAlign: TextAlign.right,
+                  style: TextStyle(fontSize: 10),
+                ),
+                leading: SizedBox(
+                  height: 45,
+                  child: Image.asset(
+                    imgs[idx],
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -293,7 +307,7 @@ class _ReportPageState extends State<ReportPage> {
                     children: [
                       SizedBox(height: 5),
                       Text(
-                        "This week you introduce",
+                        "This week you introduced",
                         style: TextStyle(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
@@ -399,6 +413,7 @@ class _ReportPageState extends State<ReportPage> {
         return 'Very Bad Sleep Quality';
       }
     }
+
     return Center(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -420,7 +435,8 @@ class _ReportPageState extends State<ReportPage> {
                           child: Text(
                             'Sleep Quality',
                             textAlign: TextAlign.center,
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 20),
                           ),
                         ),
                         Expanded(
@@ -431,7 +447,8 @@ class _ReportPageState extends State<ReportPage> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   SimpleCircularProgressBar(
-                                    valueNotifier: ValueNotifier(meanTotQuality),
+                                    valueNotifier:
+                                        ValueNotifier(meanTotQuality),
                                     size: 120,
                                     backStrokeWidth: 20,
                                     progressStrokeWidth: 20,
@@ -463,7 +480,7 @@ class _ReportPageState extends State<ReportPage> {
                                       );
                                     },
                                   ),
-                                  SizedBox(width:20), 
+                                  SizedBox(width: 20),
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment:
@@ -538,12 +555,12 @@ class _ReportPageState extends State<ReportPage> {
                                       fontSize: 22,
                                       fontWeight: FontWeight.bold,
                                       color: meanTotEfficiencyScore > 80
-                                        ? Colors.blueAccent[400]
-                                        : meanTotEfficiencyScore > 60
-                                            ? Colors.greenAccent[400]
-                                            : meanTotEfficiencyScore > 40
-                                                ? Colors.yellowAccent[400]
-                                                : Colors.redAccent[400],
+                                          ? Colors.blueAccent[400]
+                                          : meanTotEfficiencyScore > 60
+                                              ? Colors.greenAccent[400]
+                                              : meanTotEfficiencyScore > 40
+                                                  ? Colors.yellowAccent[400]
+                                                  : Colors.redAccent[400],
                                     );
                                     return Text(
                                       '${meanTotEfficiency.toInt()}%',
@@ -567,7 +584,7 @@ class _ReportPageState extends State<ReportPage> {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             Padding(
-                              padding: EdgeInsets.symmetric( vertical : 2),
+                              padding: EdgeInsets.symmetric(vertical: 2),
                               child: Text(
                                 "Sleep's Phases",
                                 textAlign: TextAlign.center,
@@ -585,35 +602,39 @@ class _ReportPageState extends State<ReportPage> {
                                       child: Container(
                                         color: Colors.transparent,
                                         child: PieChart(
-                                          PieChartData(     
+                                          PieChartData(
                                             sections: [
                                               PieChartSectionData(
-                                                value: meanTotLightPhase,
-                                                color: Colors.blue[100],
-                                                title:
-                                                    'Light\n${(meanTotLightPhase*10).truncateToDouble()/10}%',
-                                                radius: 50,
-                                                showTitle: true,
-                                                titleStyle: TextStyle(fontWeight: FontWeight.bold)
-                                              ),
+                                                  value: meanTotLightPhase,
+                                                  color: Colors.blue[100],
+                                                  title:
+                                                      'Light\n${(meanTotLightPhase * 10).truncateToDouble() / 10}%',
+                                                  radius: 50,
+                                                  showTitle: true,
+                                                  titleStyle: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold)),
                                               PieChartSectionData(
                                                 value: meanTotDeepPhase,
                                                 color: Colors.blue[0],
                                                 title:
-                                                    'Deep\n${(meanTotDeepPhase*10).truncateToDouble()/10}%',
+                                                    'Deep\n${(meanTotDeepPhase * 10).truncateToDouble() / 10}%',
                                                 radius: 50,
                                                 showTitle: true,
-                                                titleStyle: TextStyle(fontWeight: FontWeight.bold),
+                                                titleStyle: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                               ),
                                               PieChartSectionData(
-                                                value: meanTotRemPhase,
-                                                color: Colors.blue[500],
-                                                title:
-                                                    'REM\n${(meanTotRemPhase*10+1).truncateToDouble()/10}%',
-                                                radius: 50,
-                                                showTitle: true,
-                                                titleStyle: TextStyle(fontWeight: FontWeight.bold)
-                                              ),
+                                                  value: meanTotRemPhase,
+                                                  color: Colors.blue[500],
+                                                  title:
+                                                      'REM\n${(meanTotRemPhase * 10 + 1).truncateToDouble() / 10}%',
+                                                  radius: 50,
+                                                  showTitle: true,
+                                                  titleStyle: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold)),
                                             ],
                                           ),
                                         ),
@@ -670,7 +691,6 @@ class _ReportPageState extends State<ReportPage> {
                                                   : Colors.redAccent[400],
                                     ),
                                     textAlign: TextAlign.center,
-                                    
                                   ),
                                 ),
                               ),
@@ -703,14 +723,13 @@ class _ReportPageState extends State<ReportPage> {
                                     style: TextStyle(
                                       fontSize: 25,
                                       color: meanTotLatencyScore > 80
-                                        ? Colors.blueAccent[400]
-                                        : meanTotLatencyScore> 60
-                                            ? Colors.greenAccent[400]
-                                            : meanTotLatencyScore> 40
-                                                ? Colors.yellowAccent[400]
-                                                : Colors.redAccent[400],
-                                      
-                                      ),
+                                          ? Colors.blueAccent[400]
+                                          : meanTotLatencyScore > 60
+                                              ? Colors.greenAccent[400]
+                                              : meanTotLatencyScore > 40
+                                                  ? Colors.yellowAccent[400]
+                                                  : Colors.redAccent[400],
+                                    ),
                                     textAlign: TextAlign.center,
                                   ),
                                 ),
@@ -744,13 +763,13 @@ class _ReportPageState extends State<ReportPage> {
                                     style: TextStyle(
                                       fontSize: 25,
                                       color: meanTotWasoScore > 80
-                                        ? Colors.blueAccent[400]
-                                        : meanTotWasoScore> 60
-                                            ? Colors.greenAccent[400]
-                                            : meanTotWasoScore> 40
-                                                ? Colors.yellowAccent[400]
-                                                : Colors.redAccent[400],
-                                      ),
+                                          ? Colors.blueAccent[400]
+                                          : meanTotWasoScore > 60
+                                              ? Colors.greenAccent[400]
+                                              : meanTotWasoScore > 40
+                                                  ? Colors.yellowAccent[400]
+                                                  : Colors.redAccent[400],
+                                    ),
                                     textAlign: TextAlign.center,
                                   ),
                                 ),

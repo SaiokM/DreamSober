@@ -4,6 +4,7 @@ import 'package:dreamsober/pages/authorization/login_or_register.dart';
 import 'package:dreamsober/pages/home_page.dart';
 import 'package:dreamsober/pages/authorization/impact_on.dart';
 import 'package:dreamsober/pages/profilePage.dart';
+import 'package:dreamsober/pages/teamPage.dart';
 import 'package:flutter/material.dart';
 import 'package:dreamsober/pages/authorization/auth_page.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -51,6 +52,7 @@ class MyApp extends StatelessWidget {
         AuthPage.route: (context) => AuthPage(),
         ImpactOnboarding.route: (context) => ImpactOnboarding(),
         HomePage.route: (context) => HomePage(),
+        TeamPage.route: (context) => TeamPage(),
       },
     );
   }
