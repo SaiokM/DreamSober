@@ -161,8 +161,8 @@ class SleepFunction {
       _lightScore = (_lightDuration / totalSleepDuration) * 100;
       _deepScore = (_deepDuration / totalSleepDuration) * 100;
       _remScore = (_remDuration / totalSleepDuration) * 100;
-      _phaseScores = (_lightScore - 60).abs() +
-          (_deepScore - 15).abs() +
+      _phaseScores = (_lightScore - 50).abs() +
+          (_deepScore - 25).abs() +
           (_remScore - 25)
               .abs(); //Sum of the differences between the sleep phases percentage scores and the desired baseline
       _phaseScores = 100 - _phaseScores;
