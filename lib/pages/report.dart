@@ -173,7 +173,7 @@ class _ReportPageState extends State<ReportPage> {
             children: <Widget>[
               SizedBox(height: 10),
               Text(
-                "This week you drunk a total of",
+                "You drunk a total of",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 15,
@@ -271,7 +271,7 @@ class _ReportPageState extends State<ReportPage> {
                     children: [
                       SizedBox(height: 5),
                       Text(
-                        "This week you spent",
+                        "You spent",
                         style: TextStyle(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
@@ -307,7 +307,7 @@ class _ReportPageState extends State<ReportPage> {
                     children: [
                       SizedBox(height: 5),
                       Text(
-                        "This week you introduced",
+                        "You introduced",
                         style: TextStyle(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),

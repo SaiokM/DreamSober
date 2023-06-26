@@ -42,6 +42,8 @@ class _LoginPageState extends State<LoginPage> {
 
       //Navigate to Impact page
       navigateToImpactPage();
+
+      // authentication exceptions with Firebase
     } on FirebaseAuthException catch (e) {
       // pop the loading circle
       Navigator.pop(context);
@@ -69,6 +71,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  // navigate to Impact page
   void navigateToImpactPage() {
     Navigator.popAndPushNamed(context, ImpactOnboarding.route);
   }
@@ -240,6 +243,3 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
-
-//'SafeArea' è un widget che viene utilizzato per evitare che i contenuti di un'applicazione
-// siano tagliati o nascosti dalla visualizzazione del dispositivo in cui l'app viene eseguita.

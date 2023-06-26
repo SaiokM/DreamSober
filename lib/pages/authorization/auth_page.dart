@@ -1,9 +1,6 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:dreamsober/pages/home_page.dart';
-import 'package:dreamsober/pages/authorization/login_page.dart';
 import 'package:dreamsober/models/userprefs.dart';
 import 'login_or_register.dart';
 
@@ -14,7 +11,8 @@ class AuthPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false, // contiene i pixel
+      resizeToAvoidBottomInset:
+          false, // Prevents the page from resizing when the keyboard is shown
       body: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
@@ -26,7 +24,7 @@ class AuthPage extends StatelessWidget {
           }
           // user is NOT logged in
           else {
-            return LoginOrRegisterPage();
+            return const LoginOrRegisterPage();
           }
         },
       ),

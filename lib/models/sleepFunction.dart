@@ -1,9 +1,6 @@
-import 'dart:developer';
-
+// ignore: file_names
 import 'package:dreamsober/models/sleepday.dart';
 import 'package:dreamsober/models/userprefs.dart';
-import 'package:dreamsober/pages/profilePage.dart';
-import 'package:flutter/material.dart';
 
 class SleepFunction {
   final int _age = UserPrefs.getAge();
@@ -57,23 +54,23 @@ class SleepFunction {
         } else if (sleepEfficiency <= 74) {
           _sleepEfficiencyScore = 0; //poor, lesser than 74%
         } else {
-          _sleepEfficiencyScore = ((sleepEfficiency - 74) / (85 - 74)) * 100; 
+          _sleepEfficiencyScore = ((sleepEfficiency - 74) / (85 - 74)) * 100;
         }
       } else {
         //young adult
         if (sleepEfficiency >= 85) {
           _sleepEfficiencyScore = 100; //good, al least 85%
         } else if (sleepEfficiency < 64) {
-          _sleepEfficiencyScore = 0;  //poor, lesser than 74%
+          _sleepEfficiencyScore = 0; //poor, lesser than 74%
         } else {
-          _sleepEfficiencyScore = ((sleepEfficiency - 64) * (85 - 64)) * 100; 
+          _sleepEfficiencyScore = ((sleepEfficiency - 64) * (85 - 64)) * 100;
         }
       }
       if (_sleepEfficiencyScore.isNaN) {
-      _sleepEfficiencyScore = 0;
+        _sleepEfficiencyScore = 0;
       }
       if (sleepEfficiency.isNaN) {
-      sleepEfficiency = 0;
+        sleepEfficiency = 0;
       }
       return [sleepEfficiency, _sleepEfficiencyScore];
     }
@@ -86,17 +83,17 @@ class SleepFunction {
       if (_timeToFallAsleep <= 30) {
         _sleepLatencyScore = 100; //good, lesser than 30 min
       } else if (_timeToFallAsleep >= 60) {
-        _sleepLatencyScore = 0;   //poor, bigger than 60min
+        _sleepLatencyScore = 0; //poor, bigger than 60min
       } else {
-        _sleepLatencyScore = ((60 - _timeToFallAsleep) / (60 - 30)) * 100; 
+        _sleepLatencyScore = ((60 - _timeToFallAsleep) / (60 - 30)) * 100;
       }
       if (_sleepLatencyScore.isNaN) {
-      _sleepLatencyScore = 0;
-    }
-    if (_timeToFallAsleep.isNaN) {
-      _timeToFallAsleep = 0;
-    }
-    return [_timeToFallAsleep.toDouble(), _sleepLatencyScore];
+        _sleepLatencyScore = 0;
+      }
+      if (_timeToFallAsleep.isNaN) {
+        _timeToFallAsleep = 0;
+      }
+      return [_timeToFallAsleep.toDouble(), _sleepLatencyScore];
     }
     return [0, 0];
   }
@@ -104,22 +101,24 @@ class SleepFunction {
 // duration [hours]
   List<double>? SleepDuration() {
     if (!_emptyDay) {
-      if (_age <= 18) { // Young Adults
-        if (_sleepDuration >= 8){
-          _sleepDurationScore = 100;  //good, 
-        } else if (_sleepDuration <= 7){
+      if (_age <= 18) {
+        // Young Adults
+        if (_sleepDuration >= 8) {
+          _sleepDurationScore = 100; //good,
+        } else if (_sleepDuration <= 7) {
           _sleepDurationScore = 0;
         } else {
           _sleepDurationScore = ((_sleepDuration - 7) / (8 - 7)) * 100;
         }
-      } else {  // Adults
-        if (_sleepDuration >= 7){
-          _sleepDurationScore = 100;  //good, 
-        } else if (_sleepDuration <= 6){
+      } else {
+        // Adults
+        if (_sleepDuration >= 7) {
+          _sleepDurationScore = 100; //good,
+        } else if (_sleepDuration <= 6) {
           _sleepDurationScore = 0;
         } else {
           _sleepDurationScore = ((_sleepDuration - 6) / (7 - 6)) * 100;
-        }    
+        }
       }
       if (_sleepDurationScore.isNaN) {
         _sleepDurationScore = 0;
@@ -138,7 +137,7 @@ class SleepFunction {
       if (_timeAwake <= 20) {
         _wasoScore = 100; //good, lesser than 20 min
       } else if (_timeAwake >= 51) {
-        _wasoScore = 0;  //poor, bigger than 51 min
+        _wasoScore = 0; //poor, bigger than 51 min
       } else {
         _wasoScore = ((51 - _timeAwake) / (51 - 20)) * 100;
       }
@@ -178,7 +177,7 @@ class SleepFunction {
       if (_remScore.isNaN) {
         _remScore = 0;
       }
-      
+
       return [_lightScore, _deepScore, _remScore, _phaseScores];
     }
     return [0, 0, 0, 0];

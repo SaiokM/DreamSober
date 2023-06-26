@@ -14,19 +14,24 @@ import 'package:dreamsober/pages/drinkpage.dart';
 import 'package:dreamsober/pages/managedrink.dart';
 import 'package:dreamsober/pages/databasepage.dart';
 import 'package:dreamsober/pages/graph.dart';
-import 'package:dreamsober/pages/impacttest.dart';
 import 'package:provider/provider.dart';
 import 'package:dreamsober/pages/authorization/login_page.dart';
 import 'firebase/firebase_options.dart';
 
 void main() async {
+  // Ensure Flutter binding is initialized
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase app
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  // Initialize user preferences
   await UserPrefs.init();
+
   runApp(
     ChangeNotifierProvider(
+      // Provide the DailyDrinkdDB instance to the app
       create: (_) => DailyDrinkDB(),
       child: MyApp(),
     ),
@@ -39,16 +44,20 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      // Disable the debug banner
       debugShowCheckedModeBanner: false,
+
+      //  Set the initial route
       initialRoute: AuthPage.route,
-      theme: ThemeData(primarySwatch: Colors.brown), // Theme color<
+
+      // Define the app theme
+      theme: ThemeData(primarySwatch: Colors.brown),
+
+      // Define the app routes
       routes: {
         ManageDrinkPage.route: (context) => ManageDrinkPage(),
-        //ImpactTest.route: (context) => ImpactTest(),
         ProfilePage.route: (context) => ProfilePage(),
         DatabasePage.route: (context) => DatabasePage(),
-        //DrinkPage.route: (context) => DrinkPage(userUID: userUID)
-        //DatabasePage.route: (context) => DatabasePage(),
         AuthPage.route: (context) => AuthPage(),
         ImpactOnboarding.route: (context) => ImpactOnboarding(),
         HomePage.route: (context) => HomePage(),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class MyButton extends StatelessWidget {
-  final Function()? onTap;
-  final String text;
+  final Function()? onTap; // Function to be called when the button is tapped
+  final String text; // Text to display on the button
 
   const MyButton({
     super.key,
@@ -13,7 +13,7 @@ class MyButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: onTap, // Assign the onTap function to GestureDetector
       child: Container(
         padding: const EdgeInsets.all(25),
         margin: const EdgeInsets.symmetric(horizontal: 25),

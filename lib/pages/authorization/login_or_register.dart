@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:dreamsober/pages/authorization/login_page.dart';
-
 import 'register_page.dart';
 
 class LoginOrRegisterPage extends StatefulWidget {
@@ -24,6 +23,7 @@ class _LoginOrRegisterPageState extends State<LoginOrRegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Based on the value of showLoginPage, return the appropriate page
     if (showLoginPage) {
       return LoginPage(
         onTap: togglePages,

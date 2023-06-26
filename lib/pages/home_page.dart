@@ -6,7 +6,7 @@ import 'package:dreamsober/pages/authorization/auth_page.dart';
 import 'package:dreamsober/pages/report.dart';
 import 'package:dreamsober/pages/drinkpage.dart';
 import 'package:dreamsober/pages/graph.dart';
-import 'package:dreamsober/pages/impacttest.dart';
+import 'package:dreamsober/pages/authorization/impact_on.dart';
 import 'package:dreamsober/pages/managedrink.dart';
 import 'package:dreamsober/pages/databasepage.dart';
 import 'package:dreamsober/pages/profilePage.dart';
@@ -104,6 +104,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  // Drawer with profile section, Impact login section, logout
   Widget _drawer(BuildContext context, CurrentUser user) {
     log(UserPrefs.getUID());
     return Drawer(
@@ -129,6 +130,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ],
             ),
+            // Info page
             ListTile(
               leading: Icon(Icons.info_outline, color: Colors.white),
               title: Text(
@@ -140,9 +142,10 @@ class _HomePageState extends State<HomePage> {
                     .push(MaterialPageRoute(builder: (context) => InfoPage()));
               },
             ),
+            // Impact Login page
             ListTile(
               onTap: () {
-                Navigator.pushNamed(context, ImpactTest.route);
+                Navigator.pushNamed(context, ImpactOnboarding.route);
               },
               leading: Icon(Icons.login, color: Colors.white),
               title: Text(
@@ -150,6 +153,7 @@ class _HomePageState extends State<HomePage> {
                 style: TextStyle(fontSize: 20, color: Colors.white),
               ),
             ),
+            // Log out
             ListTile(
               onTap: () {
                 UserPrefs.resetUser();
@@ -185,7 +189,7 @@ class _HomePageState extends State<HomePage> {
             padding: EdgeInsets.all(16),
             selectedIndex: _selectedIdx,
             onTabChange: (idx) {
-              //log(idx.toString());
+              //Update the selected index ehen a tab is tapped
               setState(() {
                 _selectedIdx = idx;
               });

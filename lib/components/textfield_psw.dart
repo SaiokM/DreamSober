@@ -17,11 +17,13 @@ class PswTextField extends StatefulWidget {
 }
 
 class _PswTextFieldState extends State<PswTextField> {
-  bool _passwordVisible = false;
+  bool _passwordVisible =
+      false; // Whether the password text is visible or obscured
 
   void _showPassword() {
     setState(() {
-      _passwordVisible = !_passwordVisible;
+      _passwordVisible =
+          !_passwordVisible; // Toggle the visibility of the password text
     });
   }
 
@@ -48,7 +50,8 @@ class _PswTextFieldState extends State<PswTextField> {
             icon: Icon(
               _passwordVisible ? Icons.visibility : Icons.visibility_off,
             ),
-            onPressed: _showPassword,
+            onPressed:
+                _showPassword, // Toggle the password visibility when the icon button is pressed
           ),
         ),
       ),

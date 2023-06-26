@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class MailTextField extends StatelessWidget {
-  final controller;
-  final String hintText;
-  final bool obscureText;
+  final controller; // The text editing controller for the text field
+  final String hintText; // The text to display as a hint in the text field
+  final bool obscureText; // Whether the text should be obscured
 
   const MailTextField({
     super.key,

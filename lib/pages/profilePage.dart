@@ -1,12 +1,11 @@
+// ignore: file_names
 import 'package:dreamsober/models/userprefs.dart';
-import 'package:dreamsober/pages/authorization/auth_page.dart';
 import 'package:dreamsober/pages/authorization/impact_on.dart';
 import 'package:flutter/material.dart';
 import 'package:dreamsober/models/user.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:developer';
-import 'package:dreamsober/pages/impacttest.dart';
 
 class ProfilePage extends StatefulWidget {
   final String userUID = UserPrefs.getUID();
@@ -23,7 +22,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  //Text controller
+  //Text controllers for form fields
   String sex = "Male";
   TextEditingController nameController = TextEditingController();
   TextEditingController ageController = TextEditingController();
@@ -33,6 +32,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   bool enable = false;
   bool useAppBar = true;
+
   @override
   void initState() {
     super.initState();
@@ -41,6 +41,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    // ignore: avoid_print
     print('${ProfilePage.routename} built');
     log(widget.userUID);
     return Scaffold(
@@ -105,7 +106,6 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           const SizedBox(height: 30),
                           TextFormField(
-                            //enabled: enable,
                             readOnly: !enable,
                             controller: nameController,
                             decoration: InputDecoration(
@@ -115,6 +115,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                             ),
                             validator: (value) {
+                              // Validation logic for name field
                               if (value == null ||
                                   value.isEmpty ||
                                   value == "") {
@@ -138,6 +139,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                             ),
                             validator: (value) {
+                              // Validation logic for age field
                               if (value == null ||
                                   value.isEmpty ||
                                   value == "") {
@@ -164,6 +166,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                             ),
                             validator: (value) {
+                              // Validation logic for weight field
                               if (value == null ||
                                   value.isEmpty ||
                                   value == "") {
@@ -190,6 +193,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                             ),
                             validator: (value) {
+                              // Validation logic for height field
                               if (value == null ||
                                   value.isEmpty ||
                                   value == "") {
@@ -260,7 +264,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           const SizedBox(height: 40),
                           if (!widget
-                              .registerPage) // Crea modify button se non viene dalla register_page
+                              .registerPage) // Create modify button if not from register_page
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.brown[800],
@@ -298,7 +302,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     ),
                             ),
                           if (widget
-                              .registerPage) // Aggiunto il controllo per la register page
+                              .registerPage) // Added control for the register page
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.brown[800],
@@ -318,7 +322,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   Navigator.pushReplacementNamed(
                                       context,
                                       ImpactOnboarding
-                                          .route); // Torna home page
+                                          .route); // Back to home page
                                 }
                               },
                               child: const Text(
@@ -339,4 +343,3 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 } //ProfilePage
-

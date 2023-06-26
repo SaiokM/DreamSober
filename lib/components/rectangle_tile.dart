@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class RectangleTile extends StatelessWidget {
-  final String imagePath;
+  final String imagePath; // The path to the image asset
   final Function()? onTap;
 
   const RectangleTile({
@@ -22,10 +22,10 @@ class RectangleTile extends StatelessWidget {
           color: Colors.grey[200],
         ),
         child: Image.asset(
-          imagePath,
+          imagePath, // Display the image from the provided imagePath
           height: 60,
           width: 240,
-          fit: BoxFit.cover,
+          fit: BoxFit.cover, // Adjust the image to cover the container
         ),
       ),
     );

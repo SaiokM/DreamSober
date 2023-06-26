@@ -19,14 +19,14 @@ class _TeamPageState extends State<TeamPage> {
   ];
   List<String> nameList = ['Alessandro', 'Saiok', 'Giulio'];
   List<String> textList = [
-    "Health advisor of the group, gym addict, calories obsessed.\n\n He wrote the function to calculate the sleep quality and we still don't know how.\n\nLikes to upload code without first testing it.\n\nOverall a nice guy.",
-    "Group manager and page designer. He choose the color palette based on himself.\n\nAvid chatGPT user but he actually knows what he's doing (most of the times).\n\nAsks Giulio to fix what Alessandro broke.",
-    "The only one who can actualy code without chatGPT. \n\n The app was basically wrote by him for himself, due to his known alcohol problems.\n\nHe can't take it anymore and just wants to graduate.",
+    "Health advisor of the group, gym addict, calories obsessed.\n\nLikes to upload code without first testing it.\n\nOverall a nice guy.",
+    "Group manager and page designer.\n\nLoves to learn new things.\n\nAlways looking for creative solutions.\n\n",
+    "Passionate about coding but not so much for Dart.\n\nAnalytical problem-solver.\n\nHe can't take it anymore and just wants to graduate.",
   ];
   List<String> quoteList = [
-    "Fioi ho pushato",
-    "Ale porca puttana!",
-    "Sono stanco, fate voi"
+    "Opss, I did it again!",
+    "Ale, please nooo",
+    "I'm feeling exhausted",
   ];
 
   @override
@@ -146,14 +146,3 @@ class _TeamPageState extends State<TeamPage> {
     );
   }
 }
-
-
-/*
-
-        child: CarouselSlider(
-          items: memberCard(context),
-          options: CarouselOptions(
-            onPageChanged: ((index, reason) {}),
-          ),
-        ),
-        */

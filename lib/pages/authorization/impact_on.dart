@@ -1,18 +1,11 @@
-import 'dart:convert';
-import 'dart:io';
 import 'package:dreamsober/components/my_button.dart';
 import 'package:dreamsober/components/rectangle_tile.dart';
 import 'package:dreamsober/components/textfield_psw.dart';
 import 'package:dreamsober/components/textfield_user.dart';
-import 'package:dreamsober/models/sleepday.dart';
 import 'package:dreamsober/pages/authorization/auth_page.dart';
-import 'package:flutter/services.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:dreamsober/models/userprefs.dart';
-import 'package:dreamsober/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import "package:dreamsober/models/impact.dart";
-import 'package:http/http.dart' as http;
 import 'dart:developer';
 
 class ImpactOnboarding extends StatefulWidget {
@@ -34,12 +27,14 @@ class _ImpactOnboardingState extends State<ImpactOnboarding> {
   void initState() {
     log(UserPrefs.getImpactLogin().toString());
     if (UserPrefs.getImpactLogin()) {
+      // Pre-fill the text fiels with stored username and password
       userController.text = UserPrefs.getImpactUser();
       pswController.text = UserPrefs.getImpactPsw();
     }
     super.initState();
   }
 
+  // Method to retrive and save tokens
   Future<int> getandsaveTokens() async {
     UserPrefs.setImpactUsername(userController.text.trim());
     UserPrefs.setImpactPsw(pswController.text.trim());
@@ -53,7 +48,7 @@ class _ImpactOnboardingState extends State<ImpactOnboarding> {
       backgroundColor: Colors.brown[100],
       appBar: UserPrefs.getImpactLogin() ? AppBar() : null,
       body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         child: Expanded(
           child: Center(
             child: Padding(
@@ -92,7 +87,7 @@ class _ImpactOnboardingState extends State<ImpactOnboarding> {
 
                     const SizedBox(height: 20),
 
-                    // SIgn in button
+                    // Sign in button
                     MyButton(
                         text: 'Authorize',
                         onTap: () async {
@@ -104,6 +99,8 @@ class _ImpactOnboardingState extends State<ImpactOnboarding> {
                             ..removeCurrentSnackBar()
                             ..showSnackBar(SnackBar(content: Text(message)));
                           log('Response: $message');
+
+                          //If login is successful, navigate to the auth page
                           result == 200
                               ? Navigator.pushReplacementNamed(
                                   context, AuthPage.route)

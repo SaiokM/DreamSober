@@ -5,7 +5,6 @@ import 'package:dreamsober/components/my_button.dart';
 import 'package:dreamsober/components/textfield_mail.dart';
 import 'package:dreamsober/components/textfield_psw.dart';
 import 'package:dreamsober/components/square_tile.dart';
-import 'package:dreamsober/pages/impacttest.dart';
 
 class RegisterPage extends StatefulWidget {
   final Function()? onTap;
@@ -24,7 +23,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final passwordController = TextEditingController();
   final confirmpasswordController = TextEditingController();
 
-  // sign user up method
+  // Method to sign up the user
   void signUserUp() async {
     // show loading circle
     showDialog(
@@ -36,31 +35,22 @@ class _RegisterPageState extends State<RegisterPage> {
       },
     );
 
-    // try creating the user
     try {
       // check if password is confirmed
       if (passwordController.text == confirmpasswordController.text) {
+        // Create user using Firebase
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passwordController.text.trim(),
         );
 
-        //Navigator.pop(context);
-
-        //navigateToImpactPage();
-
+        // Navigate to the Profile page
         navigateToProfilePage();
       } else {
         //show error message, passwords don't match
         showErrorMessage("Passwords don't match!");
       }
-      // pop the loading circle
-      if (context.mounted) {
-        //Navigator.pop(context);
-        //navigateToImpactPage();
-
-        //navigateToProfilePage();
-      }
+      // authentication exceptions with Firebase
     } on FirebaseAuthException catch (e) {
       // pop the loading circle
       Navigator.pop(context);
@@ -70,13 +60,13 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
-  // error message to user
+  // Show error message to user
   void showErrorMessage(String message) {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          backgroundColor: Colors.deepPurple,
+          backgroundColor: Colors.blueGrey[800],
           title: Center(
             child: Text(
               message,
@@ -88,10 +78,7 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  /* void navigateToImpactPage() {
-    Navigator.pushReplacementNamed(context, ImpactTest.route);
-  }*/
-
+  // Navigate to the Profile page
   void navigateToProfilePage() {
     Navigator.pushReplacement(
       context,
@@ -230,7 +217,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
                 const SizedBox(height: 30),
 
-                // not a member? register now
+                // Already have an account? login
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
