@@ -5,6 +5,7 @@ import 'package:dreamsober/components/textfield_mail.dart';
 import 'package:dreamsober/components/textfield_psw.dart';
 import 'package:dreamsober/components/square_tile.dart';
 
+import 'forgot_pw_page.dart';
 import 'impact_on.dart';
 
 class LoginPage extends StatefulWidget {
@@ -21,7 +22,7 @@ class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  // sign user in method
+  // sign user method
   void signUserIn() async {
     // show loading circle
     showDialog(
@@ -83,7 +84,6 @@ class _LoginPageState extends State<LoginPage> {
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            //remove overflow
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -121,17 +121,13 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text("Avaible from the next update"),
-                              duration: Duration(seconds: 1),
-                            ),
-                          );
+                          Navigator.pushNamed(
+                              context, ForgotPasswordPage.route);
                         },
                         child: const Text(
                           'Forgot Password?',
                           style: TextStyle(
-                            color: Colors.grey,
+                            color: Colors.blue,
                             fontWeight: FontWeight.bold,
                           ),
                         ),

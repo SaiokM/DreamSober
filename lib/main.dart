@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, unused_import, body_might_complete_normally_nullable
 
+import 'package:dreamsober/pages/authorization/forgot_pw_page.dart';
 import 'package:dreamsober/pages/authorization/login_or_register.dart';
 import 'package:dreamsober/pages/home_page.dart';
 import 'package:dreamsober/pages/authorization/impact_on.dart';
@@ -62,6 +63,7 @@ class MyApp extends StatelessWidget {
         ImpactOnboarding.route: (context) => ImpactOnboarding(),
         HomePage.route: (context) => HomePage(),
         TeamPage.route: (context) => TeamPage(),
+        ForgotPasswordPage.route: (context) => ForgotPasswordPage(),
       },
     );
   }
