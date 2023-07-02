@@ -1,3 +1,11 @@
+/*
+  In this file I created various functions in orther to
+  better use the user preferences to store various data,
+  for example the impact username and password.
+  All of the user preferenses will be erased when the
+  user logs out.
+*/
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserPrefs {

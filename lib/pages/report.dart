@@ -46,6 +46,11 @@ class _ReportPageState extends State<ReportPage> {
     Drink('Wine', 12, 150, 4)
   ];
 
+  /*
+    Since in impact there are some weeks where there isn't data,
+    to illustrate the functionality of the ReportPage we fixed 
+    the current day in a week with known sleep data.
+  */
   //final String today = DateTime.now().toString().split(' ')[0];
   final String today = "2023-05-06"; //change this date to change the week
   late final List<String> thisWeek;
@@ -63,7 +68,7 @@ class _ReportPageState extends State<ReportPage> {
     //double height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.brown[100],
-      body: _buildForm(context), //_weeklyList(context),
+      body: _buildForm(context),
     );
   }
 
@@ -81,7 +86,6 @@ class _ReportPageState extends State<ReportPage> {
                 child: Expanded(
                   child: Column(
                     children: <Widget>[
-                      // Problema di constrains su sleep()
                       _sleep(context, sleepMap),
                       _weeklyList(context, alcMap),
                       _moneyKcal(context, alcMap),
@@ -98,6 +102,8 @@ class _ReportPageState extends State<ReportPage> {
         });
   }
 
+  // Future function to fetch alcool data from firebase and sleep data
+  // from Impact
   Future<List<Map<dynamic, dynamic>>> _AlcSleepData() async {
     List<Map> alcSleepList = [];
     Map<dynamic, dynamic> alcMap = {};
@@ -118,6 +124,8 @@ class _ReportPageState extends State<ReportPage> {
     return alcSleepList;
   }
 
+  // Creates a list of the days of the current week
+  // from the current day
   List<String> _generateWeek(String day) {
     List<String> weekList = ["", "", "", "", "", "", ""];
     List<String> date = day.split("-"); //[YYYY, MM, DD]
@@ -141,7 +149,6 @@ class _ReportPageState extends State<ReportPage> {
       var totCocktails = 0;
       var totSuper = 0;
       var totWine = 0;
-      // Giulio aggiusta
       for (String day in thisWeek) {
         if (map.keys.contains(day)) {
           totAlc += int.parse(map[day]["TotalAlcohol"].toString());

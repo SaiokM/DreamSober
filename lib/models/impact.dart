@@ -1,3 +1,8 @@
+/*
+  Class used to request data from
+  impact and extrapolate the data
+*/
+
 import 'package:dreamsober/models/userprefs.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -50,6 +55,7 @@ class Impact with ChangeNotifier {
     return response.statusCode;
   }
 
+  // Get sleep data from impact
   static Future<Map<String, SleepDay>> getSleepRangeData(
       String startDate, String endDate) async {
     var access = UserPrefs.getImpactAccess();

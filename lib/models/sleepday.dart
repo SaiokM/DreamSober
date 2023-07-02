@@ -1,3 +1,8 @@
+/*
+  Class used to extract the data from the
+  impact response. Will will then be fed 
+  to the SleepFunction
+*/
 class SleepDay {
   late String date;
   late double? duration; //seconds

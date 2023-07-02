@@ -209,7 +209,7 @@ class _ChartPageState extends State<ChartPage> {
                   ],
                 )
               ];
-              print(meanList[0].values);
+              //print(meanList[0].values);
               BarData mybarData = BarData(
                 dayList: weekList,
                 alcList: alcList,

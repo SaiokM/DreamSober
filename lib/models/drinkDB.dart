@@ -1,4 +1,9 @@
-// ignore: file_names
+/*
+  Class used to store the drinking data of a 
+  specific day in order to visualize it and
+  later save it to the database.
+*/
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:dreamsober/models/drink.dart';
@@ -11,12 +16,14 @@ class DailyDrinkDB with ChangeNotifier {
     'Super Alcoholics': 0
   };
 
+  // ("Name, alc%, volume, cost€")
   final List<Drink> drinks = [
     Drink('Beer', 4, 500, 5),
     Drink('Cocktail', 8, 200, 8),
     Drink('Super Alcoholics', 40, 40, 6),
     Drink('Wine', 12, 150, 4)
   ];
+
   DateTime _date = DateTime.now();
   late double _totAlc;
   late double _totCal;
