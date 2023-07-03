@@ -20,7 +20,7 @@ class InfoPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Center(
+               Center(
                 child: Column(
                   children: [
                     Text(
@@ -76,8 +76,8 @@ class InfoPage extends StatelessWidget {
                     ),
                     Text(
                       '\n'
-                      ' -Light Phase (60%): phase when a person is most easily awoken.\n'
-                      ' -Deep Phase (15%): phase where breathing and heart rate drop to their lowest levels, and brain activity slows.\n'
+                      ' -Light Phase (50%): phase when a person is most easily awoken.\n'
+                      ' -Deep Phase (25%): also known as slow-wave phase and its considered the deepest stage of sleep.\n'
                       ' -REM Phase (25%): the stage of sleep with the highest brain activity and often associated with intense dreaming.',
                       style: TextStyle(
                         fontSize: 15,
